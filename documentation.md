@@ -1,23 +1,12 @@
 - [Full installation list](#installs)
 
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Why do we use it?
-
-It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-
-Where does it come from?
-
-Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-
 <a name="installs"></a>
 
 ## Full installation list
 
 ### MacOS
 
-Instructions assume Homebrew is already installed on your OSX host.
+Instructions assume [Homebrew](https://brew.sh/) is already installed on your OSX host.
 
 ### python 3
 
@@ -25,6 +14,18 @@ Used as the backend language for the project, handling server connections and da
 
 ```
 brew install python
+```
+
+For installing python modules, it is advisable to create a virtual environment to help keep python modules specific to the project.
+
+```
+python3 -m virtualenv env
+```
+
+Activate the virtual environment before installing python modules.
+
+```
+source env/bin/activate
 ```
 
 ### MongoDB
@@ -37,8 +38,51 @@ If not already tapped 'MongoDB Homebrew Tap':
 brew tap mongodb/brew
 ```
 
-Now it is possible to install MongoDB Community Edition
+Now it is possible to install MongoDB Community Edition.
 
 ```
 brew install mongodb-community@4.2
+```
+
+### D3.js
+
+D3.js is used to create the different data visualisations used in the app, such as bar charts and line graphs. To install using [NPM](https://www.npmjs.com/get-npm), first initialise an NPM.
+
+```
+npm init
+```
+
+Then install D3.js and all of its dependencies.
+
+```
+npm install --save d3
+```
+
+And then include the following line in the HTML.
+
+```
+<script type="text/javascript" src="node_modules/d3/build/d3.js"></script>
+```
+
+### Flask and its extensions
+
+Flask is a microframework of python that provides many of the tools required to building a web application, such as templating, routing and Web Server Gateway Interface (WSGI).
+As it is a 'microframework', it is often also required to install several extensions to get more functionality.
+The dependencies that are included are:
+
+- jinja2 - the templating engine.
+- Werkzeug - a WSGI utility library.
+
+For installing flask (from within the virtual environment).
+
+```
+pip3 install Flask
+```
+
+##### Flask dependencies
+
+Flask-WTF which is a wrapper around the WTForms package, including CSRF, file upload, and reCAPTCHA.
+
+```
+pip3 install flask-wtf
 ```
