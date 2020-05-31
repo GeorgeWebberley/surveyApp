@@ -1,0 +1,11 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="button-row">
+    <a class="btn btn-secondary" href="#">Go back</a>
+    <a class="btn btn-primary" href="#">Save and proceed</a>
+  </div>
+  <div class="upload">
+    {{ dropzone.create(action='importFile') }} {{ dropzone.config() }}
+  </div>
+</div>
+{% endblock content %}

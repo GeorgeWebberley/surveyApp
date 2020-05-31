@@ -1,0 +1,150 @@
+:root {
+  --base-hue: 210;
+  --danger-hue-offset: 180;
+  --danger-hue: calc(var(--base-hue) - var(--danger-hue-offset));
+  --primary-colour: hsla(var(--base-hue), 30%, 50%);
+  --primary-colour-dark: hsla(var(--base-hue), 30%, 25%);
+  --complementary-colour: hsla(var(--danger-hue), 50%, 50%);
+  --complementary-colour-dark: hsla(var(--danger-hue), 30%, 25%);
+  --primary-transition: 0.3s all ease;
+  --main-font: "Ubuntu", sans-serif;
+}
+
+body {
+  position: relative;
+  font-family: var(--main-font);
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+/* ------NAVBAR CSS------ */
+
+.navbar {
+  width: 100%;
+  height: 60px;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-center {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: auto;
+  align-items: center;
+  height: 100%;
+  font-size: 1.5rem;
+}
+
+.navbar-logo {
+  text-decoration: none;
+  color: var(--primary-colour);
+}
+
+.navbar-links {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-link {
+  text-align: center;
+  line-height: 60px;
+  width: 6rem;
+  text-decoration: none;
+  color: var(--primary-colour);
+  height: 100%;
+  transition: var(--primary-transition);
+}
+
+.navbar-link:hover {
+  background-color: var(--primary-colour);
+  color: white;
+}
+
+.bar {
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    black,
+    rgba(0, 0, 0, 0)
+  );
+}
+
+/* ------LANDING PAGE CSS------ */
+
+.landing-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 120px);
+}
+
+/* .landing-center {
+  height: 80%;
+} */
+
+.landing-logo {
+  font-size: 8rem;
+  margin: 1rem;
+  background: -webkit-linear-gradient(var(--primary-colour), #333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.button-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.btn {
+  text-decoration: none;
+  border: 1px solid grey;
+  border-radius: 10%;
+  font-family: var(--main-font);
+  font-size: 1.5rem;
+  padding: 0.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-colour);
+  color: white;
+  transition: var(--primary-transition);
+}
+
+.btn-primary:hover {
+  color: var(--primary-colour);
+  background-color: white;
+  box-shadow: 5px 5px 5px grey;
+}
+
+.btn-secondary {
+  background-color: var(--complementary-colour);
+  color: white;
+  transition: var(--primary-transition);
+}
+
+.btn-secondary:hover {
+  color: var(--complementary-colour);
+  background-color: white;
+  box-shadow: 5px 5px 5px grey;
+}
+
+/* ------IMPORT PAGE------ */
+
+.container {
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.upload {
+  margin-top: 1rem;
+  height: 75vh;
+  width: 100%;
+}

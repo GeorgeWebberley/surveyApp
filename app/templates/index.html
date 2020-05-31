@@ -1,8 +1,13 @@
-{% extends "layout.html" %}
-{% block content %}
-{% for post in posts %}
-  <h1>{{ post.title }}</h1>
-  <p>By {{ post.author }} on {{ post.date_posted }}</p>
-  <p>{{ post.content }}</p>
-{% endfor %}
+{% extends "layout.html" %} {% block content %}
+<section class="landing-page">
+  <div class="landing-center">
+    <h1 class="landing-logo">Survey Site</h1>
+    <div class="button-row">
+      <a class="btn btn-secondary" href="{{ url_for('importFile') }}"
+        >Import file</a
+      >
+      <a class="btn btn-secondary" href="#">Manually input data</a>
+    </div>
+  </div>
+</section>
 {% endblock content %}

@@ -66,7 +66,7 @@ And then include the following line in the HTML.
 
 ### Flask and its extensions
 
-Flask is a microframework of python that provides many of the tools required to building a web application, such as templating, routing and Web Server Gateway Interface (WSGI).
+Flask is a microframework of python that provides many of the tools required for building a web application, such as templating, routing and Web Server Gateway Interface (WSGI).
 As it is a 'microframework', it is often also required to install several extensions to get more functionality.
 The dependencies that are included are:
 
@@ -79,10 +79,18 @@ For installing flask (from within the virtual environment).
 pip3 install Flask
 ```
 
-##### Flask dependencies
+##### Flask-WTF
 
-Flask-WTF which is a wrapper around the WTForms package, including CSRF, file upload, and reCAPTCHA.
+Flask-WTF is a wrapper around the WTForms package, including CSRF, file upload, and reCAPTCHA.
 
 ```
 pip3 install flask-wtf
+```
+
+##### Flask-Dropzone
+
+For dragging and dropping of files onto the webpage for uploading.
+
+```
+pip install Flask-Dropzone
 ```

@@ -23,3 +23,9 @@ For this I decided to download the flask extension [Flask-WTF](https://flask-wtf
 ```
 pip3 install flask-wtf
 ```
+
+I also installed a dropzone.js extension to allow fo easy uploading of files by dragging and dropping.
+
+```
+pip install Flask-Dropzone
+```
