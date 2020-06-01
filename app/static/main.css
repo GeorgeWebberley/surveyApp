@@ -1,16 +1,24 @@
 :root {
   --base-hue: 210;
-  --danger-hue-offset: 180;
-  --danger-hue: calc(var(--base-hue) - var(--danger-hue-offset));
+  --complementary-hue-offset: 180;
+  --complementary-hue: calc(var(--base-hue) - var(--complementary-hue-offset));
   --primary-colour: hsla(var(--base-hue), 30%, 50%);
   --primary-colour-dark: hsla(var(--base-hue), 30%, 25%);
-  --complementary-colour: hsla(var(--danger-hue), 50%, 50%);
-  --complementary-colour-dark: hsla(var(--danger-hue), 30%, 25%);
+  --complementary-colour: hsla(var(--complementary-hue), 50%, 50%);
+  --complementary-colour-dark: hsla(var(--complementary-hue), 30%, 25%);
+  --background-colour: hsla(var(--complementary-hue), 10%, 97%);
+  --success-colour: hsla(110, 100%, 78%, 0.5);
+  --error-colour: hsla(0, 100%, 78%, 0.3);
   --primary-transition: 0.3s all ease;
   --main-font: "Ubuntu", sans-serif;
 }
 
+html {
+  background-color: var(--background-colour);
+}
+
 body {
+  background-color: var(--background-colour);
   position: relative;
   font-family: var(--main-font);
   min-height: 100vh;
@@ -23,7 +31,7 @@ body {
 .navbar {
   width: 100%;
   height: 60px;
-  background-color: white;
+  background-color: var(--primary-colour);
   margin: 0;
   padding: 0;
 }
@@ -40,7 +48,7 @@ body {
 
 .navbar-logo {
   text-decoration: none;
-  color: var(--primary-colour);
+  color: white;
 }
 
 .navbar-links {
@@ -54,14 +62,14 @@ body {
   line-height: 60px;
   width: 6rem;
   text-decoration: none;
-  color: var(--primary-colour);
+  color: white;
   height: 100%;
   transition: var(--primary-transition);
 }
 
 .navbar-link:hover {
-  background-color: var(--primary-colour);
-  color: white;
+  color: var(--primary-colour);
+  background-color: white;
 }
 
 .bar {
@@ -70,7 +78,7 @@ body {
   background-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0),
-    black,
+    var(--primary-colour-dark),
     rgba(0, 0, 0, 0)
   );
 }
@@ -85,21 +93,17 @@ body {
   height: calc(100vh - 120px);
 }
 
-/* .landing-center {
-  height: 80%;
-} */
 
 .landing-logo {
   font-size: 8rem;
   margin: 1rem;
-  background: -webkit-linear-gradient(var(--primary-colour), #333);
+  background: -webkit-linear-gradient(var(--primary-colour), var(--primary-colour-dark));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.button-row {
+.btn-row {
   display: flex;
-  width: 100%;
   justify-content: space-between;
 }
 
@@ -136,6 +140,76 @@ body {
   box-shadow: 5px 5px 5px grey;
 }
 
+
+/* ------REGISTER/LOGIN PAGE------ */
+
+
+.form-container {
+  margin: 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fieldset {
+  margin: 0;
+  border-radius: 2%;
+  background-color: white;
+}
+
+.form {
+  /* background-color: white; */
+  width: 100%;
+  max-width: 40rem;
+}
+
+.form-title {
+  text-align: center;
+  margin: 0.5rem 0;
+  font-size: 1.5rem;
+  color: var(--primary-colour);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 3rem;
+}
+
+.form-label {
+  color: var(--primary-colour-dark);
+  margin-bottom: 0.2rem;
+}
+
+.form-input {
+  height: 1.5rem;
+}
+
+.form-input:hover {
+  box-shadow: 0 0 1px var(--primary-colour);
+}
+
+.form-input-error {
+
+}
+
+.invalid {
+
+}
+
+.login-link {
+  color: var(--primary-colour-dark);
+  margin: 1rem;
+
+}
+
+.btn-form {
+  margin: 1rem 3rem;
+}
+
+
+
+
 /* ------IMPORT PAGE------ */
 
 .container {
@@ -144,7 +218,36 @@ body {
 }
 
 .upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 1rem;
   height: 75vh;
   width: 100%;
+  background-image: linear-gradient(to right, var(--complementary-colour), var(--primary-colour));
+  border: 4px dashed white;
+}
+
+
+
+/* ------MESSAGES------ */
+
+.message {
+  max-width: 30rem;
+  height: 2rem;
+  margin: 1rem auto;
+  padding: 0 1rem;
+  line-height: 2rem;
+}
+
+.success{
+  background-color: var(--success-colour);
+  border: 1px solid green;
+  color: darkgreen;
+}
+
+.error {
+  background-color: var(--error-colour);
+  border: 1px solid red;
+  color: darkred;
 }

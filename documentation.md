@@ -87,6 +87,14 @@ Flask-WTF is a wrapper around the WTForms package, including CSRF, file upload, 
 pip3 install flask-wtf
 ```
 
+##### email_validator
+
+It may also be necessary to install email_validator if not included in your version of Flask-WTF.
+
+```
+pip3 email_validator
+```
+
 ##### Flask-Dropzone
 
 For dragging and dropping of files onto the webpage for uploading.
