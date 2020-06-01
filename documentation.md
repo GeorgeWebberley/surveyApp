@@ -1,4 +1,16 @@
-- [Full installation list](#installs)
+To start running the application, first carry out all the installations on the [installation list](#installs).
+
+The flask application then needs to know which file to be run when starting the app. From inside the virtual environment, run the following command
+
+```
+export FLASK_APP=survey.py
+```
+
+You can then run the application.
+
+```
+flask run
+```
 
 <a name="installs"></a>
 
