@@ -29,3 +29,5 @@ I also installed a dropzone.js extension to allow fo easy uploading of files by 
 ```
 pip install Flask-Dropzone
 ```
+
+After handling the file importing, I realised that one way to keep a record of that file is to save the file name in a database associated with that user. To do this, it would require having user accounts and subsequently a registration and login page. I therefore decided to implement these features at this point (and then at a later date I will return to handling 'guest' users, and how this information would be stored for these users without an account.)
