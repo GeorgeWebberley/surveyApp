@@ -4,10 +4,7 @@ This is a development journal that will be kept for the project duration and upd
 It will contain information regarding what has been achieved recently and what will be looked at next.
 Any specific problems I encounter or reflections that I may have will also be included.
 
-- [Full installation list](documentation.md#installs)
 - [Jump to the latest entry](#latestEntry)
-
-<a name="latestEntry"></a>
 
 ### Pre-project setup
 
@@ -18,7 +15,6 @@ Any specific problems I encounter or reflections that I may have will also be in
 - Ensure all initial tools and programming languages required to get the project started are ready and installed, including [python3](https://www.python.org/downloads/) (and setting up a virtual environment), [Flask](https://flask.palletsprojects.com/en/1.1.x/installation/#installation), Javascript (specifically [D3.js](https://d3js.org/)) and [MongoDB](https://www.mongodb.com/).
 
 The full installation list will be kept up to date in the accompanying [code documentation](documentation.md#installs).
-
 
 #### Preliminary System Design
 The aim is to create an initial system design that will help in the initial stages of developing the web application. The design will be continuously reviewed and assessed following the start of implementation (influenced by problems encountered, developmental requirements and user feedback) and therefore it is likely that the finished application will be quite different from the initial design.
@@ -34,7 +30,7 @@ The overarching goal of the project is to design a website where users can impor
   <img src="diagrams/sequenceDiagram.png" />
 </p>
 
-In order to keep a record of the user's data, a database will be required. In the long term, there might be the option to also use the application as a guest user and this will have to be incorporated into the system. However, for the time being I will design my database around having user accounts as this will make saving data (and identifying which data belongs to which user) much easier. The preliminary design will use 4 entity tables: User (containing account information such as email and password), Data (which contains the filename of the data in table form), Graph (which will contain information regarding the title, the variables plotted (as an array) and potentially information regarding x/y-axes) and StatisticalTest (containing information on which statistical test was used, and what the result is).
+In order to keep a record of the user's data, a database will be required. In the long term, there might be the option to also use the application as a 'guest' user and this will have to be incorporated into the system. However, for the time being I will design my database around having user accounts as this will make saving data (and identifying which data belongs to which user) much easier. The preliminary design will use 4 entity tables: User (containing account information such as email and password), Data (which contains the filename of the data in table form), Graph (which will contain information regarding the title, the variables plotted (as an array) and potentially information regarding x/y-axes) and StatisticalTest (containing information on which statistical test was used, and what the result is).
 
 <p align="center">
   <img src="diagrams/preliminaryDatabaseDesign.png" />
@@ -52,8 +48,9 @@ Some examples might be as follows:
   <img width="15%" src="images/GraphTable.png" />
 </div>
 
-The original wireframes have been constructed using [pencil project](https://pencil.evolus.vn/)and can be found in the [wireframes](week1/wireframes) folder inside week1.
+The original wireframes have been constructed using [pencil project](https://pencil.evolus.vn/) and can be found in the [wireframes](week1/wireframes) folder inside week1.
 
+<a name="latestEntry"></a>
 ### Early Implementation Log (June 1st-2nd)
 
 Following the initial installations above, it became apparent that I would need to handle web forms from the user (such as for file uploads).
