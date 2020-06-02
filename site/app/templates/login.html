@@ -1,3 +1,51 @@
 {% extends "layout.html" %} {% block content %}
-  
+  <section class="form-container">
+    <!-- action is empty string so that we post back to our current route -->
+    <form class="form" action="" method="post">
+      <!-- hidden tag helps protect against CSRF (by using CSRF token) -->
+      {{ form.hidden_tag() }}
+      <fieldset class="fieldset">
+        <div class="form-title">Login</div>
+          <div class="bar"></div>
+          <div class="form-fields">
+            <div class="form-field">
+              {{ form.email.label(class="form-label") }}
+              {% if form.email.errors %}
+                  {{ form.email(class="form-input form-input-error") }}
+                  <div class="invalid">
+                      {% for error in form.email.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.email(class="form-input") }}
+              {% endif %}
+            </div>
+
+            <div class="form-field">
+              {{ form.password.label(class="form-label") }}
+              {% if form.password.errors %}
+                  {{ form.password(class="form-input form-input-error") }}
+                  <div class="invalid">
+                      {% for error in form.password.errors %}
+                          <span>{{ error }}</span>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  {{ form.password(class="form-input") }}
+              {% endif %}
+            </div>
+
+            <div class="btn-row btn-form">
+              <a class="btn btn-secondary" href="{{ url_for('index') }}">Cancel</a>
+              {{ form.submit(class="btn btn-primary") }}
+            </div>
+
+          </div>
+      </fieldset>
+    </form>
+    <small class="login-link">
+      Need to sign up? <a href="{{ url_for('login') }}">Register</a>
+    </small>
+  </section>
 {% endblock content %}
