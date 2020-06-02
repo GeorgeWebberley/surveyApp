@@ -9,30 +9,24 @@ Any specific problems I encounter or reflections that I may have will also be in
 
 <a name="latestEntry"></a>
 
-### Pre-project setup (June 1st)
+### Pre-project setup
 
 ###### Goals
 
 - Setup the preliminary folder structure, kanban board and project journal.
 - Initialise a local project Git repository and remote repository on Github.
-- Ensure all initial tools and programming languages required to get the project started are ready and installed, including [python3](https://www.python.org/downloads/) (and setting up a virtual environment), [Flask](https://flask.palletsprojects.com/en/1.1.x/installation/#installation), Javascript (specifically [D3.js](https://d3js.org/)) and [MongoDB](https://www.mongodb.com/). The full installation list will be kept up to date in the accompanying [code documentation](documentation.md#installs).
+- Ensure all initial tools and programming languages required to get the project started are ready and installed, including [python3](https://www.python.org/downloads/) (and setting up a virtual environment), [Flask](https://flask.palletsprojects.com/en/1.1.x/installation/#installation), Javascript (specifically [D3.js](https://d3js.org/)) and [MongoDB](https://www.mongodb.com/).
 
-Following the initial installations above and after starting making a basic web application, it became apparent that I would need to handle web forms from the user (such as for file uploads).
-For this I decided to download the flask extension [Flask-WTF](https://flask-wtf.readthedocs.io/en/stable/) which is a wrapper around the WTForms package.
+The full installation list will be kept up to date in the accompanying [code documentation](documentation.md#installs).
 
-```
-pip3 install flask-wtf
-```
 
-I also installed a dropzone.js extension to allow fo easy uploading of files by dragging and dropping.
+#### Preliminary System Design
+The aim is to create an initial system design that will help in the initial stages of developing the web application. The design will be continuously reviewed and assessed following the start of implementation (influenced by problems encountered, developmental requirements and user feedback) and therefore it is likely that the finished application will be quite different from the initial design.
 
-```
-pip install Flask-Dropzone
-```
-
-After handling the file importing, I realised that one way to keep a record of that file is to save the file name in a database associated with that user. To do this, it would require having user accounts and subsequently a registration and login page. I therefore decided to implement these features at this point (and then at a later date I will return to handling 'guest' users, and how this information would be stored for these users without an account.)
-
-### Preliminary System Design
+###### Goals
+- Plan general system design in preparation of first sprint, including creation of initial system diagrams.
+- Plan and design initial database structure.
+- Create preliminary user-interface wireframes.
 
 The overarching goal of the project is to design a website where users can import data from their surveys, create graphical visualisations and carry out statistical tests. The application will communicate with a database, saving information regarding that user, their diagrams and statistical tests. Data imported by the user will first need to be pre-processed on the server to identify any anomalies and to prepare data for creation of graphical visualisations. The creation of the data visualisations will happen on the client side (using javascript D3.js) whilst the calculations for statistical tests will happen on the server side. The results of both will be displayed to the client and can potentially also be exported.
 
@@ -57,3 +51,22 @@ Some examples might be as follows:
   <img width="15%" src="images/StatisticalTestTable.png" />
   <img width="15%" src="images/GraphTable.png" />
 </div>
+
+The original wireframes have been constructed using [pencil project](https://pencil.evolus.vn/)and can be found in the [wireframes](week1/wireframes) folder inside week1.
+
+### Early Implementation Log (June 1st-2nd)
+
+Following the initial installations above, it became apparent that I would need to handle web forms from the user (such as for file uploads).
+For this I decided to download the flask extension [Flask-WTF](https://flask-wtf.readthedocs.io/en/stable/) which is a wrapper around the WTForms package.
+
+```
+pip3 install flask-wtf
+```
+
+I also installed a dropzone.js extension to allow fo easy uploading of files by dragging and dropping.
+
+```
+pip install Flask-Dropzone
+```
+
+After handling the file importing, I realised that one way to keep a record of that file is to save the file name in a database associated with that user. To do this, it would require having user accounts and subsequently a registration and login page. I therefore decided to implement these features at this point (and then at a later date I will return to handling 'guest' users, and how this information would be stored for these users without an account.)
