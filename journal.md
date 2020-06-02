@@ -52,8 +52,8 @@ However this preliminary database schema will likely need to be reviewed and red
 Some examples might be as follows:
 
 <div display="flex">
-  <img src="images/UserTable.png" />
-  <img src="images/DataTable.png" />
-  <img src="images/StatisticalTestTable.png" />
-  <img src="images/GraphTable.png" />
+  <img width="15%" src="images/UserTable.png" />
+  <img width="15%" src="images/DataTable.png" />
+  <img width="15%" src="images/StatisticalTestTable.png" />
+  <img width="15%" src="images/GraphTable.png" />
 </div>
