@@ -51,7 +51,7 @@ However this preliminary database schema will likely need to be reviewed and red
 
 Some examples might be as follows:
 
-<div display="flex">
+<div display="flex"; justify-content="center">
   <img width="15%" src="images/UserTable.png" />
   <img width="15%" src="images/DataTable.png" />
   <img width="15%" src="images/StatisticalTestTable.png" />
