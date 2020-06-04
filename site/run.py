@@ -2,7 +2,7 @@
 from surveyapp import create_app
 
 # Creates instantiation of the app
-app = create_app("test")
+app = create_app("dev")
 
 if __name__ == '__main__':
     app.run(debug=True)

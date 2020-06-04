@@ -96,7 +96,7 @@ pip install Flask-PyMongo
 During the early stages of experimenting and development of the application, I decided to carry out a restructure of my file system and code. This will help to keep my application more organised as it gets larger and will allow for easier testing.
 
 I used the flask concept of [blueprints](https://flask.palletsprojects.com/en/1.1.x/blueprints/) which allows for modularisation of the application by creating 'sub-packages' in the application for each of the different sections. For example, for now I have created a 'users' package (which contains all routes relevant to users, such as login/registration), a 'main' package (which contains the 'index' route) and 'graphs' (which contains the 'import' route). I have also moved the login/registration forms ('forms.py') into the users package. If later I also have forms relating to graphs then I will create a 'forms.py' file inside the 'graphs' package. Each of these packages contains a '__init__.py' file (which is how python recognises these as packages. It is empty for the time being).
-
+<a name="factory"></a>
 Further to this, I have decided to follow flask's [application factory design](https://flask.palletsprojects.com/en/1.1.x/patterns/appfactories/). This involves putting the creation/initialisation of the application into a function. This has a few benefits:
 * First, it allows for creating multiple instances of the application (which will be useful for running different versions of the application with different configurations depending on the environment I am running the app in.)
 * Secondly, it allows for unit testing of the application as I can effectively run instances of the application with different settings to test every case.
@@ -113,6 +113,24 @@ This allows the application to be run simply using the command:
 ```
 flask run
 ```
+
+I have also now installed pytest so that I can carry out unit testing of my application. These tests can be found inside 'test_surveyapp.py'.
+It actually took a considerable amount of time to work out how test can be carried out on an application such as this. A lot of the documentation online is not for flask applications and the ones that are required a lot of altering to get them to work.
+The 'test_surveyapp.py' file creates an instantiation of the application object (as discussed [above](#factory) in the application factory design) and applies my test configurations to it (as seen in the config.py file) by using the following line of code:
+```
+app = create_app("test")
+```
+as opposed to the instantiation created whilst I am developing:
+```
+app = create_app("dev")
+```
+
+The tests can be run simply by running the command:
+```
+pytest
+```
+Despite the project restructuring and automated testing taking a while to setup, I am glad I have put the time in now to do it as it will certainly make my life easier going forwards. It is now very simple to add further tests to my application and the current application structure (modularised with blueprints) will help keep the application organised as it grows.
+
 <a name="latestEntry"></a>
 #### User Authentication
 
