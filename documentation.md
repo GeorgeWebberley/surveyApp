@@ -88,7 +88,7 @@ The dependencies that are included are:
 For installing flask (from within the virtual environment).
 
 ```
-pip3 install Flask
+pip install Flask
 ```
 
 ##### Flask-WTF
@@ -96,7 +96,7 @@ pip3 install Flask
 Flask-WTF is a wrapper around the WTForms package, including CSRF, file upload, and reCAPTCHA.
 
 ```
-pip3 install flask-wtf
+pip install flask-wtf
 ```
 
 ##### email_validator
@@ -104,7 +104,7 @@ pip3 install flask-wtf
 It may also be necessary to install email_validator if not included in your version of Flask-WTF.
 
 ```
-pip3 email_validator
+pip email_validator
 ```
 
 ##### Flask-Dropzone
@@ -113,4 +113,42 @@ For dragging and dropping of files onto the webpage for uploading.
 
 ```
 pip install Flask-Dropzone
+```
+##### Flask-PyMongo
+
+For connecting and interacting with a MongoDB database
+
+```
+pip install Flask-PyMongo
+```
+##### flask-dotenv
+
+For managing data within .env files
+
+```
+pip install flask-dotenv
+```
+
+##### Flask-Bcrypt
+
+For hashing passwords to store in a database.
+
+```
+pip install flask-bcrypt
+```
+
+##### Flask-Login
+
+Handles user session for flask applications, including loggin in, logging out and remember user sessions over time.
+
+```
+pip install flask-login
+```
+
+##### pytest
+
+For carrying out unit testing of my code.
+
+```
+pip install pytest
 ```

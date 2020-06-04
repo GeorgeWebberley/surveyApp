@@ -1,0 +1,16 @@
+{% extends "layout.html" %} {% block content %}
+<section class="landing-page">
+  <div class="landing-center">
+    <h1 class="landing-logo">Survey Site</h1>
+    <div class="btn-row">
+      {% if current_user.is_authenticated %}
+        <a class="btn btn-secondary" href="{{ url_for('graphs.import_file') }}">Import file</a>
+        <a class="btn btn-secondary" href="#">Manually input data</a>
+      {% else %}
+        <a class="btn btn-secondary" href="{{ url_for('users.register') }}">Register</a>
+        <a class="btn btn-secondary" href="{{ url_for('users.login') }}">Login</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock content %}

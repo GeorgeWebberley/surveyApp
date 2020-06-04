@@ -1,0 +1,13 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="btn-row">
+    <a class="btn btn-secondary" href="#">Go back</a>
+    <a class="btn btn-primary" href="#">Next</a>
+  </div>
+  <div class="upload">
+    {{ dropzone.create(action='graphs.import_file') }}
+    {{ dropzone.load_js() }}
+    {{ dropzone.config() }}
+  </div>
+</div>
+{% endblock content %}
