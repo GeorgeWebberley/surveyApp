@@ -1,0 +1,24 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="btn-row">
+    <a class="btn btn-secondary" href="#">Go back</a>
+    <a class="btn btn-primary" href="#">Next</a>
+  </div>
+  <section class="table-container">
+    <form class="table-form" action="index.html" method="post">
+      <div class="table-row">
+      {% for header, _ in data.iteritems() %}
+        <textarea class="table-cell table-header" name="header" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>{{ header }}</textarea>
+      {% endfor %}
+      </div>
+      {% for _, row in data.iterrows() %}
+        <div class="table-row">
+          {% for cell in row %}
+          <textarea class="table-cell" name="cell" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>{{ cell }}</textarea>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </form>
+  </section>
+</div>
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <section class="dashboard">
+    <h1 class="dashboard-title">Dashboard</h1>
+    <div class="dashboard-grid">
+      <div class="dashboard-tables grid-section">
+        <h2 class="grid-section-title">Your data sets</h2>
+        <div class="grid-bar"></div>
+        {% for file in files %}
+          <a class="dashboard-table">{{ file["title"] }}</a>
+        {% endfor %}
+      </div>
+      <div class="dashboard-graphs grid-section">
+        <h2 class="grid-section-title">Your graphs</h2>
+        <div class="grid-bar"></div>
+      </div>
+      <div class="dashboard-stats grid-section">
+        <h2 class="grid-section-title" >Your statastical tests</h2>
+        <div class="grid-bar"></div>
+      </div>
+
+    </div>
+
+  </section>
+</div>
+{% endblock content %}

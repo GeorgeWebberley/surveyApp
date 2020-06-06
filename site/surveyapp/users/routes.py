@@ -36,7 +36,7 @@ def login():
     if form.validate_on_submit():
         user = mongo.db.users.find_one({"email": form.email.data})
         if user and bcrypt.check_password_hash(user["password"], form.password.data):
-            user_obj = User(email=user["email"])
+            user_obj = User(email=user["email"], first_name=user["firstName"], last_name=user["lastName"], _id=user["_id"])
             # logs user into a session
             login_user(user_obj)
             # retrieve the page the user was attempting to access previously from the URL

@@ -2,8 +2,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from surveyapp import mongo, login_manager
-from flask_login import UserMixin
-from surveyapp.models import User
 
 
 

@@ -1,12 +1,15 @@
 from surveyapp import mongo, login_manager
 
 # methods inside this class allow for login_manager assistance
-# when a user is logged in then it creates an instance of the session
+# when a user is logged in then it creates an instance of the session (called 'current_user')
 # the static methods can then be called for various checks
 # (e.g. "is_authenticated" allows me to check if a user is logged in or not and carry out appropriate redirects)
 class User:
-    def __init__(self, email):
+    def __init__(self, email, first_name, last_name, _id):
         self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+        self._id = _id
 
     # My own version of the methods provided by UserMixin, adapted for use with MongoDB
     # https://flask-login.readthedocs.io/en/latest/#flask_login.UserMixin
@@ -29,7 +32,7 @@ class User:
     # used to reload a user object from the user id stored in the session
     @login_manager.user_loader
     def load_user(email):
-        users = mongo.db.users.find_one({"email" : email})
-        if not users:
+        user = mongo.db.users.find_one({"email" : email})
+        if not user:
             return None
-        return User(email=users["email"])
+        return User(email=user["email"], first_name=user["firstName"], last_name=user["lastName"], _id=user["_id"])
