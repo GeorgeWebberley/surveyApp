@@ -1,16 +1,12 @@
 To start running the application, first carry out all the installations on the [installation list](#installs).
 
-The flask application then needs to know which file to be run when starting the app. From inside the virtual environment, run the following command
-
-```
-export FLASK_APP=survey.py
-```
-
-You can then run the application.
+The flask application then needs to know which file to be run when starting the app. These are currently set inside the ['.flaskenv'](./site/.flaskenv) file. It is therefore possible to run the application in develeoper mode (with debugging on) simply by running:
 
 ```
 flask run
 ```
+
+Simply edit the '.flasenv' file for running in a different environment.
 
 <a name="installs"></a>
 
