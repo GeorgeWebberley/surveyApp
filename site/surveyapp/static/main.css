@@ -1,11 +1,15 @@
+@import "d3.css";
+
 :root {
   --base-hue: 210;
   --complementary-hue-offset: 180;
   --complementary-hue: calc(var(--base-hue) - var(--complementary-hue-offset));
   --primary-colour: hsla(var(--base-hue), 30%, 50%);
+  --primary-colour-transparent: hsla(var(--base-hue), 30%, 50%, 75%);
   --primary-colour-dark: hsla(var(--base-hue), 30%, 25%);
   --complementary-colour: hsla(var(--complementary-hue), 50%, 50%);
   --complementary-colour-dark: hsla(var(--complementary-hue), 30%, 25%);
+  --complementary-colour-transparent: hsla(var(--complementary-hue), 30%, 25%, 50%);
   --background-colour: hsla(var(--complementary-hue), 10%, 97%);
   --success-colour: hsla(110, 100%, 78%, 0.5);
   --error-colour: hsla(0, 100%, 78%, 0.3);
@@ -61,7 +65,7 @@ body {
 .navbar-link {
   text-align: center;
   line-height: 60px;
-  width: 6rem;
+  padding: 0 1rem;
   text-decoration: none;
   color: white;
   height: 100%;
@@ -428,4 +432,152 @@ body {
 .dashboard-stats{
   grid-column: 1 / 6;
   grid-row: 3;
+}
+
+.no-graphs-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+}
+.no-graphs-container a{
+  text-decoration: none;
+}
+
+.empty {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed white;
+  padding: 2rem;
+  margin: 1rem;
+  transition: var(--primary-transition);
+  border-radius: 10px;
+}
+
+.empty p{
+  margin: 0.5rem;
+  padding: 0;
+}
+
+.empty:hover{
+  background-color: white;
+  color: var(--complementary-colour);
+}
+
+/* DASHBOARD-PROMPT */
+
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  /* transition: var(--primary-transition); */
+  background: var(--complementary-colour-transparent);
+  z-index: 2;
+  visibility: hidden;
+}
+
+.show-overlay {
+  transition: var(--primary-transition);
+  visibility: visible;
+}
+
+.choose-survey {
+  margin: 0;
+  background-color: white;
+  border-radius: 6px;
+}
+
+
+.choose-survey-title{
+  margin: 0;
+  display: block;
+  box-sizing: border-box;
+  border-radius: 5px 5px 0 0;
+  color: white;
+  background-color: var(--primary-colour-dark);
+
+
+}
+
+.choose-survey-title p{
+  clear: both;
+  margin: 0;
+  padding: 0;
+  padding: 0 1rem 1rem;
+}
+
+.choose-survey-table {
+  color: var(--primary-colour-dark);
+  padding: 1rem;
+  text-decoration: none;
+  display: block;
+  transition: var(--primary-transition)
+}
+
+.choose-survey-table:hover {
+  padding-left: 1.3rem;
+  text-decoration: underline;
+}
+
+.close {
+  margin: 0.3rem 0.5rem 0 0;
+  float: right;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--complementary-colour);
+}
+
+
+/* ------CHOOSE GRAPH PAGE------ */
+
+.select-graphs{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30% 30% 30%;
+  grid-column-gap: 1.5rem;
+  grid-row-gap: 2rem;
+}
+
+.graph-type {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.graph-img {
+  width: 100%;
+}
+
+.graph-img-overlay {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: var(--primary-transition);
+  background-color: var(--primary-colour-transparent);
+}
+
+.graph-img-overlay p {
+  color: white;
+  font-size: 2rem;
+}
+
+.graph-type:hover .graph-img-overlay {
+  opacity: 1;
 }

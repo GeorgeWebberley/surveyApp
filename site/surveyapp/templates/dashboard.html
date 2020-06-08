@@ -7,20 +7,53 @@
         <h2 class="grid-section-title">Your data sets</h2>
         <div class="grid-bar"></div>
         {% for file in files %}
-          <a class="dashboard-table">{{ file["title"] }}</a>
+          <div class="dashboard-table" data-title='{{ file["title"] }}'>{{ file["title"] }}</div>
         {% endfor %}
       </div>
       <div class="dashboard-graphs grid-section">
         <h2 class="grid-section-title">Your graphs</h2>
         <div class="grid-bar"></div>
+        <div class="no-graphs-container">
+          <a href="#">
+            <div class="empty add-graph">
+              <p>You have no graphs.</p>
+              <p>Click here to get started.</p>
+              <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
+            </div>
+          </a>
+        </div>
       </div>
       <div class="dashboard-stats grid-section">
         <h2 class="grid-section-title" >Your statastical tests</h2>
         <div class="grid-bar"></div>
+        <div class="no-graphs-container">
+          <a href="#">
+            <div class="empty add-stat">
+              <p>You have no statistical tests.</p>
+              <p>Click here to get started.</p>
+              <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
+            </div>
+          </a>
+        </div>
       </div>
-
     </div>
-
   </section>
+</div>
+<div class="overlay">
+  <div class="choose-survey">
+    {% if not files %}
+      <p class="choose-survey-title">You need to add a survey first!</p>
+      <i class="fa fa-times" aria-hidden="true"></i>
+    {% else %}
+    <div class="choose-survey-title">
+      <i class="fa fa-times close" aria-hidden="true"></i>
+      <p>Which survey would you like to use?</p>
+    </div>
+    <div class="bar"></div>
+      {% for file in files %}
+        <a class="choose-survey-table" href="{{ url_for('graphs.choose_graph', graph_id=file['_id']) }}">{{ file["title"] }}</a>
+      {% endfor %}
+    {% endif %}
+  </div>
 </div>
 {% endblock content %}

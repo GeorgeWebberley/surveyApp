@@ -1,0 +1,29 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <h1 class="dashboard-title">What type of graph would you like to make?</h1>
+  <div class="select-graphs">
+    <a href="{{ url_for('graphs.bar_chart', graph_id=graph_id) }}">
+      <div class="graph-type">
+        <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
+        <div class="graph-img-overlay">
+          <p>Bar Chart</p>
+        </div>
+      </div>
+    </a>
+
+    <div class="graph-type">
+      <!-- <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
+      <div class="graph-img-overlay">
+        <p>Bar Chart</p>
+      </div> -->
+    </div>
+    <div class="graph-type">
+      <!-- <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
+      <div class="graph-img-overlay">
+        <p>Bar Chart</p>
+      </div> -->
+    </div>
+
+  </div>
+</div>
+{% endblock content %}

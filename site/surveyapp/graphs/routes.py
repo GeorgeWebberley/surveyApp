@@ -1,6 +1,7 @@
 import os
 import secrets
 import bson
+import json
 import pandas as pd
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app
@@ -56,7 +57,11 @@ def table(table_id):
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
-    data = pd.read_excel(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
+    _, f_ext = os.path.splitext(file_obj["fileName"])
+    if f_ext == ".csv":
+        data = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
+    else:
+        data = pd.read_excel(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
 
     # TO IMPLEMENT THIS WHEN DEALING WITH DATASETS THAT CONTAIN LEADING EMPTY ROWS/COLUMNS
     # data = remove_nan(df)
@@ -81,4 +86,29 @@ def remove_nan(df):
 @login_required
 def dashboard():
     files=mongo.db.graphs.find({"user":current_user._id})
-    return render_template("dashboard.html", title="Dashboard", files=files)
+    return render_template("dashboard.html", title="Dashboard", files=list(files))
+
+# RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
+@graphs.route('/choosegraph/<graph_id>', methods=['GET', 'POST'])
+@login_required
+def choose_graph(graph_id):
+    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(graph_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "error")
+        return redirect(url_for("main.index"))
+    return render_template("choosegraph.html", title="Select Graph", graph_id=file_obj["_id"])
+
+# RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
+@graphs.route('/barchart/<graph_id>', methods=['GET', 'POST'])
+@login_required
+def bar_chart(graph_id):
+    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(graph_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "error")
+        return redirect(url_for("main.index"))
+    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
+    chart_data = df.to_dict(orient='records')
+    chart_data = json.dumps(chart_data, indent=2)
+    data = {'chart_data': chart_data}
+    chart_title = file_obj["title"]
+    return render_template("barchart.html", title="Bar chart", data=data, chart_title=chart_title)

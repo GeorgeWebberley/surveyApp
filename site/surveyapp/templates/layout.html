@@ -16,6 +16,10 @@
       href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap"
       rel="stylesheet"
     />
+    <script src="https://d3js.org/d3.v5.min.js" defer></script>
+    <script src="https://kit.fontawesome.com/cba779aa10.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
     <!-- dropzone css -->
     {{ dropzone.load_css() }} {{ dropzone.style(' height: 100%; width: 100%; border: none;
      font-size: 4rem; font-family: "Ubuntu", sans-serif; color: var(--primary-colour);') }}
@@ -28,10 +32,13 @@
           <div class="navbar-links">
             {% if current_user.is_authenticated %}
               <a class="navbar-link" href="{{ url_for('users.logout') }}">Logout</a>
+              <a class="navbar-link" href="{{ url_for('graphs.dashboard') }}">Dashboard</a>
+
             {% else %}
               <a class="navbar-link" href="#">Link 1</a>
+              <a class="navbar-link" href="#">Link 2</a>
+
             {% endif %}
-            <a class="navbar-link" href="#">Link 2</a>
             <a class="navbar-link" href="#">Link 3</a>
           </div>
         </div>

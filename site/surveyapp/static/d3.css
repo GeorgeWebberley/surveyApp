@@ -1,0 +1,12 @@
+rect {
+  fill: steelblue;
+}
+
+g text {
+  font-size:1.4em;
+}
+
+.graph {
+  height: 100%;
+  width: auto;
+}
