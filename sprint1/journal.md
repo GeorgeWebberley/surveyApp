@@ -113,7 +113,7 @@ Another way to display the data very easily and quickly is to use inbuilt pandas
 <a name="latestEntry"></a>
 #### Displaying a basic graph
 
-To get familiar with using D3.js, I have decided to try making a bar chart of some pre-set data. This is by no means dynamic, as I am directly using the variable names to define my axes and therefore it can only be used for a specific data set. I decided to use a very basic CSV file which contained 10 countries and their population numbers.
+To get familiar with using D3.js, I have decided to try making a bar chart of some pre-set data. This is by no means dynamic, as I am directly using the variable names to define my axes and therefore it can only be used for a specific data set. I decided to use a very basic [CSV file](../site/population.csv) which contained 10 countries and their population numbers.
 pandas could be used to parse the CSV file (using 'pd.read_csv(<filename>)') and then convert this to a json file which resembles a list of dicts (e.g. [ { country: "China", population: 1415046 }, { country: "India", population: 1354052 }...] }). I then used javascript and D3.js to plot these 2 variables against eachother on a bar chart. Obviously, this is quite different to processing survey data, as most survey data first requires aggregation.
 
 ##### Ongoing objectives
