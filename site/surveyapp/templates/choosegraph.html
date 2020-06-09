@@ -2,20 +2,11 @@
 <div class="container">
   <h1 class="dashboard-title">What type of graph would you like to make?</h1>
   <div class="select-graphs">
-    <a href="{{ url_for('graphs.bar_chart', graph_id=graph_id) }}">
-      <div class="graph-type">
-        <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
-        <div class="graph-img-overlay">
-          <p>Bar Chart</p>
-        </div>
+    <div class="graph-type">
+      <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
+      <div class="graph-img-overlay">
+        <p>Bar Chart</p>
       </div>
-    </a>
-
-    <div class="graph-type">
-      <!-- <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
-      <div class="graph-img-overlay">
-        <p>Bar Chart</p>
-      </div> -->
     </div>
     <div class="graph-type">
       <!-- <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
@@ -23,7 +14,24 @@
         <p>Bar Chart</p>
       </div> -->
     </div>
-
+    <div class="graph-type">
+      <!-- <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
+      <div class="graph-img-overlay">
+        <p>Bar Chart</p>
+      </div> -->
+    </div>
+  </div>
+</div>
+<div class="overlay">
+  <div class="choose-survey">
+    <div class="choose-survey-title">
+      <i class="fa fa-times close" aria-hidden="true"></i>
+      <p>Which variable would you like to plot?</p>
+    </div>
+    <div class="bar"></div>
+    {% for column in columns %}
+      <a class="choose-survey-table" href="{{ url_for('graphs.bar_chart', graph_id=graph_id, column=column) }}">{{ column }}</a>
+    {% endfor %}
   </div>
 </div>
 {% endblock content %}

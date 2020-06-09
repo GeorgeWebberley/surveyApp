@@ -1,10 +1,10 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <h1 class="dashboard-title">Bar chart - {{ chart_title }}</h1>
+  <h1 class="dashboard-title">Bar chart - {{ data.title }}</h1>
   <div id="graph"></div>
 </div>
 <script type="text/javascript">
   var graphData = {{ data.chart_data | safe }}
 </script>
-<script src="{{ url_for('static', filename='d3/index.js') }}" defer></script>
+<script src="{{ url_for('static', filename='d3/barchart.js') }}" defer></script>
 {% endblock content %}

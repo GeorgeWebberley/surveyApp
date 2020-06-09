@@ -40,6 +40,7 @@
 //         .attr("transform",
 //         "translate(" + margin.left + "," + margin.top + ")")
 
+console.log(graphData);
 const width = 1000;
 const height = 640;
 const svg = d3.select('#graph').append("svg")
@@ -48,8 +49,8 @@ const svg = d3.select('#graph').append("svg")
 
 const render = graphData => {
   // defining these values, means we don't limit our functions to this particular data set (just to these 2 values)
-  const xValues = d => d.population;
-  const yValues = d => d.country;
+  const xValues = d => d["Favourite ice-cream"];
+  const yValues = d => d.c;
 
   const margin = { top: 20, right: 20, bottom: 100, left: 100 };
   const gWidth = width - margin.left - margin.right;
@@ -57,24 +58,22 @@ const render = graphData => {
 
   // create instance of d3 linear scale
   // linear scales are useful for quantitative attributes (in our case, the populations)
-  const xScale = d3.scaleLinear()
+  const xScale = d3.scaleBand()
     // domain is the range of our actual data
-    // This little arrow function calculates the maximum of all our 'population' columns (e.g. the population of china)
-    .domain([0, d3.max(graphData, xValues)])
+    .domain(graphData.map(xValues))
     // range is the 'screen range' of our actual data
     .range([0, gWidth])
-
+    .paddingInner(0.1)
 
   // We create a yAxis (on the left) and pass it the scale we want it to use
-  const xAxis = d3.axisBottom(xScale)
 
 
-  const yScale = d3.scaleBand()
+  const yScale = d3.scaleLinear()
     // band scales are useful for ordinal attributes (in our case, the countries)
     // each row is set to one country
-    .domain(graphData.map(yValues))
+    .domain([0, d3.max(graphData, yValues)])
     .range([0, gHeight])
-    .paddingInner(0.1)
+
 
 
   // Make a group section (which is affectively the graph area, not the axes values/titles etc.)
@@ -94,14 +93,12 @@ const render = graphData => {
   console.log(xScale.domain());
   g.selectAll('rect').data(graphData)
     .enter().append('rect')
-      // Set the width of each bar (horizontal bar chart) to be equal to the population
-      .attr('width', d => xScale(xValues(d)))
-      .attr('height', yScale.bandwidth()) // band width is width of a single bar
-      .attr('y', d => yScale(yValues(d))) // the y attribute is the distance from the top of the graph (i.e. we set each bar to be a different distance from the top of the graph)
+      .attr('height', d => yScale(yValues(d)))
+      .attr('width', xScale.bandwidth()) // band width is width of a single bar
+      .attr('x', d => xScale(xValues(d)))
+      .attr('y', d=> gHeight - yScale(yValues(d)))
+      // .attr('y', function(d) { return yScale(d.c); } ) // the y attribute is the distance from the top of the graph (i.e. we set each bar to be a different distance from the top of the graph)
 }
-
-
-
 
 render(graphData);
 console.log(graphData);
