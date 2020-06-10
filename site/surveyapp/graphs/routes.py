@@ -5,9 +5,9 @@ import json
 import pandas as pd
 import numpy as np
 from surveyapp import dropzone, mongo
-from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app
+from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import UploadForm
+from surveyapp.graphs.forms import UploadForm, EditSurveyForm
 from bson.objectid import ObjectId
 
 
@@ -46,15 +46,15 @@ def import_file():
         "user" : current_user._id,\
         "title" : form.title.data})
         flash("File uploaded successfully!", "success")
-        table_id = table.inserted_id
-        return redirect(url_for("graphs.table", table_id=table_id))
+        survey_id = table.inserted_id
+        return redirect(url_for("graphs.table", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
 
-@graphs.route('/table/<table_id>', methods=['GET', 'POST'])
+@graphs.route('/table/<survey_id>', methods=['GET', 'POST'])
 @login_required
-def table(table_id):
-    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(table_id)})
+def table(survey_id):
+    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
@@ -66,7 +66,7 @@ def table(table_id):
     # new_header = data.iloc[0]
     # data = data[1:]
     # data.columns=new_header
-    return render_template("table2.html", title="Table", data=df, table_title=file_obj["title"])
+    return render_template("table2.html", title="Table", data=df, survey=file_obj)
     # return render_template("table.html", title="Table", data=data)
 
 # A function that removes all leading empty rows/columns
@@ -86,21 +86,21 @@ def dashboard():
     return render_template("dashboard.html", title="Dashboard", files=list(files))
 
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
-@graphs.route('/choosegraph/<graph_id>', methods=['GET', 'POST'])
+@graphs.route('/choosegraph/<survey_id>', methods=['GET', 'POST'])
 @login_required
-def choose_graph(graph_id):
-    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(graph_id)})
+def choose_graph(survey_id):
+    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
     df = read_from_file(file_obj["fileName"])
-    return render_template("choosegraph.html", title="Select Graph", graph_id=file_obj["_id"], columns=list(df))
+    return render_template("choosegraph.html", title="Select Graph", survey_id=file_obj["_id"], columns=list(df))
 
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
-@graphs.route('/barchart/<graph_id>', methods=['GET', 'POST'])
+@graphs.route('/barchart/<survey_id>', methods=['GET', 'POST'])
 @login_required
-def bar_chart(graph_id):
-    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(graph_id)})
+def bar_chart(survey_id):
+    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
@@ -109,18 +109,48 @@ def bar_chart(graph_id):
     column_info = pase_data(df)
     column = request.args.get('column')
     # i.e. if it is categorical data...
-    if df[column].dtypes == object:
-        # ...then we want to aggregate it
-        # df = df.groupby("Favourite ice-cream", as_index=False)["ID"].count()
-        df = df.groupby(column)[column].agg("count").to_frame('c').reset_index()
+    # if df[column].dtypes == object:
+    # ...then we want to aggregate it and count the amount of each variable
+    df = df.groupby(column)[column].agg("count")
+    # And then reset the index and cast back to a fram.
+    df = df.to_frame('c').reset_index()
 
+    # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
-    # print(df.groupby("Favourite ice-cream").agg({"Favourite ice-cream": "count"}))
-    # print(df)
-    # chart_data = df.to_dict(orient='records')
     # chart_data = json.dumps(chart_data, indent=2)
     data = {"chart_data": chart_data, "chart_info": column_info, "title": file_obj["title"], "column" : column}
     return render_template("barchart.html", title="Bar chart", data=data, column=column)
+
+
+# DELETE A SURVEY
+@graphs.route("/dashboard/<survey_id>/delete", methods=['POST'])
+@login_required
+def delete_survey(survey_id):
+    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "error")
+        abort(403)
+    mongo.db.graphs.delete_one(file_obj)
+    return redirect(url_for('graphs.dashboard'))
+
+
+# EDIT A SURVEY
+@graphs.route("/dashboard/<survey_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_survey(survey_id):
+    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "error")
+        abort(403)
+    form = EditSurveyForm()
+    if form.validate_on_submit():
+        mongo.db.graphs.update_one({"_id": file_obj["_id"]}, {"$set": {"title": form.title.data}})
+        return redirect(url_for('graphs.dashboard'))
+    elif request.method == "GET":
+        form.title.data = file_obj["title"]
+        # form.process()
+    return render_template("edit_survey.html", form=form)
+
 
 
 

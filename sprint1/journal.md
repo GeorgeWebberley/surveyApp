@@ -113,10 +113,20 @@ Another way to display the data very easily and quickly is to use inbuilt pandas
 <a name="latestEntry"></a>
 #### Displaying a basic graph
 
-To get familiar with using D3.js, I have decided to try making a bar chart of some pre-set data. This is by no means dynamic, as I am directly using the variable names to define my axes and therefore it can only be used for a specific data set. I decided to use a very basic [CSV file](../site/population.csv) which contained 10 countries and their population numbers.
+To get familiar with using D3.js, I have decided to try making a bar chart of some pre-set data. This is by no means dynamic, as I am directly using the variable names to define my axes and therefore it can only be used for a specific data set. I decided to use a very basic CSV file which contained 10 countries and their population numbers.
 pandas could be used to parse the CSV file (using 'pd.read_csv(<filename>)') and then convert this to a json file which resembles a list of dicts (e.g. [ { country: "China", population: 1415046 }, { country: "India", population: 1354052 }...] }). I then used javascript and D3.js to plot these 2 variables against eachother on a bar chart. Obviously, this is quite different to processing survey data, as most survey data first requires aggregation.
+
+#### Making bar chart compatable with other data
+
+The chart I made for population.csv was hard coded into the javascript (i.e. I knew the names of the table columns so I could apply those directly). Furthermore, the data in that file does not need to be aggregated, as is the case with most survey data. Firstly, to aggregate data, I used some built in functions in the pandas library. Those are the groupBy function (similar to SQL GROUP BY) and the agg function (which allows for carrying out aggregation, such as summing, averaging or counting). The most useful of these these with regards to survey data is 'count' as survey data often comprises of many different individuals responses that should all be counted together before meaninful conclusions can be drawn. I created an example survey data set which had 10 respondents all choosing their favourite flavour of icecream (chocolate, strawberry or vanilla). These 10 responses were aggregated, with 5 choosing chocolate, 3 vanilla and 2 strawberry. I was then able to apply this newly aggregated data to a bar chart to display the results.
+Further to this, I removed the hard-coded column headings and made it so that the user can choose a column heading, which is passed to D3.js which then uses a function to populate the bar chart dynamically.
+
+#### Restructuring download/Setup
+
+Initially in my [documentation.md](../documentation.md) I had instructions for how a user can install each of the individual python packages being used. I have now changed this, so that anyone downloading the repo can instead just install the python package [pipenv](https://pypi.org/project/pipenv/) which will handle the virtual environment and also carry out all the relevant package installations. I have kept the old instructions in place in case a user wants to still install packages individually.
+
 
 ##### Ongoing objectives
 
-* Data aggregation, so that bar charts can be made for survey data.
-* Dynamic graphs/variables, so that graphs can be plotted regardless of the data set being used (i.e. not hard coded with the variable names)
+* More in depth processing of data (at the moment, it is ok with categorical data but not so much with numerical data).
+* Consider looking at making an additional type of graph.

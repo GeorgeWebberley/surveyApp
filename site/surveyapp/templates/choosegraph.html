@@ -30,7 +30,7 @@
     </div>
     <div class="bar"></div>
     {% for column in columns %}
-      <a class="choose-survey-table" href="{{ url_for('graphs.bar_chart', graph_id=graph_id, column=column) }}">{{ column }}</a>
+      <a class="choose-survey-table" href="{{ url_for('graphs.bar_chart', survey_id=survey_id, column=column) }}">{{ column }}</a>
     {% endfor %}
   </div>
 </div>

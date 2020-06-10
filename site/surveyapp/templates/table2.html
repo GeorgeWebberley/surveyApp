@@ -2,14 +2,15 @@
 <div class="container">
   <div class="btn-row">
     <a class="btn btn-secondary" href="{{ url_for('graphs.dashboard') }}">Dashboard</a>
-    <h1 class="table-title">{{ table_title }}</h1>
-    <a class="btn btn-primary" href="#">Create graphs</a>
+    <h1 class="table-title">{{ survey["title"] }}</h1>
+    <a class="btn btn-primary" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id']) }}">Create graphs</a>
   </div>
   <section class="table-container">
-
     <div class="dataframe-container">
       {{ data.to_html()|safe }}
     </div>
   </section>
 </div>
+
+
 {% endblock content %}

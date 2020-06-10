@@ -42,6 +42,7 @@
 
 const data = graphData["chart_data"]
 const column = graphData["column"]
+console.log(data);
 
 const width = 1000;
 const height = 640;
@@ -74,7 +75,7 @@ const render = data => {
     // band scales are useful for ordinal attributes (in our case, the countries)
     // each row is set to one country
     .domain([0, d3.max(data, yValues)])
-    .range([0, gHeight])
+    .range([gHeight, 0])
 
 
 
@@ -95,11 +96,10 @@ const render = data => {
 
   g.selectAll('rect').data(data)
     .enter().append('rect')
-      .attr('height', d => yScale(yValues(d)))
+      .attr('height', d => gHeight - yScale(yValues(d)))
       .attr('width', xScale.bandwidth()) // band width is width of a single bar
       .attr('x', d => xScale(xValues(d)))
-      .attr('y', d=> gHeight - yScale(yValues(d)))
-      // .attr('y', function(d) { return yScale(d.c); } ) // the y attribute is the distance from the top of the graph (i.e. we set each bar to be a different distance from the top of the graph)
+      .attr('y', d=>  yScale(yValues(d)))
 }
 
 render(data);

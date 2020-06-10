@@ -121,6 +121,7 @@ body {
   font-family: var(--main-font);
   font-size: 1.5rem;
   padding: 0.5rem;
+  cursor: pointer;
 }
 
 .btn-primary {
@@ -143,6 +144,18 @@ body {
 
 .btn-secondary:hover {
   color: var(--complementary-colour);
+  background-color: white;
+  box-shadow: 5px 5px 5px grey;
+}
+
+.btn-danger {
+  background-color: red;
+  color: white;
+  transition: var(--primary-transition);
+}
+
+.btn-danger:hover {
+  color: red;
   background-color: white;
   box-shadow: 5px 5px 5px grey;
 }
@@ -208,7 +221,6 @@ body {
 
 .invalid {
   color: darkred;
-
 }
 
 .login-link {
@@ -411,10 +423,35 @@ body {
 
 .dashboard-table{
   box-sizing: border-box;
-  display: block;
+  display: flex;
+  justify-content: space-between;
   font-size: 1rem;
   padding: 0.5rem;
   transition: var(--primary-transition);
+}
+
+.dashboard-table a{
+  text-decoration: none;
+  color: white;
+}
+
+.dashboard-table:hover a{
+  color: var(--primary-transition);
+}
+
+.edit-icon {
+  color: white;
+  transition: var(--primary-transition);
+}
+
+.delete-icon {
+  border: 0;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+  background: none;
+  color: white;
+  transition: var(--primary-transition);
+  cursor: pointer;
 }
 
 .dashboard-table:hover{
@@ -422,6 +459,14 @@ body {
   color: var(--complementary-colour);
   padding-left: 1rem;
   cursor: pointer;
+}
+
+.dashboard-table:hover .edit-icon{
+  color: green;
+}
+
+.dashboard-table:hover .delete-icon{
+  color: darkred;
 }
 
 .dashboard-graphs{
@@ -467,6 +512,13 @@ body {
   color: var(--complementary-colour);
 }
 
+.add-more{
+  margin: 1rem;
+  display: flex;
+  color: white;
+  justify-content: center;
+  text-decoration: none;
+}
 /* DASHBOARD-PROMPT */
 
 .overlay {
@@ -479,6 +531,20 @@ body {
   width: 100%;
   height: 100%;
   /* transition: var(--primary-transition); */
+  background: var(--complementary-colour-transparent);
+  z-index: 2;
+  visibility: hidden;
+}
+
+.delete-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
   background: var(--complementary-colour-transparent);
   z-index: 2;
   visibility: hidden;
@@ -580,4 +646,13 @@ body {
 
 .graph-type:hover .graph-img-overlay {
   opacity: 1;
+}
+
+
+.edit-delete{
+  display: flex;
+}
+
+.edit-delete form{
+  margin-left: 0.5rem;
 }

@@ -1,17 +1,3 @@
-<!-- ------OLD CODE FOR DROPZONE------ -->
-<!-- <div class="container">
-  <div class="btn-row">
-    <a class="btn btn-secondary" href="#">Go back</a>
-    <a class="btn btn-primary" href="#">Next</a>
-  </div>
-
-  <div class="upload">
-    {{ dropzone.create(action='graphs.import_file') }}
-    {{ dropzone.load_js() }}
-    {{ dropzone.config() }}
-  </div>
-</div> -->
-
 {% extends "layout.html" %} {% block content %}
 
 <div class="container">
@@ -19,7 +5,7 @@
     <form class="form" action="" method="post" enctype="multipart/form-data">
       {{ form.hidden_tag() }}
       <fieldset class="fieldset">
-        <div class="form-title">Import a file</div>
+        <div class="form-title">Edit Survey Title</div>
         <div class="bar"></div>
         <div class="form-fields">
           <div class="form-field">
@@ -35,25 +21,10 @@
                 {{ form.title(class="form-upload") }}
             {% endif %}
           </div>
-          <div class="form-field">
-            {{ form.file.label(class="form-label") }}
-            {% if form.file.errors %}
-                {{ form.file(class="form-upload form-upload-error") }}
-                <div class="invalid">
-                    {% for error in form.file.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-            {% else %}
-                {{ form.file(class="form-upload") }}
-            {% endif %}
-          </div>
-
           <div class="btn-row btn-form">
-            <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Go back</a>
+            <a class="btn btn-secondary" href="{{ url_for('graphs.dashboard') }}">Cancel</a>
             {{ form.submit(class="btn btn-primary") }}
           </div>
-
         </div>
       </fieldset>
     </form>
