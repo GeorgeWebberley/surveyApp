@@ -12,9 +12,10 @@ flask-wtf = "*"
 email-validator = "*"
 flask-dropzone = "*"
 flask-pymongo = "*"
-flask-dotenv = "*"
 flask-bcrypt = "*"
 flask-login = "*"
+pandas = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"

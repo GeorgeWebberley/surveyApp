@@ -117,12 +117,12 @@ For connecting and interacting with a MongoDB database
 ```
 pip install Flask-PyMongo
 ```
-##### flask-dotenv
+##### python-dotenv
 
 For managing data within .env files
 
 ```
-pip install flask-dotenv
+pip install python-dotenv
 ```
 
 ##### Flask-Bcrypt
@@ -157,6 +157,14 @@ For easy installation of all packages.
 pip install pipenv
 ```
 
+##### pandas
+
+For easy installation of all packages.
+
+```
+pip install pandas
+```
+
 
 
 ## New Commands
@@ -165,6 +173,15 @@ Pre-requirements:
 * Python 3.7.7
 * Homebrew
 
+To install all the packages you first need to install the latest version of [pipenv](https://pypi.org/project/pipenv/) onto your machine. To do this, run the following command (Note: it must be this latest version.)
+
 ```
 pip install 'pipenv==2018.11.26'
+```
+
+Clone the git repository and navigate into the directory.
+Then run the following command to install all the relevant packages.
+
+```
+pipenv install
 ```
