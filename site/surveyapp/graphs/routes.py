@@ -66,7 +66,7 @@ def table(table_id):
     # new_header = data.iloc[0]
     # data = data[1:]
     # data.columns=new_header
-    return render_template("table2.html", title="Table", data=data, table_title=file_obj["title"])
+    return render_template("table2.html", title="Table", data=df, table_title=file_obj["title"])
     # return render_template("table.html", title="Table", data=data)
 
 # A function that removes all leading empty rows/columns

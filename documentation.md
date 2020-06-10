@@ -152,7 +152,7 @@ pip install flask-bcrypt
 
 ##### Flask-Login
 
-Handles user session for flask applications, including loggin in, logging out and remember user sessions over time.
+Handles user session for flask applications, including logging in, logging out and remember user sessions over time.
 
 ```
 pip install flask-login
