@@ -100,7 +100,7 @@ pip install flask-wtf
 It may also be necessary to install email_validator if not included in your version of Flask-WTF.
 
 ```
-pip email_validator
+pip install email_validator
 ```
 
 ##### Flask-Dropzone
@@ -147,4 +147,24 @@ For carrying out unit testing of my code.
 
 ```
 pip install pytest
+```
+
+##### pipenv
+
+For easy installation of all packages.
+
+```
+pip install pipenv
+```
+
+
+
+## New Commands
+
+Pre-requirements:
+* Python 3.7.7
+* Homebrew
+
+```
+pip install 'pipenv==2018.11.26'
 ```
