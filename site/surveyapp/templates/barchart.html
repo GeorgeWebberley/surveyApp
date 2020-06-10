@@ -4,7 +4,7 @@
   <div id="graph"></div>
 </div>
 <script type="text/javascript">
-  var graphData = {{ data.chart_data | safe }}
+  var graphData = {{ data | safe }}
 </script>
 <script src="{{ url_for('static', filename='d3/barchart.js') }}" defer></script>
 {% endblock content %}

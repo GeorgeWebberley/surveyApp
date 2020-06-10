@@ -40,16 +40,18 @@
 //         .attr("transform",
 //         "translate(" + margin.left + "," + margin.top + ")")
 
-console.log(graphData);
+const data = graphData["chart_data"]
+const column = graphData["column"]
+
 const width = 1000;
 const height = 640;
 const svg = d3.select('#graph').append("svg")
   .attr("width", width)
   .attr("height", height)
 
-const render = graphData => {
+const render = data => {
   // defining these values, means we don't limit our functions to this particular data set (just to these 2 values)
-  const xValues = d => d["Favourite ice-cream"];
+  const xValues = d => d[column];
   const yValues = d => d.c;
 
   const margin = { top: 20, right: 20, bottom: 100, left: 100 };
@@ -60,7 +62,7 @@ const render = graphData => {
   // linear scales are useful for quantitative attributes (in our case, the populations)
   const xScale = d3.scaleBand()
     // domain is the range of our actual data
-    .domain(graphData.map(xValues))
+    .domain(data.map(xValues))
     // range is the 'screen range' of our actual data
     .range([0, gWidth])
     .paddingInner(0.1)
@@ -71,7 +73,7 @@ const render = graphData => {
   const yScale = d3.scaleLinear()
     // band scales are useful for ordinal attributes (in our case, the countries)
     // each row is set to one country
-    .domain([0, d3.max(graphData, yValues)])
+    .domain([0, d3.max(data, yValues)])
     .range([0, gHeight])
 
 
@@ -90,8 +92,8 @@ const render = graphData => {
     // Now we translate the x-axis so it is at the bottom, not at the top
     .attr("transform", `translate(0, ${gHeight})`)
 
-  console.log(xScale.domain());
-  g.selectAll('rect').data(graphData)
+
+  g.selectAll('rect').data(data)
     .enter().append('rect')
       .attr('height', d => yScale(yValues(d)))
       .attr('width', xScale.bandwidth()) // band width is width of a single bar
@@ -100,5 +102,4 @@ const render = graphData => {
       // .attr('y', function(d) { return yScale(d.c); } ) // the y attribute is the distance from the top of the graph (i.e. we set each bar to be a different distance from the top of the graph)
 }
 
-render(graphData);
-console.log(graphData);
+render(data);

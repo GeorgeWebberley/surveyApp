@@ -112,15 +112,15 @@ def bar_chart(graph_id):
     if df[column].dtypes == object:
         # ...then we want to aggregate it
         # df = df.groupby("Favourite ice-cream", as_index=False)["ID"].count()
-        df = df.groupby("Favourite ice-cream")["Favourite ice-cream"].agg("count").to_frame('c').reset_index()
+        df = df.groupby(column)[column].agg("count").to_frame('c').reset_index()
 
     chart_data = df.to_dict(orient='records')
     # print(df.groupby("Favourite ice-cream").agg({"Favourite ice-cream": "count"}))
     # print(df)
     # chart_data = df.to_dict(orient='records')
     # chart_data = json.dumps(chart_data, indent=2)
-    data = {'chart_data': chart_data, 'chart_info': column_info, 'title': file_obj["title"]}
-    return render_template("barchart.html", title="Bar chart", data=data)
+    data = {"chart_data": chart_data, "chart_info": column_info, "title": file_obj["title"], "column" : column}
+    return render_template("barchart.html", title="Bar chart", data=data, column=column)
 
 
 
