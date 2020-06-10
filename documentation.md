@@ -1,16 +1,5 @@
-To start running the application, first carry out all the installations on the [installation list](#installs).
-
-The flask application then needs to know which file to be run when starting the app. These are currently set inside the ['.flaskenv'](./site/.flaskenv) file. It is therefore possible to run the application in develeoper mode (with debugging on) simply by running:
-
-```
-flask run
-```
-
-Simply edit the '.flasenv' file for running in a different environment.
-
-<a name="installs"></a>
-
-## Full installation list
+## Setup guide
+To start running the application, first carry out the installations listed below.
 
 ### MacOS
 
@@ -24,17 +13,6 @@ Used as the backend language for the project, handling server connections and da
 brew install python
 ```
 
-For installing python modules, it is advisable to create a virtual environment to help keep python modules specific to the project.
-
-```
-python3 -m virtualenv env
-```
-
-Activate the virtual environment before installing python modules.
-
-```
-source env/bin/activate
-```
 
 ### MongoDB
 
@@ -72,7 +50,48 @@ And then include the following line in the HTML.
 <script type="text/javascript" src="node_modules/d3/build/d3.js"></script>
 ```
 
-### Flask and its extensions
+### Python packages
+
+For installing our python packages we will be using [pipenv](https://pypi.org/project/pipenv/) which will also handle our virtual environment for us. To do this, run the following command (Note: it must be this latest version.)
+
+```
+pip install 'pipenv==2018.11.26'
+```
+
+Clone the git repository and navigate into the directory.
+Then run the following command to install all the relevant packages.
+
+```
+pipenv install
+```
+
+If you would like to also install the dev dependencies, including 'pytest' for testing, then instead run:
+
+```
+pipenv install --dev
+```
+
+With this method there is no need to create a virtual environment, it is handled for you automatically by pipenv.
+Following the installations, you can then enter that virtual environment by using:
+
+```
+pipenv shell
+```
+
+Then to run the application, navigate to the 'site' directory and run 'flask run'
+
+```
+cd site
+flask run
+```
+
+The flask application knows which file needs to be run when starting the app from the environment variables set in ['.flaskenv'](./site/.flaskenv). At the moment, the .flaskenv file specifies the app to run in developer mode. Simply edit the '.flasenv' file for running in a different environment.
+
+### Full packages list
+
+All the python packages used are listed below for your information (along with the pip command for installing if you would rather do it that way instead.)
+
+#### Flask and its extensions
 
 Flask is a microframework of python that provides many of the tools required for building a web application, such as templating, routing and Web Server Gateway Interface (WSGI).
 As it is a 'microframework', it is often also required to install several extensions to get more functionality.
@@ -80,8 +99,6 @@ The dependencies that are included are:
 
 - jinja2 - the templating engine.
 - Werkzeug - a WSGI utility library.
-
-For installing flask (from within the virtual environment).
 
 ```
 pip install Flask
@@ -149,39 +166,12 @@ For carrying out unit testing of my code.
 pip install pytest
 ```
 
-##### pipenv
 
-For easy installation of all packages.
+##### pandas and xlrd
 
-```
-pip install pipenv
-```
-
-##### pandas
-
-For easy installation of all packages.
+For easy installation of all packages (xlrd allows for parsing Excel files).
 
 ```
 pip install pandas
-```
-
-
-
-## New Commands
-
-Pre-requirements:
-* Python 3.7.7
-* Homebrew
-
-To install all the packages you first need to install the latest version of [pipenv](https://pypi.org/project/pipenv/) onto your machine. To do this, run the following command (Note: it must be this latest version.)
-
-```
-pip install 'pipenv==2018.11.26'
-```
-
-Clone the git repository and navigate into the directory.
-Then run the following command to install all the relevant packages.
-
-```
-pipenv install
+pip install xlrd
 ```

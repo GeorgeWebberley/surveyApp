@@ -16,6 +16,7 @@ flask-bcrypt = "*"
 flask-login = "*"
 pandas = "*"
 python-dotenv = "*"
+xlrd = "*"
 
 [requires]
 python_version = "3.7"
