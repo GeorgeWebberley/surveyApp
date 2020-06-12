@@ -7,8 +7,9 @@ import numpy as np
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import UploadForm, EditSurveyForm
+from surveyapp.graphs.forms import UploadForm, EditSurveyForm, SaveGraphForm
 from bson.objectid import ObjectId
+from surveyapp.graphs.utils import parse_data, save_graph, read_from_file, remove_nan
 
 
 graphs = Blueprint("graphs", __name__)
@@ -41,7 +42,7 @@ def import_file():
     # Checks validation when form is submitted with submit button
     if form.validate_on_submit():
         file_name = save_file(form.file.data)
-        table = mongo.db.graphs.insert_one({\
+        table = mongo.db.surveys.insert_one({\
         "fileName" : file_name,\
         "user" : current_user._id,\
         "title" : form.title.data})
@@ -54,7 +55,7 @@ def import_file():
 @graphs.route('/table/<survey_id>', methods=['GET', 'POST'])
 @login_required
 def table(survey_id):
-    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
@@ -69,27 +70,19 @@ def table(survey_id):
     return render_template("table2.html", title="Table", data=df, survey=file_obj)
     # return render_template("table.html", title="Table", data=data)
 
-# A function that removes all leading empty rows/columns
-def remove_nan(df):
-    data = df.dropna(how = 'all', axis = 1)
-    data = data.dropna(how = 'all', axis = 0)
-    print("FIRST ROW:")
-    print (data.iloc[0][0])
-    data = data.reset_index(drop = True)
-    return data
-
 
 @graphs.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    files=mongo.db.graphs.find({"user":current_user._id})
-    return render_template("dashboard.html", title="Dashboard", files=list(files))
+    surveys=mongo.db.surveys.find({"user":current_user._id})
+    graphs=mongo.db.graphs.find({"user":current_user._id})
+    return render_template("dashboard.html", title="Dashboard", surveys=list(surveys), graphs=list(graphs))
 
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
 @graphs.route('/choosegraph/<survey_id>', methods=['GET', 'POST'])
 @login_required
 def choose_graph(survey_id):
-    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
@@ -100,51 +93,59 @@ def choose_graph(survey_id):
 @graphs.route('/barchart/<survey_id>', methods=['GET', 'POST'])
 @login_required
 def bar_chart(survey_id):
-    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
-    df = read_from_file(file_obj["fileName"])
-    # Parse the columns to get the type of data and number of unique entries.
-    column_info = pase_data(df)
+    form = SaveGraphForm()
     column = request.args.get('column')
-    # i.e. if it is categorical data...
-    # if df[column].dtypes == object:
-    # ...then we want to aggregate it and count the amount of each variable
-    df = df.groupby(column)[column].agg("count")
-    # And then reset the index and cast back to a fram.
-    df = df.to_frame('c').reset_index()
-
-    # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
-    chart_data = df.to_dict(orient='records')
-    # chart_data = json.dumps(chart_data, indent=2)
-    data = {"chart_data": chart_data, "chart_info": column_info, "title": file_obj["title"], "column" : column}
-    return render_template("barchart.html", title="Bar chart", data=data, column=column)
+    graph_id = request.args.get('graph_id')
+    if form.validate_on_submit():
+        save_graph(form.title.data, column, survey_id, graph_id);
+        return redirect(url_for("graphs.dashboard"))
+    elif request.method == "GET":
+        df = read_from_file(file_obj["fileName"])
+        # column_info = pase_data(df)
+        df = df.groupby(column)[column].agg("count")
+        df = df.to_frame('c').reset_index()
+        # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
+        chart_data = df.to_dict(orient='records')
+        data = {"chart_data": chart_data, "title": file_obj["title"], "column" : column}
+        if request.args.get('title') == None:
+            form.title.data = "Bar chart - " + file_obj["title"] + ": " + column
+        else:
+            form.title.data = request.args.get('title')
+    return render_template("barchart.html", title="Bar chart", data=data, column=column, form=form)
 
 
 # DELETE A SURVEY
-@graphs.route("/dashboard/<survey_id>/delete", methods=['POST'])
+# NEED TO ADD FEATURE SO FILE IS REMOVED AND ALSO THAT ALL GRAPHS ARE REMOVED RELATING TO THE FILE
+@graphs.route("/survey/<survey_id>/delete", methods=['POST'])
 @login_required
 def delete_survey(survey_id):
-    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         abort(403)
-    mongo.db.graphs.delete_one(file_obj)
+    graphs = mongo.db.graphs.find({"surveyId":survey_id})
+    # print(graphs)
+    for graph in graphs:
+        mongo.db.graphs.delete_one(graph)
+    mongo.db.surveys.delete_one(file_obj)
     return redirect(url_for('graphs.dashboard'))
 
 
 # EDIT A SURVEY
-@graphs.route("/dashboard/<survey_id>/edit", methods=["GET", "POST"])
+@graphs.route("/survey/<survey_id>/edit", methods=["GET", "POST"])
 @login_required
 def edit_survey(survey_id):
-    file_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(survey_id)})
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         abort(403)
     form = EditSurveyForm()
     if form.validate_on_submit():
-        mongo.db.graphs.update_one({"_id": file_obj["_id"]}, {"$set": {"title": form.title.data}})
+        mongo.db.surveys.update_one({"_id": file_obj["_id"]}, {"$set": {"title": form.title.data}})
         return redirect(url_for('graphs.dashboard'))
     elif request.method == "GET":
         form.title.data = file_obj["title"]
@@ -152,36 +153,36 @@ def edit_survey(survey_id):
     return render_template("edit_survey.html", form=form)
 
 
+# DELETE A Graph
+@graphs.route("/graph/<graph_id>/delete", methods=['POST'])
+@login_required
+def delete_graph(graph_id):
+    graph_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(graph_id)})
+    if graph_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "error")
+        abort(403)
+    mongo.db.graphs.delete_one(graph_obj)
+    return redirect(url_for('graphs.dashboard'))
 
 
-
-# Reads the file (depending on type of file) and returns the dataframe
-def read_from_file(filename):
-    _, f_ext = os.path.splitext(filename)
-    if f_ext == ".csv":
-        data = pd.read_csv(os.path.join(current_app.root_path, "uploads", filename))
-    else:
-        data = pd.read_excel(os.path.join(current_app.root_path, "uploads", filename))
-    return data
+# Analyse data sets
+@graphs.route("/analyse", methods=['GET'])
+@login_required
+def analyse():
+    surveys = mongo.db.surveys.find({"user": current_user._id})
+    return render_template("analysedata.html", surveys=surveys)
 
 
-
-# This function loops through each column and collects information on the type of data (numerical vs categorical)
-# and the number of unique entries in that column. The type of graph that can be used will depend on the type of data.
-# Will also be useful for suggesting to the user about grouping if there are lots of unique entries.
-# e.g. if there are 100 different 'ages', can suggest grouping in 10 year batches.
-def pase_data(df):
-    column_info = []
-    for (column_title, column_data) in df.iteritems():
-        if column_data.dtypes == object:
-            data_type = "categorical"
-        if column_data.dtypes == np.int64:
-            data_type = "numerical"
-        uniques = df[column_title].nunique()
-        tempDict = {
-        "title": column_title,
-        "data_type": data_type,
-        "num_unique": uniques
-        }
-        column_info.append(tempDict)
-    return column_info
+# Give the user a quick overview of stats on the survey data
+@graphs.route("/quickstats/<survey_id>", methods=['GET'])
+@login_required
+def quick_stats(survey_id):
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "error")
+        return redirect(url_for("main.index"))
+    df = read_from_file(file_obj["fileName"])
+    rows = len(df.index)
+    cols = len(df.columns)
+    column_info = parse_data(df);
+    return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info )

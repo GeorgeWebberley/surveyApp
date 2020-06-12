@@ -13,4 +13,8 @@ class EditSurveyForm(FlaskForm):
     title = StringField("Enter a new title.", validators=[DataRequired()])
     submit = SubmitField("Save changes")
 
+class SaveGraphForm(FlaskForm):
+    title = StringField(validators=[DataRequired()])
+    submit = SubmitField("Save.")
+
 # FileAllowed([".xls", ".xlt", ".xla", ".xlsx", ".xltx", ".xlsb", ".xlsm", ".xltm", ".xlam", ".csv"], message="Only CSV files or Excel Spreadsheets allowed.")

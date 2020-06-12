@@ -7,6 +7,8 @@ const dataTables = [...document.querySelectorAll(".dashboard-table")];
 const overlay = document.querySelector(".overlay");
 const close = document.querySelector(".close");
 const graphType = document.querySelector(".graph-type");
+const saveGraphTitle = document.querySelector(".save-graph-title");
+const editGraphTitle = document.querySelector(".edit-graph-title");
 
 
 
@@ -30,3 +32,21 @@ if (graphType != null) {
     overlay.classList.add("show-overlay")
   });
 }
+
+
+if (saveGraphTitle != null) {
+  saveGraphTitle.addEventListener("click", () => {
+    editGraphTitle.classList.remove("hide-title")
+    saveGraphTitle.classList.add("hide-title")
+  });
+}
+
+
+// Javascript
+var container = document.querySelector('.stats-grid');
+var msnry = new Masonry( container, {
+  // options
+  columnWidth: '.grid-element',
+  itemSelector: '.grid-element',
+  gutter: 5
+});

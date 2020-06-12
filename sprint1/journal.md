@@ -110,7 +110,6 @@ I initially experimented with displaying an 'editable' table, so that the user c
 
 Another way to display the data very easily and quickly is to use inbuilt pandas function 'df.to_html()' which converts the loaded excel/scv file straight into HTML. The downside to this is that the data cannot be manipulated as it can in the other method I tried. The advantage is that it is much faster and therefore probably more appropriate for my MVP. The HTML for this is in [table2.html](../site/surveyapp/templates/table2.html). Later, when I implement data cleaning, I will look to see if I can use the 'forms' method.
 
-<a name="latestEntry"></a>
 #### Displaying a basic graph
 
 To get familiar with using D3.js, I have decided to try making a bar chart of some pre-set data. This is by no means dynamic, as I am directly using the variable names to define my axes and therefore it can only be used for a specific data set. I decided to use a very basic CSV file which contained 10 countries and their population numbers.
@@ -124,6 +123,21 @@ Further to this, I removed the hard-coded column headings and made it so that th
 #### Restructuring download/Setup
 
 Initially in my [documentation.md](../documentation.md) I had instructions for how a user can install each of the individual python packages being used. I have now changed this, so that anyone downloading the repo can instead just install the python package [pipenv](https://pypi.org/project/pipenv/) which will handle the virtual environment and also carry out all the relevant package installations. I have kept the old instructions in place in case a user wants to still install packages individually.
+
+
+#### Saving graphs (11th June)
+I have now implemented a feature so that a bar chart can be saved along with its respective title. This is then present on the user's 'dashboard', where they can view, edit or delete their graphs. Furthermore I have implemented the feature to delete the survey data files. Doing so will also delete all respective graphs relating to that file.
+
+#### Difficulties designing application (11th June)
+As my application develops more and more I am finding that the code is getting a bit more disorganised/messy/reptitive. I anticipate soon I will need to refactor my code to improve readability and efficiency.
+Furthermore, I am finding it difficult to plan how I will go forwards with statistical analysis and graphs. At present, the application is able to produce a bar chart from one variable. However, users may want to factor in multiple variables into their charts. Furthermore, users may want to analyse their data first (for example, obtain averages) and then graph the results of these sums. I will be developing these features into my application over the coming days.
+
+<a name="latestEntry"></a>
+#### Quick Stats Page (12th June)
+I decided to make a page which can display a set selection of basic statistics to the user depending on the type of data being used. For example, categorical data (such as words) is not averaged or summed, but instead grouped and counted, and gives the user details of the most and least commonly occurring answers. Numerical data (such as age) is averaged, as well as providing the user with the maximum and minimum values. These stats will also be useful later when it comes to creating graphs.
+
+I presented this to the user in a grid format. It took a while to get the css that I wanted, particularly when some columns are very long and some are very short. To get round this I used the JQuery package [Masonry](https://masonry.desandro.com/) which allows for dynamic grids.
+
 
 
 ##### Ongoing objectives

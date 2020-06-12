@@ -1,0 +1,12 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="sub-container">
+    <h3 class="form-title">Choose a survey to analyse</h3>
+    <div class="grid-bar"></div>
+    {% for survey in surveys %}
+      <h4 class="analyse-survey">- {{ survey["title"] }}</h4>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}

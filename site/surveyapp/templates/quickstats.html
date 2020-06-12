@@ -1,0 +1,62 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <h3 class="form-title">Quick Stats</h3>
+  <div class="grid-section overall-data">
+    <p>Number of rows: {{ rows }}</p>  
+    <p>Number of columns: {{ cols }}</p>
+  </div>
+  <div class="stats-grid">
+  {% for column in column_info %}
+    <div class="grid-section grid-element">
+      <h2 class="grid-section-title">{{ column["title"] }}</h2>
+      <div class="grid-bar"></div>
+      <h4>Data type: {{ column["data_type"] }}</h4>
+      {% if column["data_type"] != "true/false" %}
+        <h4>Unique values: {{ column["num_unique"] }}</h4>
+      {% endif %}
+      {% if column["quantities"] %}
+        <div class="sub-grid-section">
+          <h4>Quantities</h4>
+          <div class="bar"></div>
+          {% for key in column["quantities"] %}
+          <div class="grid-entry">
+            <h5>{{ key }}</h5>
+            <span class="bar-grid-element"></span>
+            <h5>{{ column["quantities"][key] }}</h5>
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if column["data_type"] == "numerical" %}
+      <div class="sub-grid-section">
+        <h4>Aggregations</h4>
+        <div class="bar"></div>
+        <div class="grid-entry">
+          <h5>Average</h5>
+          <span class="bar-grid-element"></span>
+          <h5>{{ column["average"] }}</h5>
+        </div>
+        <div class="grid-entry">
+          <h5>Highest value</h5>
+          <span class="bar-grid-element"></span>
+          <h5>{{ column["max"] }}</h5>
+        </div>
+        <div class="grid-entry">
+          <h5>Lowest value</h5>
+          <span class="bar-grid-element"></span>
+          <h5>{{ column["min"] }}</h5>
+        </div>
+        <div class="grid-entry">
+          <h5>Sum of values</h5>
+          <span class="bar-grid-element"></span>
+          <h5>{{ column["sum"] }}</h5>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+</div>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+{% endblock content %}

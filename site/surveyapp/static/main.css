@@ -114,14 +114,20 @@ body {
   justify-content: space-between;
 }
 
+.float-right{
+  float: right;
+}
+
 .btn {
   text-decoration: none;
   border: 1px solid grey;
   border-radius: 5px;
   font-family: var(--main-font);
-  font-size: 1.5rem;
+  font-size: 1rem;
+  min-width: 7rem;
   padding: 0.5rem;
   cursor: pointer;
+  text-align: center;
 }
 
 .btn-primary {
@@ -397,11 +403,6 @@ body {
   text-align: center;
   margin: 1rem 0 0.3rem 0;
   color: white;
-  /* text-decoration: underline; */
-  /* margin: 0;
-  padding: 0.8rem;
-  background-color: var(--primary-colour);
-  border-radius: 5px; */
 }
 
 .grid-bar{
@@ -500,6 +501,7 @@ body {
   margin: 1rem;
   transition: var(--primary-transition);
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .empty p{
@@ -510,6 +512,14 @@ body {
 .empty:hover{
   background-color: white;
   color: var(--complementary-colour);
+}
+
+.edit-delete{
+  display: flex;
+}
+
+.edit-delete form{
+  margin-left: 0.5rem;
 }
 
 .add-more{
@@ -648,11 +658,124 @@ body {
   opacity: 1;
 }
 
+/* ------BARCHART PAGE------ */
 
-.edit-delete{
+.save-graph-form{
   display: flex;
+  position: relative;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
-.edit-delete form{
-  margin-left: 0.5rem;
+.edit-graph-title{
+  color: var(--primary-colour-dark);
+  max-width: 30rem;
+  font-size: 1rem;
+  width: 50%;
+  text-align: center;
+}
+
+.save-graph{
+  position: absolute;
+  right: 0;
+  font-size: 0.8rem;
+}
+
+/* ------ANALYSE DATA PAGE------ */
+
+.sub-container {
+  text-align: left;
+  background: var(--primary-colour-dark);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 10px;
+  height: 80vh;
+}
+
+.sub-container h3{
+  color: white;
+}
+
+.analyse-survey{
+  width: 30%;
+  margin: 1rem;
+  transition: var(--primary-transition);
+}
+
+.analyse-survey:hover{
+  margin-left: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ------QUICK STATS------ */
+/* .quick-stats-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+}
+
+.grid-element {
+  padding: 1rem;
+  align-self: start;
+} */
+
+
+
+.grid-element {
+  padding: 1rem;
+  margin-bottom: 5px;
+  width: calc(30% - 5px);
+  align-self: start;
+}
+
+/*
+.grid-element div:nth-child(even) {
+  float: right;
+  clear: right;
+}
+.alt div:nth-child(odd) {
+  float: left;
+  clear: left;
+}
+.alt div {
+
+} */
+
+.overall-data {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.overall-data p{
+  margin: 1rem 2rem;
+}
+
+.sub-grid-section {
+  background-color: white;
+  color: var(--primary-colour);
+  border-radius: 10px;
+  padding: 0.1rem 2rem;
+}
+
+.sub-grid-section h4{
+  color: var(--primary-colour-dark);
+  margin: 0.5rem;
+  text-align: center;
+}
+
+.grid-entry{
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.bar-grid-element{
+  margin: 0 1rem;
+  width: 100%;
+  height: 1px;
+  background-color: var(--primary-colour);
 }
