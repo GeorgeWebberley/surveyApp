@@ -3,10 +3,12 @@
   <h1 class="dashboard-title">What type of graph would you like to make?</h1>
   <div class="select-graphs">
     <div class="graph-type">
-      <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
-      <div class="graph-img-overlay">
-        <p>Bar Chart</p>
-      </div>
+      <a href="{{ url_for('graphs.bar_chart2', survey_id=survey_id) }}">
+        <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
+        <div class="graph-img-overlay">
+          <p>Bar Chart</p>
+        </div>
+      </a>
     </div>
     <div class="graph-type">
     </div>
@@ -14,7 +16,7 @@
     </div>
   </div>
 </div>
-<div class="overlay">
+<!-- <div class="overlay">
   <div class="choose-survey">
     <div class="choose-survey-title">
       <i class="fa fa-times close" aria-hidden="true"></i>
@@ -25,5 +27,5 @@
       <a class="choose-survey-table" href="{{ url_for('graphs.bar_chart', survey_id=survey_id, column=column) }}">{{ column }}</a>
     {% endfor %}
   </div>
-</div>
+</div> -->
 {% endblock content %}

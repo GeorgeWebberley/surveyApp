@@ -40,13 +40,3 @@ if (saveGraphTitle != null) {
     saveGraphTitle.classList.add("hide-title")
   });
 }
-
-
-// Javascript
-var container = document.querySelector('.stats-grid');
-var msnry = new Masonry( container, {
-  // options
-  columnWidth: '.grid-element',
-  itemSelector: '.grid-element',
-  gutter: 5
-});

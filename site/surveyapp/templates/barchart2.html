@@ -1,0 +1,32 @@
+{% extends "layout.html" %} {% block content %}
+<div class="graph-container">
+  <h1 class="dashboard-title margin-top">Graph Title</h1>
+  <div class="graph-grid">
+    <div class="y-axis-container grid-section">
+      <div class="y-axis-details">
+        <h2 class="grid-section-title">Y-axis</h2>
+        <div class="grid-bar"></div>
+      </div>
+    </div>
+    <div id="graph"></div>
+    <div class="x-axis-container grid-section">
+      <div class="x-axis-details">
+        <h2 class="grid-section-title">X-axis</h2>
+        <div class="grid-bar"></div>
+        <div class="x-axis-variable">
+          <label>Choose a variable:</label>
+          <select class="x-axis-value">
+            {% for variable in data["column_info"] %}
+              <option value="{{ variable['title'] }}">{{ variable['title'] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var graphData = {{ data | safe }}
+</script>
+<script src="{{ url_for('static', filename='d3/barchart2.js') }}" defer></script>
+{% endblock content %}

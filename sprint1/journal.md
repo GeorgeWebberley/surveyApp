@@ -132,13 +132,17 @@ I have now implemented a feature so that a bar chart can be saved along with its
 As my application develops more and more I am finding that the code is getting a bit more disorganised/messy/reptitive. I anticipate soon I will need to refactor my code to improve readability and efficiency.
 Furthermore, I am finding it difficult to plan how I will go forwards with statistical analysis and graphs. At present, the application is able to produce a bar chart from one variable. However, users may want to factor in multiple variables into their charts. Furthermore, users may want to analyse their data first (for example, obtain averages) and then graph the results of these sums. I will be developing these features into my application over the coming days.
 
-<a name="latestEntry"></a>
 #### Quick Stats Page (12th June)
 I decided to make a page which can display a set selection of basic statistics to the user depending on the type of data being used. For example, categorical data (such as words) is not averaged or summed, but instead grouped and counted, and gives the user details of the most and least commonly occurring answers. Numerical data (such as age) is averaged, as well as providing the user with the maximum and minimum values. These stats will also be useful later when it comes to creating graphs.
 
 I presented this to the user in a grid format. It took a while to get the css that I wanted, particularly when some columns are very long and some are very short. To get round this I used the JQuery package [Masonry](https://masonry.desandro.com/) which allows for dynamic grids.
 
 
+<a name="latestEntry"></a>
+#### Dynamic javascript graph generation (13th June)
+One thing that I thought would improve the user experience would be to have the graph criteria (such as what variables are plotted on what axes) as selectable options on the actual graph page itself. Therefore, I have slightly restructured my application so that a lot of the data is sent to the client when they open the graph page. Javascript is then used to dynamically create the graph as the user selects options in drop down lists. I think this improves the user experience as it allows the user to try different options and get immediate results rather than having to reload the page. At present, I have only done a single variable (the x-axis on a bar chart) but will eventually allow for more settings.
+
+The downside to this approach is that all the data has to be sent to the client when they load the page, even if the user only plans to use a small amount of that data. This will obviously have the potential to add unnecessary traffic between the client and the server. However, I think that overall it may in fact reduce overall traffic instead, as the user is immediately able to see the result of the graphs and play around with the settings without having to communicate back and forth with the server to get the graph that they want. 
 
 ##### Ongoing objectives
 

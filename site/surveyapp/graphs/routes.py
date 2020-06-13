@@ -117,6 +117,28 @@ def bar_chart(survey_id):
             form.title.data = request.args.get('title')
     return render_template("barchart.html", title="Bar chart", data=data, column=column, form=form)
 
+# RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
+@graphs.route('/barchart2/<survey_id>', methods=['GET'])
+@login_required
+def bar_chart2(survey_id):
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "error")
+        return redirect(url_for("main.index"))
+
+    df = read_from_file(file_obj["fileName"])
+    column_info = parse_data(df)
+    # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
+    chart_data = df.to_dict(orient='records')
+    data = {"chart_data": chart_data, "title": file_obj["title"], "column_info" : column_info}
+
+    return render_template("barchart2.html", title="Bar chart", data=data)
+
+
+
+
+
+
 
 # DELETE A SURVEY
 # NEED TO ADD FEATURE SO FILE IS REMOVED AND ALSO THAT ALL GRAPHS ARE REMOVED RELATING TO THE FILE
