@@ -138,13 +138,22 @@ I decided to make a page which can display a set selection of basic statistics t
 I presented this to the user in a grid format. It took a while to get the css that I wanted, particularly when some columns are very long and some are very short. To get round this I used the JQuery package [Masonry](https://masonry.desandro.com/) which allows for dynamic grids.
 
 
-<a name="latestEntry"></a>
 #### Dynamic javascript graph generation (13th June)
 One thing that I thought would improve the user experience would be to have the graph criteria (such as what variables are plotted on what axes) as selectable options on the actual graph page itself. Therefore, I have slightly restructured my application so that a lot of the data is sent to the client when they open the graph page. Javascript is then used to dynamically create the graph as the user selects options in drop down lists. I think this improves the user experience as it allows the user to try different options and get immediate results rather than having to reload the page. At present, I have only done a single variable (the x-axis on a bar chart) but will eventually allow for more settings.
 
-The downside to this approach is that all the data has to be sent to the client when they load the page, even if the user only plans to use a small amount of that data. This will obviously have the potential to add unnecessary traffic between the client and the server. However, I think that overall it may in fact reduce overall traffic instead, as the user is immediately able to see the result of the graphs and play around with the settings without having to communicate back and forth with the server to get the graph that they want. 
+The downside to this approach is that all the data has to be sent to the client when they load the page, even if the user only plans to use a small amount of that data. This will obviously have the potential to add unnecessary traffic between the client and the server. However, I think that overall it may in fact reduce overall traffic instead, as the user is immediately able to see the result of the graphs and play around with the settings without having to communicate back and forth with the server to get the graph that they want.
+
+<a name="latestEntry"></a>
+#### More settings for bar chart (14th June)
+Before finishing up on the bar-chart for sprint 1, I wanted to give the user more settings to plot their bar chart against. Currently, the user is able to select a variable for the X-axis (e.g. 'Favourite ice-cream') and then a chart is created using the 'count' of that variable (e.g. 5 people chose chocolate, 8 chose strawberry etc.).
+
+However, it is very likely that a user would want to get more information out of their data. For example, they may want to know the average age of people who chose chocolate compared with the average age of those who chose strawberry. I have therefore implemented features that allow the user to pick a variable for their y-axis and how they want the data to be aggregated (the x-axis variables are grouped, and therefore the y-axis has to be some sort of numerical aggregation, such as mean, sum etc.). Furthermore, I have limited the variables that the user can pick for their y-axis to only numerical values. Y-axis on a bar chart has to have some sort of numerical value and therefore it is not possible to plot a categorical variable which has no value (such as true/false or 'Favourite ice-cream').
+
+All of this aggregation was done using D3.js which I have found to be easier to use and get familiar with than using Pandas. Furthermore, it can all be done on the client side, reducing back and forth communication with the server (as discussed above).
 
 ##### Ongoing objectives
 
-* More in depth processing of data (at the moment, it is ok with categorical data but not so much with numerical data).
-* Consider looking at making an additional type of graph.
+* Now that the way the graph is made has changed, I will need to review the way the server saves and stores graphs in the database.
+* To start thinking about getting user feedback so far.
+* Add more graphs. I think line graph would be a good next one to look at as it will be quite different to bar charts. Pie-charts I think will be quite similar to bar-charts as it is mostly categorical data and aggregations, only the presentation is different.
+* To carry out unit testing of the bar-chart and dashboard pages.

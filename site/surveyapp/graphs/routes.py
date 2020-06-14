@@ -131,7 +131,6 @@ def bar_chart2(survey_id):
     # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
     data = {"chart_data": chart_data, "title": file_obj["title"], "column_info" : column_info}
-
     return render_template("barchart2.html", title="Bar chart", data=data)
 
 

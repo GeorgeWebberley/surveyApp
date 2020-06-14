@@ -728,18 +728,40 @@ body {
   width: 100%;
 }
 
-.x-axis-variable{
-  margin-top: 1rem;
-}
-
-
-.x-axis-variable label{
+.x-axis-details label{
   margin: 1rem;
 }
 
+.y-axis-variable {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
 
 .margin-top {
   margin-top: 1rem;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.empty-graph {
+  box-sizing: border-box;
+  position: absolute;
+  width: 950px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px dashed var(--primary-colour);
+  color: var(--primary-colour);
+  margin: 0 0 40px 50px;
+  border-radius: 10px;
 }
 
 /* ------ANALYSE DATA PAGE------ */

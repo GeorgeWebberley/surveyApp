@@ -1,21 +1,52 @@
 {% extends "layout.html" %} {% block content %}
 <div class="graph-container">
-  <h1 class="dashboard-title margin-top">Graph Title</h1>
+  <h1 class="dashboard-title margin-top">Bar chart: {{ data["title"] }}</h1>
   <div class="graph-grid">
+    <!-- ------Y AXIS------ -->
     <div class="y-axis-container grid-section">
       <div class="y-axis-details">
         <h2 class="grid-section-title">Y-axis</h2>
-        <div class="grid-bar"></div>
+        <div class="grid-bar">
+          <div class="y-axis-variable">
+            <label>Choose a variable:</label>
+            <select class="y-axis-value axis-setting">
+              <option value="Amount">Amount</option>
+              {% for variable in data["column_info"] %}
+                {% if variable["data_type"] == "numerical" %}
+                <!-- On the y a-xis we can only plot variables with numerical value -->
+                <option value="{{ variable['title'] }}">{{ variable['title'] }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <div class="y-axis-variable aggregate hidden">
+            <label>Aggregation: </label>
+            <select class="y-axis-aggregation axis-setting">
+              <!-- Furthermore, as the data in the x-axis is grouped, we can only provide aggregated data on y-axis -->
+              <option value="Average">Average</option>
+              <option value="Highest">Highest</option>
+              <option value="Lowest">Lowest</option>
+              <option value="Sum">Sum</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="graph"></div>
+    <!-- ------GRAPH------ -->
+    <div id="graph">
+      <div class="empty-graph visible">
+        <h1>Choose an x-axis variable to get started</h1>
+      </div>
+    </div>
+    <!-- ------X AXIS------ -->
     <div class="x-axis-container grid-section">
       <div class="x-axis-details">
         <h2 class="grid-section-title">X-axis</h2>
         <div class="grid-bar"></div>
-        <div class="x-axis-variable">
+        <div class="margin-top">
           <label>Choose a variable:</label>
-          <select class="x-axis-value">
+          <select class="x-axis-value axis-setting">
+            <option disabled selected value> -- select an option -- </option>
             {% for variable in data["column_info"] %}
               <option value="{{ variable['title'] }}">{{ variable['title'] }}</option>
             {% endfor %}
@@ -23,9 +54,13 @@
         </div>
       </div>
     </div>
+    <!-- ------END OF X AXIS------ -->
   </div>
 </div>
-<script type="text/javascript">
+<script type="text/javascript" defer>
+  var nan = "N/A";
+  var True = true;
+  var False = false;
   var graphData = {{ data | safe }}
 </script>
 <script src="{{ url_for('static', filename='d3/barchart2.js') }}" defer></script>
