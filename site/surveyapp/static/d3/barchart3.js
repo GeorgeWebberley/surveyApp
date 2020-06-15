@@ -154,72 +154,18 @@ const render = (data, groupedData) => {
     .attr("class", "label")
     .text(xAxisValue);
 
-  // Select all 'rect' DOM elements (if they exist)
   var rect = graph.selectAll('rect').data(groupedData)
-
-  // D3 'exit()' is what happens to DOM elements that no longer have data bound to them
-  // Given a transition that shrinks them down to the x-axis
-  rect.exit().transition()
-  .duration(1000)
-  .attr("y", yScale(0))
-  .attr('height', 0)
-  .remove()
-
-  // D3 'enter()' is the creation of DOM elements bound to the data
-  var bar = rect.enter()
+  rect.exit().remove()
+  // Draw bars for the bar chart
+  rect.enter()
   .append('rect')
-      .attr("y",  yScale(0))
+      .attr("y", function(d) {return yScale(0);})
       .attr('x', d => xScale(xValues(d)))
       .attr('width', xScale.bandwidth()) // band width is width of a single bar
-
-
-  // For the colour, I had to convert the 'primary-colour-dark' variable into a hex colour so that the effect can work
-  bar.on('mouseenter', function(d) {
-    d3.select(this)
-    .transition()
-    .duration(100)
-    .style('fill', '#2D4053')
-
-
-    var tooltipOffset = (d3.select(this).attr("width") - 80)/2;
-
-    var tooltip = d3.select(".tooltip")
-
-    // var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth() / 2;
-		// var yPosition = parseFloat(d3.select(this).attr("y"))/2 + gHeight/2;
-    // tooltip.html(d)
-    //   .transition()
-		// 	.style("left", d + "px")
-		// 	.style("top", d + "px")
-		// 	.select(".tooltip-value")
-		// 	.text(yValues(d));
-
-    // To position the tool tip when the user hovers. Use the window and calculate the offset
-    var matrix = this.getScreenCTM()
-        .translate(+ this.getAttribute("x"), + this.getAttribute("y"));
-    tooltip.html(yValues(d))
-        .transition()
-        .style("left", (window.pageXOffset + matrix.e + tooltipOffset) + "px") // Center it horizontally over the bar
-        .style("top", (window.pageYOffset + matrix.f) + "px"); // Shift it 40 px above the bar
-
-		tooltip.classed("tooltip-hidden", false)
-
-  }).on('mouseout', function() {
-    d3.select(this)
-    .transition()
-    .style('fill', 'steelblue')
-
-    d3.select(".tooltip").classed("tooltip-hidden", true);
-  })
-
-  bar.merge(rect)  // 'merge' merges the 'enter' and 'update' groups
+      .merge(rect)
       .transition()
-      .delay(d =>  xScale(xValues(d))/2 )
+      .delay(function(d,i){ return 100*i; })
       .duration(1000)
       .attr('height', d => gHeight - yScale(yValues(d)))
       .attr('y', d=>  yScale(yValues(d)))
-      .attr('x', d => xScale(xValues(d)))
-      .attr('width', xScale.bandwidth()) // band width is width of a single bar
-
-
 }

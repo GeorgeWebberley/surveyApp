@@ -1,12 +1,9 @@
 rect {
+  /* fill: hsla(210, 30%, 50%); */
   fill: steelblue;
 }
 
+
 g text {
   font-size:1.4em;
-}
-
-.graph {
-  height: 100%;
-  width: auto;
 }

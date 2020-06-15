@@ -143,13 +143,20 @@ One thing that I thought would improve the user experience would be to have the 
 
 The downside to this approach is that all the data has to be sent to the client when they load the page, even if the user only plans to use a small amount of that data. This will obviously have the potential to add unnecessary traffic between the client and the server. However, I think that overall it may in fact reduce overall traffic instead, as the user is immediately able to see the result of the graphs and play around with the settings without having to communicate back and forth with the server to get the graph that they want.
 
-<a name="latestEntry"></a>
 #### More settings for bar chart (14th June)
 Before finishing up on the bar-chart for sprint 1, I wanted to give the user more settings to plot their bar chart against. Currently, the user is able to select a variable for the X-axis (e.g. 'Favourite ice-cream') and then a chart is created using the 'count' of that variable (e.g. 5 people chose chocolate, 8 chose strawberry etc.).
 
 However, it is very likely that a user would want to get more information out of their data. For example, they may want to know the average age of people who chose chocolate compared with the average age of those who chose strawberry. I have therefore implemented features that allow the user to pick a variable for their y-axis and how they want the data to be aggregated (the x-axis variables are grouped, and therefore the y-axis has to be some sort of numerical aggregation, such as mean, sum etc.). Furthermore, I have limited the variables that the user can pick for their y-axis to only numerical values. Y-axis on a bar chart has to have some sort of numerical value and therefore it is not possible to plot a categorical variable which has no value (such as true/false or 'Favourite ice-cream').
 
 All of this aggregation was done using D3.js which I have found to be easier to use and get familiar with than using Pandas. Furthermore, it can all be done on the client side, reducing back and forth communication with the server (as discussed above).
+
+<a name="latestEntry"></a>
+#### Exploring D3 more with regards to enter, update and exit (15th June)
+I spent some time trying to really get familiar with D3 as it is a core part of my project. I followed many tutorials to get to grips with the concept of 'enter', 'update' and 'exit'. One big problem is that many people and tutorials still use version 3 of D3.js, which is very different from the most recent version (version 4).
+Understanding these concepts has allowed me to better 'bind' my data to the DOM elements. Previously, each time the graph changed I would clear/delete the graph and redraw it. Now I edit the previous DOM elements, add new ones if needed and delete ones no longer being used. This allows for improved manipulation of the DOM elements, such as using transitions.
+I have subsequently altered my bar-char page to include transitions as the data changes. I have also moved all the axis settings on to the left of the page for easier access.
+
+I will want to now work on getting some basic statistical tests done, so that I have covered all aspects of my project in a basic way before getting user feedback.
 
 ##### Ongoing objectives
 
