@@ -1,24 +1,67 @@
 {% extends "layout.html" %} {% block content %}
-<div class="container">
+<div class="graph-container">
   <form action="" method="post">
     {{ form.hidden_tag() }}
-      <div class="save-graph-form">
-        {% if form.title.errors %}
-            {{ form.title(class="edit-graph-title form-upload-error") }}
-            <div class="invalid">
-                {% for error in form.title.errors %}
-                    <span>{{ error }}</span>
-                {% endfor %}
+    <div class="save-graph-form">
+      {% if form.title.errors %}
+          {{ form.title(class="edit-graph-title form-upload-error") }}
+          <div class="invalid">
+              {% for error in form.title.errors %}
+                  <span>{{ error }}</span>
+              {% endfor %}
+          </div>
+      {% else %}
+          {{ form.title(class="edit-graph-title hide-title") }}
+      {% endif %}
+      {{ form.submit(class="btn btn-primary save-graph") }}
+    </div>
+    <div class="graph-grid">
+      <div class="axis-container grid-section">
+        <!-- ------X AXIS------ -->
+        <div class="x-axis-details">
+          <h2 class="grid-section-title">X-axis</h2>
+          <div class="grid-bar"></div>
+          <div class="axis-variable">
+            {{ form.x_axis.label() }}
+            {{ form.x_axis(class="x-axis-value axis-setting") }}
+          </div>
+        </div>
+        <!-- ------Y AXIS------ -->
+        <div class="y-axis-details hidden-axis">
+          <h2 class="grid-section-title">Y-axis</h2>
+          <div class="grid-bar">
+            <div class="axis-variable">
+              {{ form.y_axis.label() }}
+              {{ form.y_axis(class="y-axis-value axis-setting") }}
             </div>
-        {% else %}
-            {{ form.title(class="edit-graph-title hide-title") }}
-        {% endif %}
-        {{ form.submit(class="btn btn-primary save-graph") }}
+            <div class="aggregate hidden-axis">
+              {{ form.y_axis_agg.label() }}
+              {{ form.y_axis_agg(class="y-axis-aggregation axis-setting") }}
+            </div>
+          </div>
+        </div>
       </div>
+      <!-- ------GRAPH------ -->
+      <div id="graph">
+        <!-- ------GRAPH OVERLAY------ -->
+        <div class="empty-graph visible">
+          <h1>Choose an x-axis variable to get started</h1>
+        </div>
+        <!-- ------TOOLTIP------ -->
+        <div class="tooltip tooltip-hidden">
+          <p><span class="tooltip-value"></span></p>
+        </div>
+      </div>
+      <!-- ------END OF GRAPH------ -->
+    </div>
+  <!-- END OF GRAPH GRID -->
   </form>
-  <div id="graph"></div>
 </div>
-<script type="text/javascript">
+<script type="text/javascript" defer>
+  // Conversions from python True/False to javascript true/false
+  var nan = "N/A";
+  var True = true;
+  var False = false;
   var graphData = {{ data | safe }}
 </script>
 <script src="{{ url_for('static', filename='d3/barchart.js') }}" defer></script>

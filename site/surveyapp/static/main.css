@@ -7,6 +7,7 @@
   --primary-colour: hsla(var(--base-hue), 30%, 50%);
   --primary-colour-transparent: hsla(var(--base-hue), 30%, 50%, 75%);
   --primary-colour-dark: hsla(var(--base-hue), 30%, 25%);
+  --primary-colour-light: hsla(var(--base-hue), 30%, 75%);
   --complementary-colour: hsla(var(--complementary-hue), 50%, 50%);
   --complementary-colour-dark: hsla(var(--complementary-hue), 30%, 25%);
   --complementary-colour-transparent: hsla(var(--complementary-hue), 30%, 25%, 50%);
@@ -664,7 +665,7 @@ body {
   display: flex;
   position: relative;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin: 2rem;
 }
 
 .edit-graph-title{
@@ -699,7 +700,7 @@ body {
 
 .axis-container{
   width: 15rem;
-  height: 90%;
+  height: 85%;
   display: flex;
   flex-direction: column;
   grid-column: 1;
@@ -779,26 +780,95 @@ body {
   text-align: left;
   background: var(--primary-colour-dark);
   color: white;
-  padding: 0.5rem;
+  padding: 0;
   border-radius: 10px;
-  height: 80vh;
 }
 
-.sub-container h3{
-  color: white;
-}
-
-.analyse-survey{
-  width: 30%;
-  margin: 1rem;
+/*
+.analyse-option{
+  width: auto;
+  box-sizing: border-box;
+  padding: 1rem;
+  margin: 0;
   transition: var(--primary-transition);
+  color: var(--primary-colour-light);
 }
 
-.analyse-survey:hover{
-  margin-left: 1.5rem;
+.analyse-option:hover{
+  padding-left: 2rem;
   font-weight: bold;
   cursor: pointer;
+  color: white;
+} */
+
+/* .analyse-select{
+  padding-left: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+} */
+
+
+.analyse-option{
+  margin-bottom: 2rem;
+  margin-left: 2rem;
 }
+
+
+.analyse-transition{
+  transition: var(--primary-transition);
+}
+/*
+.options-grid{
+  display: grid;
+  grid-template-columns: 50% 50%;
+} */
+
+/*
+.analyse-question{
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--primary-colour);
+  color: white;
+  margin: 0;
+  padding: 0.2rem 2rem;
+  font-size: 1rem;
+} */
+
+
+.analyse-question{
+  box-sizing: border-box;
+  width: 100%;
+  /* background-color: var(--primary-colour); */
+  color: white;
+  margin: 0;
+  padding: 0.2rem 2rem;
+  font-size: 1rem;
+}
+
+
+.full-bar{
+  width: 100%;
+  background-color: white;
+  height: 1px;
+}
+
+.analyse-continue{
+  display: flex;
+  flex-direction: column;
+  height: 5rem;
+  align-items: center;
+  background-color: var(--primary-colour);
+  border-radius: 0 0 10px 10px;
+}
+
+.analyse-continue input{
+  margin: auto;
+}
+
+
+
 
 /* ------QUICK STATS------ */
 

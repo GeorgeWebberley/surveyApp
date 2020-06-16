@@ -150,7 +150,6 @@ However, it is very likely that a user would want to get more information out of
 
 All of this aggregation was done using D3.js which I have found to be easier to use and get familiar with than using Pandas. Furthermore, it can all be done on the client side, reducing back and forth communication with the server (as discussed above).
 
-<a name="latestEntry"></a>
 #### Exploring D3 more with regards to enter, update and exit (15th June)
 I spent some time trying to really get familiar with D3 as it is a core part of my project. I followed many tutorials to get to grips with the concept of 'enter', 'update' and 'exit'. One big problem is that many people and tutorials still use version 3 of D3.js, which is very different from the most recent version (version 4).
 Understanding these concepts has allowed me to better 'bind' my data to the DOM elements. Previously, each time the graph changed I would clear/delete the graph and redraw it. Now I edit the previous DOM elements, add new ones if needed and delete ones no longer being used. This allows for improved manipulation of the DOM elements, such as using transitions.
@@ -158,9 +157,17 @@ I have subsequently altered my bar-char page to include transitions as the data 
 
 I will want to now work on getting some basic statistical tests done, so that I have covered all aspects of my project in a basic way before getting user feedback.
 
+<a name="latestEntry"></a>
+#### Saving graphs and starting on statistical analysis (16th June)
+Following the change in format for producing the graph, as well as allowing for more detailed settings (such as choosing a y axis and aggregation variable), I needed to review the way I save graphs.
+Furthermore, I have now also added a feature so that users can go and edit their graphs. The edited graphs will update the existing MongoDB document to reflect the changes.
+At some point (and if time allows) I will want to allow users to customise their graph by choosing things such as colours and axis labels.
+
+I have also started working on reading in data for statistical analysis. The first test I will do will be a Kruskall Wallis test as I can use this on the sample data I have been working with (flavoured icecream vs age) to see if their is a correlation. Implementing the equation for this test will be the next thing I do.
+
 ##### Ongoing objectives
 
-* Now that the way the graph is made has changed, I will need to review the way the server saves and stores graphs in the database.
 * To start thinking about getting user feedback so far.
 * Add more graphs. I think line graph would be a good next one to look at as it will be quite different to bar charts. Pie-charts I think will be quite similar to bar-charts as it is mostly categorical data and aggregations, only the presentation is different.
 * To carry out unit testing of the bar-chart and dashboard pages.
+* Start on basic statistical tests.

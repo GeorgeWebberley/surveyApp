@@ -7,7 +7,7 @@ import numpy as np
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import UploadForm, EditSurveyForm, SaveGraphForm
+from surveyapp.graphs.forms import UploadForm, EditSurveyForm, SaveGraphForm, StatisticalTestForm
 from bson.objectid import ObjectId
 from surveyapp.graphs.utils import parse_data, save_graph, read_from_file, remove_nan
 
@@ -89,52 +89,57 @@ def choose_graph(survey_id):
     df = read_from_file(file_obj["fileName"])
     return render_template("choosegraph.html", title="Select Graph", survey_id=file_obj["_id"], columns=list(df))
 
+
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
+# ALSO NEEDS REFACTORING AS GETTING QUITE LONG
 @graphs.route('/barchart/<survey_id>', methods=['GET', 'POST'])
 @login_required
 def bar_chart(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
-    if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
-        return redirect(url_for("main.index"))
     form = SaveGraphForm()
-    column = request.args.get('column')
-    graph_id = request.args.get('graph_id')
-    if form.validate_on_submit():
-        save_graph(form.title.data, column, survey_id, graph_id);
-        return redirect(url_for("graphs.dashboard"))
-    elif request.method == "GET":
-        df = read_from_file(file_obj["fileName"])
-        # column_info = pase_data(df)
-        df = df.groupby(column)[column].agg("count")
-        df = df.to_frame('c').reset_index()
-        # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
-        chart_data = df.to_dict(orient='records')
-        data = {"chart_data": chart_data, "title": file_obj["title"], "column" : column}
-        if request.args.get('title') == None:
-            form.title.data = "Bar chart - " + file_obj["title"] + ": " + column
-        else:
-            form.title.data = request.args.get('title')
-    return render_template("barchart.html", title="Bar chart", data=data, column=column, form=form)
-
-# RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
-@graphs.route('/barchart2/<survey_id>', methods=['GET'])
-@login_required
-def bar_chart2(survey_id):
-    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
 
+    # This needs to be specified before 'form.validate_on_submit()' so Flask WTForms knows how to validate it
     df = read_from_file(file_obj["fileName"])
     column_info = parse_data(df)
+    for column in column_info:
+        form.x_axis.choices.append((column["title"], column["title"]))
+        if column["data_type"] == "numerical":
+            # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
+            form.y_axis.choices.append((column["title"], column["title"]))
+    # Check to see if graph already exists
+    graph_id = request.args.get("graph_id")
+    # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
+    if form.validate_on_submit():
+        if form.x_axis.data == "Amount":
+            y_agg = ""
+        else:
+            y_agg = form.y_axis_agg.data
+        mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
+        {"$set": {"title" : form.title.data,\
+                "surveyId": survey_id,\
+                "user" : current_user._id,\
+                "xAxis" : form.x_axis.data,\
+                "yAxis": form.y_axis.data,\
+                "yAggregation": y_agg}}, upsert=True)
+        return redirect(url_for("graphs.dashboard", title="Dashboard"))
+
+    # If we are editing the graph instead of creating new, we want to prepopulate the fields
+    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
+    if graph_obj:
+        form.x_axis.data = graph_obj["xAxis"]
+        form.y_axis.data = graph_obj["yAxis"]
+        form.y_axis_agg.data = graph_obj["yAggregation"]
+        form.title.data = graph_obj["title"]
+    else:
+        form.title.data = "Bar chart - " + file_obj["title"]
+
     # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
     data = {"chart_data": chart_data, "title": file_obj["title"], "column_info" : column_info}
-    return render_template("barchart2.html", title="Bar chart", data=data)
-
-
-
+    return render_template("barchart.html", title="Bar chart", data=data, form=form)
 
 
 
@@ -187,11 +192,20 @@ def delete_graph(graph_id):
 
 
 # Analyse data sets
-@graphs.route("/analyse", methods=['GET'])
+@graphs.route("/analyse", methods=['GET', 'POST'])
 @login_required
 def analyse():
-    surveys = mongo.db.surveys.find({"user": current_user._id})
-    return render_template("analysedata.html", surveys=surveys)
+    form = StatisticalTestForm()
+    surveys = list(mongo.db.surveys.find({"user": current_user._id}))
+    for survey in surveys:
+        form.survey.choices.append((survey["title"], survey["title"]))
+        df = read_from_file(survey["fileName"])
+        for variable in list(df.columns.values):
+            form.independent_variable.choices.append((variable, variable))
+            form.dependent_variable.choices.append((variable, variable))
+    if form.validate_on_submit():
+        return redirect(url_for('graphs.dashboard'))
+    return render_template("analysedata.html", form=form)
 
 
 # Give the user a quick overview of stats on the survey data

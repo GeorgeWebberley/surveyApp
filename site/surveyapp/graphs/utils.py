@@ -54,7 +54,7 @@ def parse_data(df):
 
 
 # Saves new graph, else if already exists it updates the existing one
-def save_graph(title, column, survey_id, graph_id):
+def save_graph(title, survey_id, graph_id, x_variable, y_variable, y_aggregation):
     graph = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
     if not graph:
         mongo.db.graphs.insert_one({\
