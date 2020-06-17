@@ -941,3 +941,10 @@ body {
   font-size: 16px;
   line-height: 20px;
 }
+
+.result-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}

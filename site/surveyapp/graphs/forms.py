@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, FileField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from bson.objectid import ObjectId
 
 
 class UploadForm(FlaskForm):
@@ -23,10 +24,10 @@ class SaveGraphForm(FlaskForm):
     submit = SubmitField("Save")
 
 class StatisticalTestForm(FlaskForm):
-    # We will append variables to x/y axis choices based on the data
-    survey = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
-    # Bar chart will default to "Amount" on y axis. Will also append all numerical variable types from the data set.
-    test = SelectField(choices=[("", " -- select an option -- "), ("kruskall", "Kruskall Wallis Test"), ("paired t", "Paired T Test"), ("chi", "Chi-Squared Test")], validators=[DataRequired()])
+    # We will append choices to drop down depending on the data and what is selected by the upser
+    # as survey takes an objectId as the value, we need to initialise it and also tell it to coerce ObjectIds
+    survey = SelectField(choices=[("000000000000000000000000", " -- select an option -- ")], coerce=ObjectId, validators=[DataRequired()])
+    test = SelectField(choices=[("", " -- select an option -- "), ("Kruskall Wallis Test", "Kruskall Wallis Test"), ("Paired T Test", "Paired T Test"), ("Chi-Squared Test", "Chi-Squared Test")], validators=[DataRequired()])
     independent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
     dependent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
     submit = SubmitField("Continue")

@@ -10,9 +10,25 @@ const independentVariableList = document.querySelector(".independent-variable")
 const dependentVariableList = document.querySelector(".dependent-variable")
 const statisticalTestList = document.querySelector(".statistical-test")
 
-
 function setEventListeners() {
-  onChangeListener(surveyList, statisticalTests);
+  // onChangeListener(surveyList, statisticalTests);
+  surveyList.onchange = function() {
+    statisticalTests.classList.remove("hidden-axis");
+    surveyList.firstChild.hidden = true;
+    survey = surveyList.value
+    fetch("/analyse/" + survey)
+      .then(response => response.json())
+      .then(data => {
+        let optionHTML = "<option value=''> -- select an option -- </option>";
+        data.variables.forEach(variable => {
+          optionHTML += "<option value='" + variable + "'>" + variable + "</option>";
+        })
+        independentVariableList.innerHTML = optionHTML;
+        dependentVariableList.innerHTML = optionHTML;
+      })
+  }
+
+
   onChangeListener(statisticalTestList, independentVariables);
   onChangeListener(independentVariableList, dependentVariables);
   onChangeListener(dependentVariableList, continueButton);

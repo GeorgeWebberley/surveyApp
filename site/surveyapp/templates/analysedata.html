@@ -2,12 +2,12 @@
 <div class="container">
   <div class="sub-container">
     <form action="" method="post">
+    {{ form.hidden_tag() }}
 
     <div class="survey-analyse">
       <div class="analyse-question">
         <h3>Which survey would you like to analyse?</h3>
       </div>
-      {{ form.hidden_tag() }}
       {{ form.survey(class="analyse-option analyse-survey") }}
     </div>
     <div class="analyse-transition statistical-tests hidden-axis">
@@ -15,7 +15,6 @@
       <div class="analyse-question">
         <h3>What test would you like to apply?</h3>
       </div>
-      {{ form.hidden_tag() }}
       {{ form.test(class="analyse-option statistical-test") }}
     </div>
     <div class="analyse-transition independent-variables hidden-axis">
@@ -23,7 +22,6 @@
       <div class="analyse-question">
         <h3>Please select your independent variable.</h3>
       </div>
-      {{ form.hidden_tag() }}
       {{ form.independent_variable(class="analyse-option independent-variable") }}
     </div>
     <div class="analyse-transition dependent-variables hidden-axis">
@@ -31,7 +29,6 @@
       <div class="analyse-question">
         <h3>Please select your dependent variable.</h3>
       </div>
-      {{ form.hidden_tag() }}
       {{ form.dependent_variable(class="analyse-option dependent-variable") }}
     </div>
     <div class="analyse-transition analyse-continue hidden-axis">
@@ -42,4 +39,8 @@
 </div>
 
 <script src="{{ url_for('static', filename='analyse.js') }}" defer></script>
+
+
+
+
 {% endblock content %}

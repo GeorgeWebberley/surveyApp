@@ -4,8 +4,11 @@ import bson
 import json
 import pandas as pd
 import numpy as np
+# from scipy.stats import kruskal
+import pingouin as pg
+from pingouin import kruskal
 from surveyapp import dropzone, mongo
-from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort
+from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
 from flask_login import login_required, current_user
 from surveyapp.graphs.forms import UploadForm, EditSurveyForm, SaveGraphForm, StatisticalTestForm
 from bson.objectid import ObjectId
@@ -196,16 +199,59 @@ def delete_graph(graph_id):
 @login_required
 def analyse():
     form = StatisticalTestForm()
+    # Get a list of all surveys associate with the current user
     surveys = list(mongo.db.surveys.find({"user": current_user._id}))
     for survey in surveys:
-        form.survey.choices.append((survey["title"], survey["title"]))
+        # Loop through each survey, saving the title (and filename) as well as the variables in the select options
+        form.survey.choices.append((survey["_id"], survey["title"]))
         df = read_from_file(survey["fileName"])
         for variable in list(df.columns.values):
             form.independent_variable.choices.append((variable, variable))
             form.dependent_variable.choices.append((variable, variable))
     if form.validate_on_submit():
-        return redirect(url_for('graphs.dashboard'))
+        # Get the dataset, and save the variables in python variables
+        survey = mongo.db.surveys.find_one({"_id": form.survey.data})
+        df = read_from_file(survey["fileName"])
+        independent_variable = form.independent_variable.data
+        dependent_variable = form.dependent_variable.data
+        test = form.test.data
+        if test == "Kruskall Wallis Test":
+            kruskal_result = kruskal(data=df, dv=dependent_variable, between=independent_variable)
+            p_value = kruskal_result["p-unc"][0]
+        return redirect(url_for('graphs.result'), test=form.test.data, p_value=p_value, independent_variable=independent_variable, dependent_variable=dependent_variable)
     return render_template("analysedata.html", form=form)
+
+
+
+# Analyse data sets
+@graphs.route("/result", methods=['GET'])
+@login_required
+def result():
+    alpha=0.05
+    p_value=request.args.get("p_value")
+    test=request.args.get("test")
+    independent_variable=request.args.get("independent_variable")
+    dependent_variable=request.args.get("dependent_variable")
+    result = {"test":test, "p":p_value, "alpha":alpha, "iv":independent_variable, "dv":dependent_variable}
+    return render_template("result.html", result=result)
+
+
+
+
+
+
+
+# A route that will return all the variables associated with a survey when called.
+# Used for creating dynamic drop down boxes, with options changing based on previous options
+@graphs.route("/analyse/<survey_id>")
+def get_survey(survey_id):
+    survey = mongo.db.surveys.find_one({"_id": ObjectId(survey_id)})
+    df = read_from_file(survey["fileName"])
+    return jsonify({"variables" : df.columns.values.tolist()})
+
+
+
+
 
 
 # Give the user a quick overview of stats on the survey data

@@ -175,3 +175,12 @@ For easy installation of all packages (xlrd allows for parsing Excel files).
 pip install pandas
 pip install xlrd
 ```
+
+##### SciPy and Pingouin
+
+Used for carrying out the statistical tests on the data.
+
+```
+pip install scipy
+pip install pingouin
+```

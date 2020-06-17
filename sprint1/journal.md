@@ -165,6 +165,11 @@ At some point (and if time allows) I will want to allow users to customise their
 
 I have also started working on reading in data for statistical analysis. The first test I will do will be a Kruskall Wallis test as I can use this on the sample data I have been working with (flavoured icecream vs age) to see if their is a correlation. Implementing the equation for this test will be the next thing I do.
 
+#### Difficulties with dynamic page loading(17th June)
+For choosing the statistical tests, I wanted to create dynamic dropdown/select options that will populate as the user selects their data set and the variables they want to use. However, as the forms are pre-validated on the server side before being sent (for security purposes) it proved to be difficult to render them dynamically. I finally managed to think of a solution using javascript, but unfortunately it used up the better part of the day!
+
+Additionally to this, I started working on the actual calculation for the statistical test. Initially I used [SciPy](https://www.scipy.org/) but was unable to get the correct results from the data (I compared it to the results produced by SPSS). In the end I managed to get it to work using the python package [pingouin](https://pingouin-stats.org/). The first test I have done is the Kruskal Wallis test as this is good for survey data as it compared groups of categorical data with ordinal or parametric data.
+
 ##### Ongoing objectives
 
 * To start thinking about getting user feedback so far.
