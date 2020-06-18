@@ -124,6 +124,8 @@ const render = (data, groupedData) => {
   // Remove old axes labels (if they exist)
   d3.selectAll('.label').remove();
 
+  // sort the grouped data keys in ascending order (i.e. so the x-axis is in numerical order)
+  groupedData.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
   // Set the scale for the x-axis
   const xScale = d3.scaleBand()
     .domain(groupedData.map(xValues))

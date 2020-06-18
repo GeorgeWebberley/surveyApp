@@ -17,12 +17,13 @@ class TestingConfig(object):
     MONGO_URI = "mongodb://localhost:27017/surveyDatabaseTest"
     SECRET_KEY = 'test!'
     # DropZone configurations
-    DROPZONE_ALLOWED_FILE_CUSTOM=True
-    DROPZONE_ALLOWED_FILE_TYPE='.xls, .xlt, .xla, .xlsx, .xltx, .xlsb, .xlsm, .xltm, .xlam, .csv'
-    DROPZONE_INVALID_FILE_TYPE='Only Excel files or CSV files can be used.'
-    DROPZONE_MAX_FILES = 1
+    # DROPZONE_ALLOWED_FILE_CUSTOM=True
+    # DROPZONE_ALLOWED_FILE_TYPE='.xls, .xlt, .xla, .xlsx, .xltx, .xlsb, .xlsm, .xltm, .xlam, .csv'
+    # DROPZONE_INVALID_FILE_TYPE='Only Excel files or CSV files can be used.'
+    # DROPZONE_MAX_FILES = 1
     # disabled so we can test login/registration
     WTF_CSRF_ENABLED = False
+    # LOGIN_DISABLED = True
 
 config_by_name = dict(
     dev=Config,

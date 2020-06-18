@@ -10,7 +10,7 @@ from pingouin import kruskal
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import UploadForm, EditSurveyForm, SaveGraphForm, StatisticalTestForm
+from surveyapp.graphs.forms import UploadForm, EditForm, SaveGraphForm, StatisticalTestForm
 from bson.objectid import ObjectId
 from surveyapp.graphs.utils import parse_data, save_graph, read_from_file, remove_nan
 
@@ -79,7 +79,8 @@ def table(survey_id):
 def dashboard():
     surveys=mongo.db.surveys.find({"user":current_user._id})
     graphs=mongo.db.graphs.find({"user":current_user._id})
-    return render_template("dashboard.html", title="Dashboard", surveys=list(surveys), graphs=list(graphs))
+    tests=mongo.db.tests.find({"user":current_user._id})
+    return render_template("dashboard.html", title="Dashboard", surveys=list(surveys), graphs=list(graphs), tests=list(tests))
 
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
 @graphs.route('/choosegraph/<survey_id>', methods=['GET', 'POST'])
@@ -120,6 +121,7 @@ def bar_chart(survey_id):
             y_agg = ""
         else:
             y_agg = form.y_axis_agg.data
+        # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
         mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
         {"$set": {"title" : form.title.data,\
                 "surveyId": survey_id,\
@@ -172,7 +174,7 @@ def edit_survey(survey_id):
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         abort(403)
-    form = EditSurveyForm()
+    form = EditForm()
     if form.validate_on_submit():
         mongo.db.surveys.update_one({"_id": file_obj["_id"]}, {"$set": {"title": form.title.data}})
         return redirect(url_for('graphs.dashboard'))
@@ -218,38 +220,65 @@ def analyse():
         if test == "Kruskall Wallis Test":
             kruskal_result = kruskal(data=df, dv=dependent_variable, between=independent_variable)
             p_value = kruskal_result["p-unc"][0]
-        return redirect(url_for('graphs.result'), test=form.test.data, p_value=p_value, independent_variable=independent_variable, dependent_variable=dependent_variable)
+        return redirect(url_for('graphs.result',\
+                                survey=survey["_id"],\
+                                test=test,\
+                                p_value=p_value,\
+                                independent_variable=independent_variable,\
+                                dependent_variable=dependent_variable))
     return render_template("analysedata.html", form=form)
 
 
 
-# Analyse data sets
-@graphs.route("/result", methods=['GET'])
+# Results from stats test
+# IN THE FURUTRE, ADD FEATURE TO ADJUST THE P-VALUE????
+@graphs.route("/result", methods=['GET', 'POST'])
 @login_required
 def result():
+    form = EditForm()
+    # Set a default alpha value 0.05 to compare the p value to
     alpha=0.05
-    p_value=request.args.get("p_value")
+    # cast string to float so it can be compared with the alpha value
+    p_value=float(request.args.get("p_value"))
     test=request.args.get("test")
     independent_variable=request.args.get("independent_variable")
     dependent_variable=request.args.get("dependent_variable")
+    # Get the survey variable so the test result can be saved and reference the survey
+    survey=request.args.get("survey")
+    test_id=request.args.get("test_id")
+    if form.validate_on_submit():
+        # 'upsert' creates entry if it does not yet exist
+        mongo.db.tests.update_one({"_id": ObjectId(test_id)},\
+        {"$set":{"survey" : survey,\
+                "user" : current_user._id,\
+                "title" : form.title.data,\
+                "test" : test,\
+                "independentVariable" : independent_variable,\
+                "dependentVariable" : dependent_variable,\
+                "p" : p_value}}, upsert=True)
+        return redirect(url_for('graphs.dashboard', title="Dashboard"))
+    title=request.args.get("title")
+    if title:
+        # i.e. if test already exists and user is clicking to view/edit it
+        form.title.data = title
+    else:
+        # Set the default title. Users can change this
+        form.title.data = independent_variable + "/" + dependent_variable + ": " + test
     result = {"test":test, "p":p_value, "alpha":alpha, "iv":independent_variable, "dv":dependent_variable}
-    return render_template("result.html", result=result)
+    return render_template("result.html", result=result, form=form)
 
 
 
-
-
-
-
-# A route that will return all the variables associated with a survey when called.
-# Used for creating dynamic drop down boxes, with options changing based on previous options
-@graphs.route("/analyse/<survey_id>")
-def get_survey(survey_id):
-    survey = mongo.db.surveys.find_one({"_id": ObjectId(survey_id)})
-    df = read_from_file(survey["fileName"])
-    return jsonify({"variables" : df.columns.values.tolist()})
-
-
+# DELETE A statistical test
+@graphs.route("/analyse/<test_id>/delete", methods=['POST'])
+@login_required
+def delete_test(test_id):
+    test_obj = mongo.db.tests.find_one_or_404({"_id":ObjectId(test_id)})
+    if test_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "error")
+        abort(403)
+    mongo.db.tests.delete_one(test_obj)
+    return redirect(url_for('graphs.dashboard'))
 
 
 
@@ -267,3 +296,26 @@ def quick_stats(survey_id):
     cols = len(df.columns)
     column_info = parse_data(df);
     return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info )
+
+
+
+
+
+
+
+
+
+# A 'helper' route that will return all the variables associated with a survey when called.
+# Used by a javscript 'fetch' function for creating dynamic drop down boxes, with options changing based on previous options
+@graphs.route("/analyse/<survey_id>")
+def get_survey(survey_id):
+    survey = mongo.db.surveys.find_one({"_id": ObjectId(survey_id)})
+    df = read_from_file(survey["fileName"])
+    column_info = parse_data(df)
+    independent_variables = []
+    dependent_variables = []
+    for column in column_info:
+        independent_variables.append(column["title"])
+        if column["data_type"] == "numerical":
+            dependent_variables.append(column["title"])
+    return jsonify({"independentVariables" : independent_variables, "dependentVariables" : dependent_variables})

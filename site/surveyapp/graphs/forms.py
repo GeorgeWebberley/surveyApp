@@ -10,9 +10,10 @@ class UploadForm(FlaskForm):
     file = FileField('Choose file to upload', validators=[DataRequired(), FileAllowed(["xls", "xlt", "xla", "xlsx", "xltx", "xlsb", "xlsm", "xltm", "xlam", "csv"], message="Only CSV files or Excel Spreadsheets allowed.")])
     submit = SubmitField('Save and proceed')
 
-class EditSurveyForm(FlaskForm):
-    title = StringField("Enter a new title.", validators=[DataRequired()])
-    submit = SubmitField("Save changes")
+# This form is used for editing a statistical test title and for editing a survey title
+class EditForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    submit = SubmitField("Save")
 
 class SaveGraphForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
@@ -27,7 +28,7 @@ class StatisticalTestForm(FlaskForm):
     # We will append choices to drop down depending on the data and what is selected by the upser
     # as survey takes an objectId as the value, we need to initialise it and also tell it to coerce ObjectIds
     survey = SelectField(choices=[("000000000000000000000000", " -- select an option -- ")], coerce=ObjectId, validators=[DataRequired()])
-    test = SelectField(choices=[("", " -- select an option -- "), ("Kruskall Wallis Test", "Kruskall Wallis Test"), ("Paired T Test", "Paired T Test"), ("Chi-Squared Test", "Chi-Squared Test")], validators=[DataRequired()])
+    test = SelectField(choices=[("", " -- select an option -- "), ("Kruskall Wallis Test", "Kruskall Wallis Test")], validators=[DataRequired()])
     independent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
     dependent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
     submit = SubmitField("Continue")

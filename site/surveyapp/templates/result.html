@@ -1,10 +1,50 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <div class="result-container grid-section">
-    <div class="result-title">
-      <h3>Results from {{ result["test"] }}</h3>
+  <div class="grid-section">
+    <div class="title-area">
+      <h3>Test results</h3>
     </div>
-
+    <div class="full-bar"></div>
+    <div class="result-container">
+      <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.title.label(class="result-form-title") }}
+        {% if form.title.errors %}
+            {{ form.title(class="result-form-input form-input-error") }}
+            <div class="invalid">
+                {% for error in form.title.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ form.title(class="result-form-input") }}
+        {% endif %}
+        <table class="result-table">
+         <tr>
+           <th>Null Hypothesis</th>
+           <th>Statistical Test</th>
+           <th>Significance Value</th>
+           <th>P-Value</th>
+           <th>Conclusion</th>
+         </tr>
+         <tr>
+           <td>The distribution of <strong>{{ result["dv"] }}</strong> is the same across groups of <strong>{{ result["iv"] }}</strong></td>
+           <td>{{ result["test"] }}</td>
+           <td>{{ result["alpha"] }}</td>
+           <td>{{ result["p"] }}</td>
+           {% if result["p"] <= result["alpha"] %}
+            <td>Reject the null hypothesis</td>
+           {% else %}
+            <td>Accept the null hypothesis</td>
+           {% endif %}
+         </tr>
+        </table>
+        <div class="btn-row result-buttons">
+          <a class="btn btn-secondary" href="{{ url_for('graphs.dashboard') }}">Cancel</a>
+          {{ form.submit(class="btn btn-primary") }}
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 

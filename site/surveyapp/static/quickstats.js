@@ -4,5 +4,5 @@ var msnry = new Masonry( container, {
 
   columnWidth: '.grid-element',
   itemSelector: '.grid-element',
-  gutter: 5
+  gutter: 10
 });

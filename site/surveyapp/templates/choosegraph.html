@@ -2,14 +2,10 @@
 <div class="container">
   <h1 class="dashboard-title">What type of graph would you like to make?</h1>
   <div class="select-graphs">
-    <div class="graph-type">
-      <a href="{{ url_for('graphs.bar_chart', survey_id=survey_id) }}">
-        <img class="graph-img" src="{{ url_for('static', filename='images/barchart.jpg') }}" class="graph-img"/>
-        <div class="graph-img-overlay">
-          <p>Bar Chart</p>
-        </div>
-      </a>
-    </div>
+    <a class="select-graph-link" href="{{ url_for('graphs.bar_chart', survey_id=survey_id) }}">
+      <img class="graph-img" src="{{ url_for('static', filename='images/barchart.png') }}" class="graph-img"/>
+      <p class="select-graph-type">Bar Chart</p>
+    </a>
     <div class="graph-type">
     </div>
     <div class="graph-type">

@@ -4,6 +4,8 @@ from surveyapp import create_app, mongo
 
 
 
+from flask_login import current_user
+
 # ------APPLICATION INITIALISATION------
 @pytest.fixture
 def client():
@@ -76,6 +78,8 @@ def logout(client):
     return client.get('/logout', follow_redirects=True)
 
 
+
+
 # make sure logging in and logging out works
 def test_login_logout(client):
     # Create an account to test the login page
@@ -93,8 +97,23 @@ def test_login_logout(client):
 
     # test login/logout with correct details
     rv = login(client, "test@email.com", "password")
-    # print(rv.data)
     assert b'Logged in successfully.' in rv.data
 
     rv = logout(client)
     assert b'Logged out successfully.' in rv.data
+
+
+
+
+# Test the dashboard page
+def test_dashboard(client):
+
+    # First try accessing dashboard when not logged in
+    rv = client.get('/dashboard', content_type="html/text")
+    # Check that the user was redirected
+    assert(rv.status_code == 302)
+
+
+    # Create an account to test the login page
+    register(client, "test", "name", "test@email.com", "password", "password")
+    login(client, "test@email.com", "password")

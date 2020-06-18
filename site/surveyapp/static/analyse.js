@@ -11,7 +11,7 @@ const dependentVariableList = document.querySelector(".dependent-variable")
 const statisticalTestList = document.querySelector(".statistical-test")
 
 function setEventListeners() {
-  // onChangeListener(surveyList, statisticalTests);
+
   surveyList.onchange = function() {
     statisticalTests.classList.remove("hidden-axis");
     surveyList.firstChild.hidden = true;
@@ -19,25 +19,43 @@ function setEventListeners() {
     fetch("/analyse/" + survey)
       .then(response => response.json())
       .then(data => {
-        let optionHTML = "<option value=''> -- select an option -- </option>";
-        data.variables.forEach(variable => {
-          optionHTML += "<option value='" + variable + "'>" + variable + "</option>";
+        let independentSelect = "<option value=''> -- select an option -- </option>";
+        data.independentVariables.forEach(variable => {
+          independentSelect += "<option value='" + variable + "'>" + variable + "</option>";
         })
-        independentVariableList.innerHTML = optionHTML;
-        dependentVariableList.innerHTML = optionHTML;
+        let dependentSelect = "<option value=''> -- select an option -- </option>";
+        data.dependentVariables.forEach(variable => {
+          dependentSelect += "<option value='" + variable + "'>" + variable + "</option>";
+        })
+        independentVariableList.innerHTML = independentSelect;
+        dependentVariableList.innerHTML = dependentSelect;
       })
   }
 
+  statisticalTestList.onchange = function() {
+    independentVariables.classList.remove("hidden-axis");
+    statisticalTestList.firstChild.hidden = true;
+  }
 
-  onChangeListener(statisticalTestList, independentVariables);
-  onChangeListener(independentVariableList, dependentVariables);
-  onChangeListener(dependentVariableList, continueButton);
+  onChangeListener(independentVariableList, dependentVariableList, dependentVariables);
+  onChangeListener(dependentVariableList, independentVariableList, continueButton);
+
 }
 
-function onChangeListener(options, nextSection){
-  options.onchange = function() {
+// This function removes the chosen variable from the opposite select box, preventing the same variable being picked twice
+function onChangeListener(currentSelect, otherSelect, nextSection){
+  currentSelect.onchange = function() {
     nextSection.classList.remove("hidden-axis");
-    options.firstChild.hidden = true;
+    currentSelect.firstChild.hidden = true;
+    variable = currentSelect.value
+    for (var i=0; i < otherSelect.length; i++) {
+        if (otherSelect.options[i].value == variable){
+          otherSelect.options[i].hidden = true;
+        } else {
+          otherSelect.options[i].hidden = false;
+        }
+    }
+    otherSelect.firstChild.hidden = true;
   }
 }
 

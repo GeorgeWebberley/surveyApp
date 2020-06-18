@@ -5,8 +5,10 @@
     <div class="dashboard-grid">
       <!-- ------YOUR SURVEYS GRID SECTION------ -->
       <div class="dashboard-tables grid-section">
-        <h2 class="grid-section-title">Your surveys</h2>
-        <div class="grid-bar"></div>
+        <div class="title-area">
+          <h4>Your surveys</h4>
+        </div>
+        <div class="full-bar"></div>
         {% if not surveys %}
         <div class="no-graphs-container">
           <a href="{{ url_for('graphs.import_file') }}">
@@ -36,8 +38,10 @@
       </div>
       <!-- ------YOUR GRAPHS GRID SECTION------ -->
       <div class="dashboard-graphs grid-section">
-        <h2 class="grid-section-title">Your graphs</h2>
-        <div class="grid-bar"></div>
+        <div class="title-area">
+          <h4>Your graphs</h4>
+        </div>
+        <div class="full-bar"></div>
         {% if not graphs %}
         <div class="no-graphs-container">
           <div class="empty add-graph">
@@ -65,8 +69,11 @@
       </div>
       <!-- ------ANALYSE YOUR DATA GRID SECTION------ -->
       <div class="dashboard-stats grid-section">
-        <h2 class="grid-section-title" >Analyse your data</h2>
-        <div class="grid-bar"></div>
+        <div class="title-area">
+          <h4>Analyse your data</h4>
+        </div>
+        <div class="full-bar"></div>
+        {% if not tests %}
         <div class="no-graphs-container">
           <a href="{{ url_for('graphs.analyse')}}">
             <div class="empty">
@@ -76,6 +83,29 @@
             </div>
           </a>
         </div>
+        {% else %}
+          {% for test in tests %}
+            <div class="dashboard-table">
+              <a href="{{ url_for('graphs.result',
+                          test_id=test['_id'],
+                          survey=test['survey'],
+                          test=test['test'],
+                          p_value=test['p'],
+                          independent_variable=test['independentVariable'],
+                          dependent_variable=test['dependentVariable'],
+                          title=test['title'] )}}">{{ test["title"] }}</a>
+              <div class="edit-delete">
+                <form action="{{ url_for('graphs.delete_test', test_id=test['_id'] )}}" method="post"
+                    onsubmit="return confirm('Are you sure you want to delete this test?');">
+                  <button class="delete-icon" type="submit"><i class="fas fa-trash fa-lg"></i></button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+          <a class="add-more" href="{{ url_for('graphs.analyse') }}">
+            <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
+          </a>
+        {% endif %}
       </div>
     </div>
   </section>

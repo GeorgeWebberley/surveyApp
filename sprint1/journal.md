@@ -157,7 +157,6 @@ I have subsequently altered my bar-char page to include transitions as the data 
 
 I will want to now work on getting some basic statistical tests done, so that I have covered all aspects of my project in a basic way before getting user feedback.
 
-<a name="latestEntry"></a>
 #### Saving graphs and starting on statistical analysis (16th June)
 Following the change in format for producing the graph, as well as allowing for more detailed settings (such as choosing a y axis and aggregation variable), I needed to review the way I save graphs.
 Furthermore, I have now also added a feature so that users can go and edit their graphs. The edited graphs will update the existing MongoDB document to reflect the changes.
@@ -170,9 +169,14 @@ For choosing the statistical tests, I wanted to create dynamic dropdown/select o
 
 Additionally to this, I started working on the actual calculation for the statistical test. Initially I used [SciPy](https://www.scipy.org/) but was unable to get the correct results from the data (I compared it to the results produced by SPSS). In the end I managed to get it to work using the python package [pingouin](https://pingouin-stats.org/). The first test I have done is the Kruskal Wallis test as this is good for survey data as it compared groups of categorical data with ordinal or parametric data.
 
+<a name="latestEntry"></a>
+#### Finished statistics page for sprint 1(18th June)
+I have continued to work on the statistics page, and now have created a result 'table' that displays the results of the statistical test to the user. It also suggests what the 'null hypothesis' is (based on the variables provided) and whether the null hypothesis should be rejected.
+I have also implemented the server side storing of the statistical test in the database, allowing users to view it again at a later date and to give it a custom title.
+Adding more statistical tests will likely add extra complexity. Currently the application is setup to handle Kruskal Wallis H tests, and other statistical tests will have other requirements (e.g. different kinds of data). This is a problem I anticipate and will aim to address in sprint 2.
+
 ##### Ongoing objectives
 
 * To start thinking about getting user feedback so far.
 * Add more graphs. I think line graph would be a good next one to look at as it will be quite different to bar charts. Pie-charts I think will be quite similar to bar-charts as it is mostly categorical data and aggregations, only the presentation is different.
-* To carry out unit testing of the bar-chart and dashboard pages.
-* Start on basic statistical tests.
+* To carry out unit testing of the bar-chart, statistics page and dashboard pages.
