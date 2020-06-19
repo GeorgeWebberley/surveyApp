@@ -33,7 +33,7 @@
             {% if current_user.is_authenticated %}
               <a class="navbar-link" href="{{ url_for('users.logout') }}">Logout</a>
               <a class="navbar-link" href="{{ url_for('graphs.dashboard') }}">Dashboard</a>
-              <a class="navbar-link" href="{{ url_for('users.feedback') }}">Feedback</a>
+              <a class="navbar-link" href="{{ url_for('main.feedback') }}">Feedback</a>
 
             {% endif %}
           </div>

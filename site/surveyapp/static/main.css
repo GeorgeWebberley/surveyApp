@@ -402,6 +402,7 @@ body {
   border-radius: 10px;
 }
 
+
 .title-area {
   box-sizing: border-box;
   width: 100%;
@@ -1045,4 +1046,12 @@ body {
   height: 10rem;
   margin: 0 10%;
   margin-top: 0.5rem;
+}
+
+
+
+/* ------GENERAL------ */
+
+.padding {
+  padding: 1rem;
 }

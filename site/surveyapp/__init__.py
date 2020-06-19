@@ -36,9 +36,11 @@ def create_app(config_name):
     from surveyapp.users.routes import users
     from surveyapp.graphs.routes import graphs
     from surveyapp.main.routes import main
+    from surveyapp.errors.handlers import errors
     # Register the blueprint routes
     app.register_blueprint(users)
     app.register_blueprint(graphs)
     app.register_blueprint(main)
+    app.register_blueprint(errors)
 
     return app

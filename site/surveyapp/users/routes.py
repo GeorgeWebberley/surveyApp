@@ -1,7 +1,7 @@
 from surveyapp import dropzone, mongo, bcrypt
 from flask import Flask, render_template, url_for, request, flash, redirect, Blueprint
 # syntax for accessing files inside packages
-from surveyapp.users.forms import RegistrationForm, LoginForm, FeedbackForm
+from surveyapp.users.forms import RegistrationForm, LoginForm
 from flask_login import current_user, login_user, logout_user, login_required
 from surveyapp.models import User
 
@@ -54,11 +54,3 @@ def logout():
     logout_user()
     flash("Logged out successfully.", "success")
     return redirect(url_for('main.index'))
-
-
-
-@users.route('/feedback', methods=["GET", "POST"])
-@login_required
-def feedback():
-    form = FeedbackForm()
-    return render_template("feedback.html", title = "Feedback", form = form)
