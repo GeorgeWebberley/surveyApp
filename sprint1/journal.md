@@ -169,14 +169,25 @@ For choosing the statistical tests, I wanted to create dynamic dropdown/select o
 
 Additionally to this, I started working on the actual calculation for the statistical test. Initially I used [SciPy](https://www.scipy.org/) but was unable to get the correct results from the data (I compared it to the results produced by SPSS). In the end I managed to get it to work using the python package [pingouin](https://pingouin-stats.org/). The first test I have done is the Kruskal Wallis test as this is good for survey data as it compared groups of categorical data with ordinal or parametric data.
 
-<a name="latestEntry"></a>
 #### Finished statistics page for sprint 1(18th June)
 I have continued to work on the statistics page, and now have created a result 'table' that displays the results of the statistical test to the user. It also suggests what the 'null hypothesis' is (based on the variables provided) and whether the null hypothesis should be rejected.
 I have also implemented the server side storing of the statistical test in the database, allowing users to view it again at a later date and to give it a custom title.
 Adding more statistical tests will likely add extra complexity. Currently the application is setup to handle Kruskal Wallis H tests, and other statistical tests will have other requirements (e.g. different kinds of data). This is a problem I anticipate and will aim to address in sprint 2.
 
+
+<a name="latestEntry"></a>
+#### Deploying to public server and creating feedback page (19th June)
+I decided that one of the easiest ways for users to provide feedback would be through a web form on my survey application web site. This would be much easier for users as they would be able to input their thoughts without having to fill out separate forms on other applications or printing out word documents. The feedback form is very short and simple so as to not put people off from wanting to provide feedback. It containes 3 questions in total:
+* 1. How would you rate the user interface (1 = bad, 10 = good)
+* 2. How well does the application do what you want it to do? (1 = not well, 10 = well)
+* 3. Text box for comments and improvements that the user would like to see.
+
+Additionally to this, I have now deployed the MVP on a server as I felt this would be the easiest way for others to test the app and to provide feedback (they therefore don't have to clone git repositories and carry out installations to get it to work). Over the weekend I will send the links to potential users of the application (My brother and his partner) as well as others who would potentially like to use it and provide feedback (colleagues, friends and family).
+
+One other feature I added today was for custom error pages. This is because the default pages did not look nice and also don't match the style of the website. I have mad error pages for 404, 403 and 500 errors.
+
+
 ##### Ongoing objectives
 
-* To start thinking about getting user feedback so far.
 * Add more graphs. I think line graph would be a good next one to look at as it will be quite different to bar charts. Pie-charts I think will be quite similar to bar-charts as it is mostly categorical data and aggregations, only the presentation is different.
 * To carry out unit testing of the bar-chart, statistics page and dashboard pages.
