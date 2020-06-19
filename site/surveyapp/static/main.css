@@ -1023,3 +1023,26 @@ body {
   padding: 1rem;
   box-sizing: border-box;
 }
+
+
+
+/* ------FEEDBACK FORM------ */
+
+
+.feedback-section{
+  padding: 1rem;
+}
+
+.feedback-radio {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  margin-right: 1rem;
+}
+
+.feedback-text{
+  width: 80%;
+  height: 10rem;
+  margin: 0 10%;
+  margin-top: 0.5rem;
+}

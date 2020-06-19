@@ -1,0 +1,75 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="sub-container">
+    <form action="" method="post">
+    {{ form.hidden_tag() }}
+
+    <div class="feedback-section">
+      <div class="analyse-question">
+        {{ form.user_interface.label() }}
+      </div>
+      {% if form.user_interface.errors %}
+          {{ form.user_interface(class="feedback-radio") }}
+          <div class="invalid">
+              {% for error in form.user_interface.errors %}
+                  <span>{{ error }}</span>
+              {% endfor %}
+          </div>
+      {% else %}
+      {{ form.user_interface(class="feedback-radio") }}
+      {% endif %}
+    </div>
+    <div class="full-bar"></div>
+
+    <div class="feedback-section">
+      <div class="analyse-question">
+        {{ form.functionality.label() }}
+      </div>
+      {% if form.functionality.errors %}
+          {{ form.functionality(class="feedback-radio") }}
+          <div class="invalid">
+              {% for error in form.functionality.errors %}
+                  <span>{{ error }}</span>
+              {% endfor %}
+          </div>
+      {% else %}
+      {{ form.functionality(class="feedback-radio") }}
+      {% endif %}
+    </div>
+    <div class="full-bar"></div>
+
+
+
+    <div class="feedback-section">
+      <div class="analyse-question">
+        {{ form.comments.label() }}
+      </div>
+      {% if form.comments.errors %}
+          {{ form.comments(class="feedback-text") }}
+          <div class="invalid">
+              {% for error in form.comments.errors %}
+                  <span>{{ error }}</span>
+              {% endfor %}
+          </div>
+      {% else %}
+      {{ form.comments(class="feedback-text") }}
+      {% endif %}
+    </div>
+    <div class="full-bar"></div>
+
+
+
+
+    <div class="analyse-continue">
+      <div class="full-bar"></div>
+      {{ form.submit(class="btn btn-secondary") }}
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='analyse.js') }}" defer></script>
+
+
+
+
+{% endblock content %}
