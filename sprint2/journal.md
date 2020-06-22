@@ -5,22 +5,37 @@ I have decided to move on to sprint 2 slightly earlier than anticipated (origina
 
 A summary of the user feedback can be found [here](../sprint1/journal.md#userFeedback1) at the end of sprint 1.
 
-
 ###### Goals
+The overarching aim of sprint 2 is to review the minimum viable product with the user feedback from sprint 1 and the backlog of jobs needed to improve the application. More specifically, this will involve:
 
-- Setup the preliminary folder structure, kanban board and project journal. &#x2705;
-- Initialise a local project Git repository and remote repository on Github. &#x2705;
-- Ensure all initial tools and programming languages required to get the project started are ready and installed, including:
-  * [python3](https://www.python.org/downloads/) (and setting up a virtual environment). &#x2705;
+- Review system diagrams and database design and make any changes if necessary.
+- Creating an export feature, allowing users to export their graph (and maybe also statistical test) as an image or pdf.
+- Fixing any existing bugs, such as issue with loading javascript on the 'analyse' page.
+- Add more choice of graphs and more statistical tests.
+- Make site more responsive, so that it can be used on smaller screens such as iPad.
+- Allow users to input their survey data directly, as opposed to importing a CSV/XL file.
 
-  * [Flask](https://flask.palletsprojects.com/en/1.1.x/installation/#installation). &#x2705;
+### Review of sequence diagrams and database design (21st June)
+The 'sequence' diagram from sprint 1 is still very much valid, with only some minor changes needed. Previously I carried out the data pre-processing on the server side and sent the reduced data set needed for creating graphs to the client. However, as described in [this](../sprint1/journal.md#dynamicGraph) section, giving the user the ability to choose their variables and axes on the graph page and get instant visualisation would likely reduce traffic of the user having to go back and forth with the server to get the result they want. Therefore I have updated the sequence diagram to show how the data processing for graphs occurs mostly on the client side in D3.js.
 
-  * Javascript (specifically [D3.js](https://d3js.org/)). &#x2705;
 
-  * [MongoDB](https://www.mongodb.com/). &#x2705;
+<p align="center">
+  <img src="../diagrams/sequenceDiagram2.png" />
+</p>
 
-The full installation list will be kept up to date in the accompanying [code documentation](../documentation.md#installs).
+The design for the database has changed also since the preliminary design. In the original design, graphs and statistical tests referenced the 'survey' entity which in turn referenced the 'user' entity. This has since changed, with graphs, tests and surveys all referencing the 'user' entity, with graphs and tests also referencing the 'survey' entity. I have updated my diagram to reflect this.
 
+
+<p align="center">
+  <img src="../diagrams/databaseDesign2.png" />
+</p>
+
+As discussed previously, this design is flexible, meaning that the design of the 'graph' entity will vary considerable depending on the type of graph being made (e.g. different numbers of variables, x/y axes, aggregations etc.) Furthermore, I also expect the 'test' entity to vary depending on the type of test. This is an advantage of using a document based database such as MongoDB. The python code will be able to check the 'type' of graph/statistical test and then know how to read it accordingly.
+
+
+### Bug fixing (21st June)
+
+I explored the different possible reasons why the javascript file was not loading for one user when accessing the 'analyse' page for creating statistical tests. After some searching around on the internet, I realised that one possible reason could've been the use of an adblocker preventing some of the content being loaded. A lot of adblockers will identify any static files such as images, CSS and javascript files with 'suspicious' sounding names (names such as 'advert.jpg'). My javascript file for the analyse page was called 'analyse.js' which I thought could have been a culprit. I downloaded an adblocker extension to test it on my computer and discovered that changing the name from 'analyse.js' to 'statistic.js' solved the problem!
 
 
 ##### Ongoing objectives

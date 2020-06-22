@@ -137,7 +137,7 @@ I decided to make a page which can display a set selection of basic statistics t
 
 I presented this to the user in a grid format. It took a while to get the css that I wanted, particularly when some columns are very long and some are very short. To get round this I used the JQuery package [Masonry](https://masonry.desandro.com/) which allows for dynamic grids.
 
-
+<a name="dynamicGraph"></a>
 #### Dynamic javascript graph generation (13th June)
 One thing that I thought would improve the user experience would be to have the graph criteria (such as what variables are plotted on what axes) as selectable options on the actual graph page itself. Therefore, I have slightly restructured my application so that a lot of the data is sent to the client when they open the graph page. Javascript is then used to dynamically create the graph as the user selects options in drop down lists. I think this improves the user experience as it allows the user to try different options and get immediate results rather than having to reload the page. At present, I have only done a single variable (the x-axis on a bar chart) but will eventually allow for more settings.
 
