@@ -29,6 +29,6 @@ def feedback():
         "functionality" : form.functionality.data,\
         "comments" : form.comments.data,\
         "user" : current_user._id})
-        flash("Thankyou for your feedback.", "success")
+        flash("Thank you for your feedback.", "success")
         return redirect(url_for("main.index"))
     return render_template("feedback.html", title = "Feedback", form = form)

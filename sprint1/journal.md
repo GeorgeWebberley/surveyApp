@@ -5,11 +5,11 @@
 The overarching aim of sprint 1 is to produce a working minimum viable product (MVP).
 This can be broken down more specifically into the following goals.
 
-* Create a web application that runs on a server, loads some basic pages and connects to a database.
-* Get familiar with the tools being used for the web application (python, flask, D3.js, MongoDB).
-* To create some sort of way for users to input data (through upload or direct input).
-* Display the data in tabular form.
-* Create a basic graphical visualisation using sample data.
+* Create a web application that runs on a server, loads some basic pages and connects to a database. &#x2705;
+* Get familiar with the tools being used for the web application (python, flask, D3.js, MongoDB). &#x2705;
+* To create some sort of way for users to input data (through upload or direct input). &#x2705;
+* Display the data in tabular form. &#x2705;
+* Create a basic graphical visualisation using sample data. &#x2705;
 
 ### Early Implementation Log (Weeks 1-2)
 
@@ -175,7 +175,6 @@ I have also implemented the server side storing of the statistical test in the d
 Adding more statistical tests will likely add extra complexity. Currently the application is setup to handle Kruskal Wallis H tests, and other statistical tests will have other requirements (e.g. different kinds of data). This is a problem I anticipate and will aim to address in sprint 2.
 
 
-<a name="latestEntry"></a>
 #### Deploying to public server and creating feedback page (19th June)
 I decided that one of the easiest ways for users to provide feedback would be through a web form on my survey application web site. This would be much easier for users as they would be able to input their thoughts without having to fill out separate forms on other applications or printing out word documents. The feedback form is very short and simple so as to not put people off from wanting to provide feedback. It containes 3 questions in total:
 * 1. How would you rate the user interface (1 = bad, 10 = good)
@@ -187,7 +186,22 @@ Additionally to this, I have now deployed the MVP on a server as I felt this wou
 One other feature I added today was for custom error pages. This is because the default pages did not look nice and also don't match the style of the website. I have mad error pages for 404, 403 and 500 errors.
 
 
-##### Ongoing objectives
+<a name="userFeedback1"></a>
+#### Distributing the website to potential users, friends and colleagues (19th-20th June)
+Now that I have a minimum viable product, a user feedback form and the web application is publicly deployed it is now an appropriate time to get some user feedback before continuing with development. Over the course of these 2 days I have messaged several of my colleagues, friends, family and potential users of the application (potential users being my brother and his partner who run a business collecting data from clinical trials).
 
-* Add more graphs. I think line graph would be a good next one to look at as it will be quite different to bar charts. Pie-charts I think will be quite similar to bar-charts as it is mostly categorical data and aggregations, only the presentation is different.
-* To carry out unit testing of the bar-chart, statistics page and dashboard pages.
+Many agreed to test out the application and provide feedback, so I sent out links to the website as well as emailing some sample survey data if they did not have their own that they would like to test.
+
+Some of the positive comments include:
+* Intuitive process for uploading, producing graphs and statistical tests.
+* Helpful that it suggests variables based on type.
+* Nice animations on the graphs.
+
+Some of the key comments about improvements that the users would like to see are:
+* An export feature, allowing the graphs to be exported as images and saved locally.
+* Some issues about using on a smaller screen (on an iPad the graphs go off the screen).
+* More choice in graphs/statistical tests.
+* Email is case sensitive causing some difficulties logging in (i.e. when user signed up they accidentally gave a capital letter at the start of the email address which was not recognised when logging in.) Therefore to make emails case insensitive.
+* To be able to enter survey data directly into the browser, rather than importing from a file.
+* 'Dashboard' is a bit confusing. Might be better to call this 'Home'.
+* When trying to analyse data, the javascript would not load the page 'Failed to load resource: net::ERR_BLOCKED_BY_CLIENT'
