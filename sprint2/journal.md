@@ -10,7 +10,7 @@ The overarching aim of sprint 2 is to review the minimum viable product with the
 
 - Review system diagrams and database design and make any changes if necessary.
 - Creating an export feature, allowing users to export their graph (and maybe also statistical test) as an image or pdf.
-- Fixing any existing bugs, such as issue with loading javascript on the 'analyse' page.
+- Fixing any existing bugs, such as issue with loading javascript on the 'analyse' page. &#x2705;
 - Add more choice of graphs and more statistical tests.
 - Make site more responsive, so that it can be used on smaller screens such as iPad.
 - Allow users to input their survey data directly, as opposed to importing a CSV/XL file.
@@ -41,4 +41,8 @@ I explored the different possible reasons why the javascript file was not loadin
 ##### Ongoing objectives
 
 * Add more graphs. I think line graph would be a good next one to look at as it will be quite different to bar charts. Pie-charts I think will be quite similar to bar-charts as it is mostly categorical data and aggregations, only the presentation is different.
+* Add more statistical tests.
+* Add an export feature.
+* Improve CSS to allow for responsive web pages (particularly on the bar chart page).
+* Allow users to input survey data directly.
 * To carry out unit testing of the bar-chart, statistics page and dashboard pages.
