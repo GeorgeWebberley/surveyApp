@@ -1,10 +1,10 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <section class="dashboard">
-    <h1 class="dashboard-title">Your dashboard</h1>
-    <div class="dashboard-grid">
+  <section class="home">
+    <h1 class="home-title">Your home</h1>
+    <div class="home-grid">
       <!-- ------YOUR SURVEYS GRID SECTION------ -->
-      <div class="dashboard-tables grid-section">
+      <div class="home-tables grid-section">
         <div class="title-area">
           <h4>Your surveys</h4>
         </div>
@@ -21,7 +21,7 @@
         </div>
         {% else %}
           {% for survey in surveys %}
-            <div class="dashboard-table">
+            <div class="home-table">
               <a href="{{ url_for('graphs.table', survey_id=survey['_id'] )}}">{{ survey["title"] }}</a>
               <div class="edit-delete">
                 <a href="{{ url_for('graphs.edit_survey', survey_id=survey['_id'] )}}"><i class="edit-icon far fa-edit"></i></a>
@@ -37,7 +37,7 @@
         {% endif %}
       </div>
       <!-- ------YOUR GRAPHS GRID SECTION------ -->
-      <div class="dashboard-graphs grid-section">
+      <div class="home-graphs grid-section">
         <div class="title-area">
           <h4>Your graphs</h4>
         </div>
@@ -52,7 +52,7 @@
         </div>
         {% else %}
         {% for graph in graphs %}
-          <div class="dashboard-table">
+          <div class="home-table">
             <a href="{{ url_for('graphs.bar_chart', survey_id=graph['surveyId'], column=graph['column'], title=graph['title'], graph_id=graph['_id'] )}}">{{ graph["title"] }}</a>
             <div class="edit-delete">
               <a href="{{ url_for('graphs.bar_chart', graph_id=graph['_id'], survey_id=graph['surveyId'])}}"><i class="edit-icon far fa-edit"></i></a>
@@ -68,7 +68,7 @@
         {% endif %}
       </div>
       <!-- ------ANALYSE YOUR DATA GRID SECTION------ -->
-      <div class="dashboard-stats grid-section">
+      <div class="home-stats grid-section">
         <div class="title-area">
           <h4>Analyse your data</h4>
         </div>
@@ -85,7 +85,7 @@
         </div>
         {% else %}
           {% for test in tests %}
-            <div class="dashboard-table">
+            <div class="home-table">
               <a href="{{ url_for('graphs.result',
                           test_id=test['_id'],
                           survey=test['survey'],

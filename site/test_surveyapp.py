@@ -105,11 +105,11 @@ def test_login_logout(client):
 
 
 
-# Test the dashboard page
-def test_dashboard(client):
+# Test the home page
+def test_home(client):
 
-    # First try accessing dashboard when not logged in
-    rv = client.get('/dashboard', content_type="html/text")
+    # First try accessing home when not logged in
+    rv = client.get('/home', content_type="html/text")
     # Check that the user was redirected
     assert(rv.status_code == 302)
 

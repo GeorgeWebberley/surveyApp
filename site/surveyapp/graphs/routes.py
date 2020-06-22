@@ -74,13 +74,13 @@ def table(survey_id):
     # return render_template("table.html", title="Table", data=data)
 
 
-@graphs.route('/dashboard', methods=['GET', 'POST'])
+@graphs.route('/home', methods=['GET', 'POST'])
 @login_required
-def dashboard():
+def home():
     surveys=mongo.db.surveys.find({"user":current_user._id})
     graphs=mongo.db.graphs.find({"user":current_user._id})
     tests=mongo.db.tests.find({"user":current_user._id})
-    return render_template("dashboard.html", title="Dashboard", surveys=list(surveys), graphs=list(graphs), tests=list(tests))
+    return render_template("home.html", title="Home", surveys=list(surveys), graphs=list(graphs), tests=list(tests))
 
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
 @graphs.route('/choosegraph/<survey_id>', methods=['GET', 'POST'])
@@ -129,7 +129,7 @@ def bar_chart(survey_id):
                 "xAxis" : form.x_axis.data,\
                 "yAxis": form.y_axis.data,\
                 "yAggregation": y_agg}}, upsert=True)
-        return redirect(url_for("graphs.dashboard", title="Dashboard"))
+        return redirect(url_for("graphs.home", title="Home"))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
     graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
@@ -163,7 +163,7 @@ def delete_survey(survey_id):
     for graph in graphs:
         mongo.db.graphs.delete_one(graph)
     mongo.db.surveys.delete_one(file_obj)
-    return redirect(url_for('graphs.dashboard'))
+    return redirect(url_for('graphs.home'))
 
 
 # EDIT A SURVEY
@@ -177,7 +177,7 @@ def edit_survey(survey_id):
     form = EditForm()
     if form.validate_on_submit():
         mongo.db.surveys.update_one({"_id": file_obj["_id"]}, {"$set": {"title": form.title.data}})
-        return redirect(url_for('graphs.dashboard'))
+        return redirect(url_for('graphs.home'))
     elif request.method == "GET":
         form.title.data = file_obj["title"]
         # form.process()
@@ -193,7 +193,7 @@ def delete_graph(graph_id):
         flash("You do not have access to that page", "error")
         abort(403)
     mongo.db.graphs.delete_one(graph_obj)
-    return redirect(url_for('graphs.dashboard'))
+    return redirect(url_for('graphs.home'))
 
 
 # Analyse data sets
@@ -256,7 +256,7 @@ def result():
                 "independentVariable" : independent_variable,\
                 "dependentVariable" : dependent_variable,\
                 "p" : p_value}}, upsert=True)
-        return redirect(url_for('graphs.dashboard', title="Dashboard"))
+        return redirect(url_for('graphs.home', title="Home"))
     title=request.args.get("title")
     if title:
         # i.e. if test already exists and user is clicking to view/edit it
@@ -278,7 +278,7 @@ def delete_test(test_id):
         flash("You do not have access to that page", "error")
         abort(403)
     mongo.db.tests.delete_one(test_obj)
-    return redirect(url_for('graphs.dashboard'))
+    return redirect(url_for('graphs.home'))
 
 
 

@@ -11,6 +11,7 @@ The overarching aim of sprint 2 is to review the minimum viable product with the
 - Review system diagrams and database design and make any changes if necessary.
 - Creating an export feature, allowing users to export their graph (and maybe also statistical test) as an image or pdf.
 - Fixing any existing bugs, such as issue with loading javascript on the 'analyse' page. &#x2705;
+- Minor changes, such as changing 'Dashboard' to 'Home', fixing case sensitivity on email login &#x2705;
 - Add more choice of graphs and more statistical tests.
 - Make site more responsive, so that it can be used on smaller screens such as iPad.
 - Allow users to input their survey data directly, as opposed to importing a CSV/XL file.
@@ -37,6 +38,10 @@ As discussed previously, this design is flexible, meaning that the design of the
 
 I explored the different possible reasons why the javascript file was not loading for one user when accessing the 'analyse' page for creating statistical tests. After some searching around on the internet, I realised that one possible reason could've been the use of an adblocker preventing some of the content being loaded. A lot of adblockers will identify any static files such as images, CSS and javascript files with 'suspicious' sounding names (names such as 'advert.jpg'). My javascript file for the analyse page was called 'analyse.js' which I thought could have been a culprit. I downloaded an adblocker extension to test it on my computer and discovered that changing the name from 'analyse.js' to 'statistic.js' solved the problem!
 
+### Account edit (21st June)
+
+One comment was to allow for editing account details. I have therefore added an 'account' page where users can update their email, first name or last name. I will update this soon to allow users to also reset their password.
+
 
 ##### Ongoing objectives
 
@@ -46,3 +51,4 @@ I explored the different possible reasons why the javascript file was not loadin
 * Improve CSS to allow for responsive web pages (particularly on the bar chart page).
 * Allow users to input survey data directly.
 * To carry out unit testing of the bar-chart, statistics page and dashboard pages.
+* Password reset.

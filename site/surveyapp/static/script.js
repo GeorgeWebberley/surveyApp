@@ -3,7 +3,7 @@
 // ---- ASSIGNMENT OF VARIABLES TO QUERY SELECTORS ---- //
 
 const addGraph = document.querySelector(".add-graph");
-const dataTables = [...document.querySelectorAll(".dashboard-table")];
+const dataTables = [...document.querySelectorAll(".home-table")];
 const overlay = document.querySelector(".overlay");
 const close = document.querySelector(".close");
 const graphType = document.querySelector(".graph-type");

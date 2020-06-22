@@ -1,0 +1,60 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="sub-container">
+    <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="title-area">
+      <h2>{{ current_user.first_name }}'s account</h2>
+    </div>
+    <div class="full-bar"></div>
+    <div class="padding">
+      <h3>{{ form.first_name.label(class="account-details") }}</h3>
+      {% if form.first_name.errors %}
+          {{ form.first_name(class="result-form-input form-input-error") }}
+          <div class="invalid">
+              {% for error in form.first_name.errors %}
+                  <span>{{ error }}</span>
+              {% endfor %}
+          </div>
+      {% else %}
+          {{ form.first_name(class="result-form-input") }}
+      {% endif %}
+    </div>
+    <div class="full-bar"></div>
+    <div class="padding">
+      <h3>{{ form.last_name.label(class="account-details") }}</h3>
+      {% if form.last_name.errors %}
+          {{ form.last_name(class="result-form-input form-input-error") }}
+          <div class="invalid">
+              {% for error in form.last_name.errors %}
+                  <span>{{ error }}</span>
+              {% endfor %}
+          </div>
+      {% else %}
+          {{ form.last_name(class="result-form-input") }}
+      {% endif %}
+    </div>
+    <div class="full-bar"></div>
+    <div class="padding">
+      <h3>{{ form.email.label(class="account-details") }}</h3>
+      {% if form.email.errors %}
+          {{ form.email(class="result-form-input form-input-error") }}
+          <div class="invalid">
+              {% for error in form.email.errors %}
+                  <span class="white">{{ error }}</span>
+              {% endfor %}
+          </div>
+      {% else %}
+          {{ form.email(class="result-form-input") }}
+      {% endif %}
+    </div>
+    <div class="analyse-continue">
+      <div class="full-bar"></div>
+      {{ form.submit(class="btn btn-secondary") }}
+    </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock content %}
