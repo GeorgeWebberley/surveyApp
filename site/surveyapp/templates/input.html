@@ -1,0 +1,20 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="btn-row">
+    <button class="btn btn-primary save">Save</button>
+    <h1 class="table-title">Make a new table</h1>
+  </div>
+  <section class="handsontable-container">
+    <div id="handsontable"></div>
+  </section>
+</div>
+<script type="text/javascript" defer>
+  var nan = "N/A";
+  var True = true;
+  var False = false;
+  var data = {{ data | safe }}
+  var url = "{{ url_for('graphs.input', survey_id=survey_id) }}"
+  var survey_data=survey_data
+</script>
+<script src="{{ url_for('static', filename='input.js') }}" defer></script>
+{% endblock content %}

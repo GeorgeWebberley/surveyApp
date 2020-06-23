@@ -1,0 +1,101 @@
+﻿"Gender","Age","First time here?","Staff were friendly","Food came on time","Food was nice","Favourite course","Overall score (1-10)"
+M,50,Yes,Agree,Strongly agree,Disagree,Starter,7
+F,36,No,Agree,Strongly disagree,Neutral,Main,7
+F,44,No,Neutral,Agree,Strongly agree,Dessert,7
+M,36,Yes,Disagree,Agree,Agree,Dessert,6
+F,45,Yes,Strongly disagree,Strongly disagree,Agree,Dessert,2
+M,48,No,Agree,Disagree,Strongly agree,Main,6
+M,40,Yes,Agree,Neutral,Strongly agree,Dessert,6
+F,50,Yes,Strongly agree,Agree,Disagree,Dessert,6
+F,45,Yes,Strongly agree,Strongly agree,Agree,Starter,9
+F,40,Yes,Disagree,Disagree,Strongly agree,Main,4
+M,27,Yes,Strongly agree,Strongly agree,Agree,Starter,9
+F,62,Yes,Neutral,Disagree,Strongly agree,Dessert,5
+NB,48,Yes,Agree,Strongly disagree,Neutral,Starter,4
+M,49,Yes,Neutral,Disagree,Agree,Dessert,5
+F,45,Yes,Neutral,Strongly agree,Strongly agree,Starter,8
+M,55,Yes,Strongly agree,Strongly disagree,Strongly agree,Dessert,6
+M,42,Yes,Agree,Disagree,Disagree,Dessert,3
+F,49,No,Strongly agree,Strongly agree,Disagree,Main,6
+F,37,No,Strongly agree,Agree,Strongly agree,Dessert,8
+F,36,Yes,Agree,Strongly agree,Strongly agree,Main,8
+M,34,Yes,Strongly disagree,Agree,Strongly agree,Starter,5
+F,31,No,Agree,Strongly agree,Agree,Dessert,7
+F,55,Yes,Agree,Strongly agree,Agree,Dessert,7
+M,25,No,Strongly agree,Agree,Agree,Dessert,7
+F,54,Yes,Strongly agree,Agree,Strongly agree,Dessert,10
+M,53,No,Agree,Neutral,Strongly agree,Dessert,5
+M,43,No,Disagree,Disagree,Strongly agree,Dessert,4
+F,45,Yes,Agree,Strongly disagree,Strongly agree,Main,6
+F,56,Yes,Strongly agree,Disagree,Neutral,Dessert,4
+F,50,No,Strongly agree,Strongly disagree,Strongly agree,Dessert,7
+M,47,Yes,Strongly agree,Neutral,Agree,Main,9
+F,28,Yes,Strongly disagree,Disagree,Strongly disagree,Dessert,1
+F,41,No,Disagree,Strongly agree,Agree,Dessert,5
+M,32,Yes,Strongly agree,Strongly disagree,Agree,Dessert,7
+F,48,Yes,Disagree,Strongly disagree,Strongly agree,Dessert,6
+M,41,Yes,Agree,Disagree,Strongly agree,Dessert,6
+M,38,Yes,Strongly agree,Strongly disagree,Neutral,Starter,5
+F,39,Yes,Neutral,Strongly disagree,Agree,Main,6
+F,36,Yes,Disagree,Strongly agree,Disagree,Dessert,3
+F,45,No,Strongly agree,Neutral,Strongly agree,Dessert,6
+M,51,Yes,Neutral,Disagree,Agree,Starter,5
+F,23,Yes,Strongly disagree,Disagree,Neutral,Starter,2
+F,48,No,Agree,Strongly agree,Agree,Main,7
+M,32,No,Agree,Strongly agree,Strongly agree,Dessert,9
+F,69,Yes,Neutral,Disagree,Agree,Main,6
+M,57,Yes,Disagree,Strongly agree,Agree,Dessert,7
+NB,53,No,Neutral,Agree,Strongly agree,Main,7
+F,43,No,Agree,Strongly disagree,Strongly agree,Main,6
+F,47,No,Agree,Disagree,Strongly agree,Main,8
+F,27,Yes,Strongly agree,Disagree,Agree,Dessert,7
+M,46,No,Agree,Disagree,Neutral,Dessert,6
+F,30,Yes,Strongly agree,Strongly agree,Neutral,Main,8
+F,56,Yes,Neutral,Disagree,Strongly agree,Starter,7
+M,32,Yes,Strongly agree,Disagree,Strongly agree,Dessert,8
+F,38,No,Strongly agree,Agree,Agree,Dessert,7
+M,54,Yes,Strongly agree,Disagree,Strongly agree,Dessert,8
+M,46,No,Agree,Strongly agree,Agree,Main,7
+F,57,No,Strongly disagree,Strongly agree,Agree,Dessert,6
+F,35,No,Agree,Strongly agree,Neutral,Dessert,7
+F,44,Yes,Strongly disagree,Strongly agree,Strongly agree,Dessert,10
+M,57,No,Strongly agree,Strongly agree,Agree,Dessert,9
+F,31,No,Agree,Strongly disagree,Agree,Starter,8
+F,35,Yes,Neutral,Strongly disagree,Neutral,Dessert,3
+M,36,Yes,Agree,Disagree,Neutral,Dessert,5
+F,34,Yes,Agree,Strongly agree,Strongly agree,Main,9
+M,30,Yes,Strongly agree,Strongly agree,Neutral,Starter,8
+M,55,No,Disagree,Disagree,Strongly agree,Dessert,6
+F,50,Yes,Agree,Strongly agree,Disagree,Dessert,6
+NB,46,Yes,Disagree,Strongly agree,Strongly agree,Dessert,9
+F,40,Yes,Strongly disagree,Neutral,Disagree,Starter,4
+M,35,No,Neutral,Strongly agree,Strongly agree,Dessert,8
+F,48,Yes,Agree,Strongly agree,Strongly agree,Main,10
+F,58,No,Strongly agree,Disagree,Strongly agree,Starter,9
+M,39,No,Strongly agree,Strongly agree,Neutral,Starter,7
+F,67,Yes,Agree,Disagree,Agree,Starter,7
+M,32,No,Strongly agree,Strongly agree,Agree,Starter,9
+M,36,Yes,Strongly agree,Strongly disagree,Neutral,Dessert,7
+F,37,Yes,Strongly agree,Strongly disagree,Strongly agree,Dessert,10
+F,46,Yes,Strongly agree,Neutral,Agree,Starter,7
+F,39,Yes,Strongly agree,Agree,Disagree,Dessert,5
+M,46,No,Strongly agree,Strongly agree,Agree,Main,9
+F,42,No,Agree,Strongly agree,Agree,Starter,8
+F,43,No,Agree,Agree,Disagree,Starter,6
+M,48,Yes,Strongly agree,Agree,Strongly agree,Dessert,4
+F,46,Yes,Strongly agree,Strongly disagree,Agree,Dessert,6
+M,49,Yes,Strongly agree,Strongly disagree,Strongly agree,Dessert,7
+M,44,No,Strongly agree,Agree,Strongly agree,Dessert,9
+F,29,No,Strongly agree,Strongly agree,Agree,Dessert,8
+F,43,Yes,Neutral,Agree,Strongly agree,Dessert,7
+F,57,Yes,Disagree,Strongly disagree,Strongly agree,Dessert,8
+M,52,Yes,Agree,Strongly disagree,Disagree,Dessert,4
+F,50,No,Disagree,Strongly agree,Agree,Starter,6
+F,38,Yes,Strongly agree,Strongly agree,Disagree,Starter,7
+M,20,Yes,Strongly agree,Strongly agree,Strongly agree,Main,10
+F,48,Yes,Strongly agree,Disagree,Strongly agree,Dessert,9
+M,19,No,Agree,Strongly disagree,Strongly agree,Dessert,8
+M,35,Yes,Strongly agree,Disagree,Strongly agree,Dessert,9
+F,54,No,Neutral,Strongly disagree,Strongly agree,Main,8
+F,23,Yes,Neutral,Strongly disagree,Strongly agree,Main,8
+F,31,No,Strongly agree,Strongly disagree,Neutral,Dessert,6

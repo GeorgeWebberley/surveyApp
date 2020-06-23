@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 # from scipy.stats import kruskal
 import pingouin as pg
+import pyexcel as p
 from pingouin import kruskal
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
@@ -53,6 +54,48 @@ def import_file():
         survey_id = table.inserted_id
         return redirect(url_for("graphs.table", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
+
+@graphs.route('/input', methods=['GET', 'POST'])
+@login_required
+def input():
+    survey_id = request.args.get("survey_id")
+    data_obj = {}
+    # The post method here is from the ajax call in the client javascript
+    if request.method == "POST":
+        # Get the survey ID from the client
+        file_id = ObjectId(request.form["surveyId"])
+        # Get the database object corresponding ton that ID
+        file_obj = mongo.db.surveys.find_one_or_404({"_id":file_id})
+        # Generate a random hex to be the new filename
+        random_hex = secrets.token_hex(8)
+        file_name = random_hex + ".csv"
+        # Get the full path for saving the file
+        file = os.path.join(current_app.root_path, "uploads", file_name)
+        # Create and write the updated table to the file
+        with open(file, "w") as new_file:
+            new_file.write(request.form["table"])
+        # Delete the old file
+        old_file = os.path.join(current_app.root_path, "uploads", file_obj["fileName"])
+        os.remove(old_file)
+        # Update the database entry
+        mongo.db.surveys.update_one({"_id": file_id},\
+        {"$set": {"fileName" : file_name,\
+                "user" : current_user._id,\
+                "title" : file_obj["title"]}})
+        flash("Data updated", "success")
+        return redirect(url_for("graphs.home"))
+    elif request.method == "GET" and survey_id:
+        file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
+        if file_obj["user"] != current_user._id:
+            flash("You do not have access to that page", "error")
+            return redirect(url_for("main.index"))
+        df = read_from_file(file_obj["fileName"])
+        data_obj = df.to_dict(orient="records")
+    data = {"dataObj": data_obj, "surveyId": str(survey_id)}
+    return render_template("input.html", title = "Input", data=data)
+
+
+
 
 
 @graphs.route('/table/<survey_id>', methods=['GET', 'POST'])

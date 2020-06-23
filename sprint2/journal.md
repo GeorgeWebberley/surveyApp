@@ -1,5 +1,5 @@
 <a name="latestEntry"></a>
-### Sprint 2 (starting 21st June)
+### Sprint 2 (starting 22nd June)
 
 I have decided to move on to sprint 2 slightly earlier than anticipated (original plan in the proposal was to start sprint 2 on the 29th June). This is partly because I was able to start the project earlier than I planned but also because I have made good progress towards my objectives with the creation of a minimum viable product that would benefit from user feedback.
 
@@ -16,7 +16,7 @@ The overarching aim of sprint 2 is to review the minimum viable product with the
 - Make site more responsive, so that it can be used on smaller screens such as iPad.
 - Allow users to input their survey data directly, as opposed to importing a CSV/XL file.
 
-### Review of sequence diagrams and database design (21st June)
+### Review of sequence diagrams and database design (22nd June)
 The 'sequence' diagram from sprint 1 is still very much valid, with only some minor changes needed. Previously I carried out the data pre-processing on the server side and sent the reduced data set needed for creating graphs to the client. However, as described in [this](../sprint1/journal.md#dynamicGraph) section, giving the user the ability to choose their variables and axes on the graph page and get instant visualisation would likely reduce traffic of the user having to go back and forth with the server to get the result they want. Therefore I have updated the sequence diagram to show how the data processing for graphs occurs mostly on the client side in D3.js.
 
 
@@ -34,13 +34,21 @@ The design for the database has changed also since the preliminary design. In th
 As discussed previously, this design is flexible, meaning that the design of the 'graph' entity will vary considerable depending on the type of graph being made (e.g. different numbers of variables, x/y axes, aggregations etc.) Furthermore, I also expect the 'test' entity to vary depending on the type of test. This is an advantage of using a document based database such as MongoDB. The python code will be able to check the 'type' of graph/statistical test and then know how to read it accordingly.
 
 
-### Bug fixing (21st June)
+### Bug fixing (22nd June)
 
 I explored the different possible reasons why the javascript file was not loading for one user when accessing the 'analyse' page for creating statistical tests. After some searching around on the internet, I realised that one possible reason could've been the use of an adblocker preventing some of the content being loaded. A lot of adblockers will identify any static files such as images, CSS and javascript files with 'suspicious' sounding names (names such as 'advert.jpg'). My javascript file for the analyse page was called 'analyse.js' which I thought could have been a culprit. I downloaded an adblocker extension to test it on my computer and discovered that changing the name from 'analyse.js' to 'statistic.js' solved the problem!
 
-### Account edit (21st June)
+### Account edit (22nd June)
 
 One comment was to allow for editing account details. I have therefore added an 'account' page where users can update their email, first name or last name. I will update this soon to allow users to also reset their password.
+
+### Initial attempts at creating an editable table page (23rd June)
+
+One of the comments in the user feedback was to create a way for users to manually input data, as opposed to importing it from a file. I thought that one way to do this nicely would be to create a mini excel-like table in the website where users can manually input data. This would also allow users to edit data in their uploaded files. To do this I looked at the javascript extension 'handsontable'. This allows me to render existing excel/csv files in table format.
+To do this, the data has to first be converted to an object or 2d array on the server side. This can then be sent to the client javascript using flask and then rendered using client side javascript. To 'save' the changes, the javascript needs to 'post' the updated table back to the server using an AJAX post request.
+So far, I have implemented editing a table. However this is still at an early stage and will need reviewing and updating as I go. Furthermore, I will need to work out how to allows users to make tables from scratch (i.e. adding rows and columns themselves, as opposed to editing rows/columns that already exist.)
+
+To make this simpler, I may return to how the files are saved (currently they are saved as excel or csv files. However, I may change this so that all files are saved as CSV. This will make updating the files much easier as the information saved by 'handsontable' is typically in CSV format unless otherwise specified - which would be hacky to code as the client would need to know if it is Excel or CSV before sending it)
 
 
 ##### Ongoing objectives

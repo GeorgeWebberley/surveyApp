@@ -16,13 +16,34 @@
       href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap"
       rel="stylesheet"
     />
+
+    <!-- D3 javascript -->
     <script src="https://d3js.org/d3.v5.min.js" defer></script>
+
+    <!-- Fontawesome icons -->
     <script src="https://kit.fontawesome.com/cba779aa10.js" crossorigin="anonymous"></script>
+
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+    <!-- Jquery -->
+    <script
+			  src="https://code.jquery.com/jquery-3.5.1.js"
+			  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+			  crossorigin="anonymous"></script>
+
+
 
     <!-- dropzone css -->
     {{ dropzone.load_css() }} {{ dropzone.style(' height: 100%; width: 100%; border: none;
      font-size: 4rem; font-family: "Ubuntu", sans-serif; color: var(--primary-colour);') }}
+
+
+
+
+
+    <!-- handsontable -->
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@7.4.2/dist/handsontable.full.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/handsontable@7.4.2/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
     <header>
