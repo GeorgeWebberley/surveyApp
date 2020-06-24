@@ -1,4 +1,3 @@
-<a name="latestEntry"></a>
 ### Sprint 2 (starting 22nd June)
 
 I have decided to move on to sprint 2 slightly earlier than anticipated (original plan in the proposal was to start sprint 2 on the 29th June). This is partly because I was able to start the project earlier than I planned but also because I have made good progress towards my objectives with the creation of a minimum viable product that would benefit from user feedback.
@@ -49,6 +48,17 @@ To do this, the data has to first be converted to an object or 2d array on the s
 So far, I have implemented editing a table. However this is still at an early stage and will need reviewing and updating as I go. Furthermore, I will need to work out how to allows users to make tables from scratch (i.e. adding rows and columns themselves, as opposed to editing rows/columns that already exist.)
 
 To make this simpler, I may return to how the files are saved (currently they are saved as excel or csv files. However, I may change this so that all files are saved as CSV. This will make updating the files much easier as the information saved by 'handsontable' is typically in CSV format unless otherwise specified - which would be hacky to code as the client would need to know if it is Excel or CSV before sending it)
+
+<a name="latestEntry"></a>
+### Continued work on 'edit table' and 'new table' (24th June)
+
+Today I have continued to try and get familiar with using handsontable as a tool for editing existing tables and for creating tables. I have now added features so that users can add more columns to the table with a column header for each, representing that variable/survey question.
+
+I have also made it so that rows are automatically added (i.e. when the user enters in data in the final row a new row is automatically added on) and that any empty rows are not saved.
+
+I have also began to work on the page also being able to start with an empty table, so that users can manually input data from scratch if they do not yet have an excel file or csv file.
+
+The overall appearance of this page will still need reworking. Also presently, when the user is creating the table from scratch it does not yet save it to the database. This will be the next thing I work on before moving onto other issues highlighted from the user feedback.
 
 
 ##### Ongoing objectives

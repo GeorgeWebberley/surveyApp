@@ -1,12 +1,9 @@
-var headers = []
+let data = []
+let headers = []
 
-if(data["dataObj"][0]){
-  headers = Object.keys(data["dataObj"][0]);
-}
-
-var container = document.getElementById('handsontable');
-var hot = new Handsontable(container, {
-  data: data["dataObj"],
+let container = document.getElementById('handsontable');
+let hot = new Handsontable(container, {
+  data: [],
   rowHeaders: true,
   colHeaders: true,
   filters: true,
@@ -22,11 +19,11 @@ button.addEventListener('click', function(){
   const string = exportPlugin.exportAsString('csv', {
     columnHeaders: true,
   });
-  $.post( "/input", {
+  $.post( "/edit", {
     table: string,
     surveyId: data["surveyId"]
   });
-  // var xhr = new XMLHttpRequest();
+  // let xhr = new XMLHttpRequest();
   // xhr.open("POST", url, true);
   // xhr.setRequestHeader('Content-Type', 'application/json');
   // xhr.send(JSON.stringify({

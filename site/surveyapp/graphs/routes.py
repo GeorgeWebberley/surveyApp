@@ -55,9 +55,12 @@ def import_file():
         return redirect(url_for("graphs.table", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
-@graphs.route('/input', methods=['GET', 'POST'])
+@graphs.route('/edit', methods=['GET', 'POST'])
 @login_required
-def input():
+def edit():
+    # Initialise variables
+    value_list = []
+    header_list = []
     survey_id = request.args.get("survey_id")
     data_obj = {}
     # The post method here is from the ajax call in the client javascript
@@ -82,17 +85,26 @@ def input():
         {"$set": {"fileName" : file_name,\
                 "user" : current_user._id,\
                 "title" : file_obj["title"]}})
-        flash("Data updated", "success")
-        return redirect(url_for("graphs.home"))
     elif request.method == "GET" and survey_id:
         file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
         if file_obj["user"] != current_user._id:
             flash("You do not have access to that page", "error")
             return redirect(url_for("main.index"))
         df = read_from_file(file_obj["fileName"])
-        data_obj = df.to_dict(orient="records")
-    data = {"dataObj": data_obj, "surveyId": str(survey_id)}
-    return render_template("input.html", title = "Input", data=data)
+        value_list = df.values.tolist()
+        header_list = df.columns.values.tolist()
+        data_obj = [df.columns.values.tolist()] + df.values.tolist()
+        # data_obj = df.to_dict(orient="records")
+    data = {"values": value_list, "headers": header_list, "surveyId": str(survey_id)}
+    return render_template("edit.html", title = "Edit", data=data)
+
+
+
+@graphs.route('/input', methods=['GET', 'POST'])
+@login_required
+def input():
+    return render_template("input.html", title = "Edit")
+
 
 
 

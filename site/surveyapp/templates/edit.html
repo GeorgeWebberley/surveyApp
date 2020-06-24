@@ -1,0 +1,27 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="btn-row">
+    <button class="btn btn-primary save">Save</button>
+    <h1 class="table-title">Make a new table</h1>
+  </div>
+  <section class="handsontable-container">
+    <small class="table-guide">Click on cells to edit data</small>
+    <div id="handsontable"></div>
+  </section>
+  <section class="input-overlay">
+    <div class="add-variable">
+      <p>Click here to add your first column</p>
+    </div>
+  </section>
+</div>
+
+<script type="text/javascript" defer>
+  var nan = "N/A";
+  var True = true;
+  var False = false;
+  var data = {{ data | safe }}
+  var url = "{{ url_for('graphs.input', survey_id=survey_id) }}"
+  var survey_data=survey_data
+</script>
+<script src="{{ url_for('static', filename='edit.js') }}" defer></script>
+{% endblock content %}
