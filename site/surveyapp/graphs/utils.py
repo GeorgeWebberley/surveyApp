@@ -1,4 +1,5 @@
 import os
+import secrets
 import pandas as pd
 import numpy as np
 from surveyapp import mongo
@@ -6,14 +7,21 @@ from flask import Flask, current_app
 from flask_login import current_user
 from bson.objectid import ObjectId
 
-# Reads the file (depending on type of file) and returns the dataframe
-def read_from_file(filename):
-    _, f_ext = os.path.splitext(filename)
-    if f_ext == ".csv":
-        data = pd.read_csv(os.path.join(current_app.root_path, "uploads", filename))
+# Saves file after import. All files are saved as CSV for easier handling
+def save_file(form_file):
+    # Generate a random hex for the filename
+    random_hex = secrets.token_hex(8)
+    file_name = random_hex + ".csv"
+    file_path = os.path.join(current_app.root_path, "uploads", file_name)
+    # Split the extension from the fileName. I'm not using the filename so variable name is '_' according to PEP8
+    _, f_ext = os.path.splitext(form_file.filename)
+    # If not CSV file I will convert it to csv before saving (for easier handling later)
+    if f_ext != ".csv":
+        data_xls = pd.read_excel(form_file, index_col=None)
+        data_xls.to_csv(file_path, encoding='utf-8', index=False)
     else:
-        data = pd.read_excel(os.path.join(current_app.root_path, "uploads", filename))
-    return data
+        form_file.save(file_path)
+    return file_name
 
 # A function that removes all leading empty rows/columns
 def remove_nan(df):

@@ -1,5 +1,6 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
+  <a class="back-btn" href="{{ url_for('graphs.dashboard', survey_id=survey_id) }}">Back</a>
   <h3 class="form-title">Quick Stats</h3>
   <div class="grid-section overall-data">
     <p>Number of rows: {{ rows }}</p>

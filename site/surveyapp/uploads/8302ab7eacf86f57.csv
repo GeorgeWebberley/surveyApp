@@ -1,8 +1,8 @@
 ﻿"Gender","Age","First time here?","Staff were friendly","Food came on time","Food was nice","Favourite course","Overall score (1-10)"
-M,50,Yes,Agree,Strongly agree,Disagree,Starter,7
+M,50,Yes,hello,Strongly agree,Disagree,Starter,7
 F,36,No,Agree,Strongly disagree,Neutral,Main,7
 F,44,No,Neutral,Agree,Strongly agree,Dessert,7
-M,36,Yes,Disagree,Agree,Agree,Dessert,6
+M,36,Yes,Disagree,Strongly agree,Agree,Dessert,6
 F,45,Yes,Strongly disagree,Strongly disagree,Agree,Dessert,2
 M,48,No,Agree,Disagree,Strongly agree,Main,6
 M,40,Yes,Agree,Neutral,Strongly agree,Dessert,6

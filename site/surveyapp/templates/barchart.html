@@ -1,6 +1,9 @@
 {% extends "layout.html" %} {% block content %}
 <div class="graph-container">
   <form action="" method="post">
+    {% if form.errors %}
+      {{ form.errors }}
+    {% endif %}
     {{ form.hidden_tag() }}
     <div class="save-graph-form">
       {% if form.title.errors %}

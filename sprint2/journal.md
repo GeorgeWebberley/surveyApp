@@ -49,7 +49,6 @@ So far, I have implemented editing a table. However this is still at an early st
 
 To make this simpler, I may return to how the files are saved (currently they are saved as excel or csv files. However, I may change this so that all files are saved as CSV. This will make updating the files much easier as the information saved by 'handsontable' is typically in CSV format unless otherwise specified - which would be hacky to code as the client would need to know if it is Excel or CSV before sending it)
 
-<a name="latestEntry"></a>
 ### Continued work on 'edit table' and 'new table' (24th June)
 
 Today I have continued to try and get familiar with using handsontable as a tool for editing existing tables and for creating tables. I have now added features so that users can add more columns to the table with a column header for each, representing that variable/survey question.
@@ -60,6 +59,16 @@ I have also began to work on the page also being able to start with an empty tab
 
 The overall appearance of this page will still need reworking. Also presently, when the user is creating the table from scratch it does not yet save it to the database. This will be the next thing I work on before moving onto other issues highlighted from the user feedback.
 
+<a name="latestEntry"></a>
+### Finishing table edit page and redesigning home/dashboard (25th June)
+
+Today I continued working on the 'edit' table page, allowing users to save their changes after editing their raw data, as well as being able to start a new survey/table from scratch and save this.
+The saving of the table produced a few challenges. Predominantly it was with regards to sending the data back to the server via a POST request. All of my previous POST requests have been handled by WTForms, which carries out a pre-validation of the form on the server side, handles CSRF tokens and validates the return submission. However, as the table is completely built on the client side (using front end javascript and handsontable) it was difficult to think of a way to post this to the server whilst mainting security through the CSRF token. In the end, I used an AJAX call using JQuery. I extracted the CSRF token value from the WTForm (which also contained a 'title' field) and could factor this into the AJAX call.
+On the server side, I was then able to extract the table data (sent in string form) and the 'title' data and carry out the appropriate save to the database.
+
+I also changed the way I save files after a user uploads. Now, all files are converted to CSV (using pandas) before saving, which allows for easier handling at later stages.
+
+I am also working on changing the home/dashboard. One user feedback comment said how it would be nicer if the home/dashboard is survey-centric (i.e. the user selects a survey and the dashboard focuses on that, with graphs and statistical tests from that specific survey.) Whilst this is now functional, the appearance is not quite right and will need modifying (e.g. buttons different sizes etc.). Furthermore, I am beginning to find that much of my original code (such as CSS classes) is now obsolete. I will need to spend a day in the near future refactoring code, deleting obsolete code and making my code DRY.
 
 ##### Ongoing objectives
 

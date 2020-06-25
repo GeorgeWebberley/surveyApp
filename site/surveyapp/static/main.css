@@ -214,6 +214,8 @@ body {
 .form-label {
   color: var(--primary-colour-dark);
   margin-bottom: 0.2rem;
+  margin-right: 1rem;
+  line-height: 1.5rem;
 }
 
 .form-input {
@@ -403,6 +405,10 @@ body {
   border-radius: 10px;
 }
 
+.grid-section a{
+  text-decoration: none;
+}
+
 
 .title-area {
   box-sizing: border-box;
@@ -491,9 +497,14 @@ body {
 .home-table:hover .delete-icon{
   color: darkred;
 }
-
+/*
 .home-graphs{
   grid-column: 2 / 6;
+  grid-row: 1 / 3;
+} */
+
+.home-graphs{
+  grid-column: 1 / 6;
   grid-row: 1 / 3;
 }
 
@@ -502,13 +513,13 @@ body {
   grid-row: 3;
 }
 
-.no-graphs-container{
+.empty-container{
   display: flex;
   align-items: center;
   justify-content: center;
   height: 80%;
 }
-.no-graphs-container a{
+.empty-container a{
   text-decoration: none;
 }
 
@@ -551,6 +562,74 @@ body {
   justify-content: center;
   text-decoration: none;
 }
+
+/* drop-down */
+
+.dropdown{
+  /* display: inline-block; */
+  position: relative;
+  width: 10rem;
+  margin: 0;
+}
+
+.dropdown p{
+  background: var(--primary-colour);
+  padding: 1rem;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.dropdown-options {
+  display: none;
+  position: absolute;
+  background-color: var(--complementary-colour);
+  width: 10rem;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+
+.dropdown-options a {
+  font-size: 0.8rem;
+  color: white;
+  padding: 1rem;
+  text-decoration: none;
+  display: block;
+  transition: var(--primary-transition);
+}
+
+.dropdown-options a:hover {
+  background-color: white;
+  color: var(--complementary-colour);
+}
+
+.dropdown:hover .dropdown-options {
+  display: block;
+}
+
+.back-btn {
+  width: 8rem;
+  background: var(--complementary-colour);
+  padding: 1rem;
+  text-decoration: none;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  margin: 0;
+  transition: var(--primary-transition);
+  font-size: 0.8rem;
+}
+
+.back-btn:hover {
+  background-color: white;
+  color: var(--complementary-colour);
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+
+}
+
 /* home-PROMPT */
 
 .overlay {
@@ -1061,6 +1140,11 @@ body {
   color: var(--complementary-colour);
 }
 
+.left {
+  position: absolute;
+  left: 0;
+}
+
 
 /* ------DATA INPUT PAGE------ */
 
@@ -1093,6 +1177,6 @@ body {
   color: var(--primary-colour-dark);
 }
 
-.no-displaye{
+.no-display{
   display: none;
 }

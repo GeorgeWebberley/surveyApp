@@ -1,12 +1,44 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <div class="btn-row">
-    <button class="btn btn-primary save">Save</button>
-    <h1 class="table-title">Make a new table</h1>
-  </div>
+  {% if survey_id %}
+    <a class="back-btn left" href="{{ url_for('graphs.dashboard', survey_id=survey_id) }}">Back</a>  
+  {% endif %}
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="save-graph-form">
+      {% if form.title.errors %}
+          {{ form.title.label(class="form-label") }}
+          {{ form.title(class="edit-graph-title form-upload-error") }}
+          <div class="invalid">
+              {% for error in form.title.errors %}
+                  <span>{{ error }}</span>
+              {% endfor %}
+          </div>
+      {% else %}
+          {{ form.title.label(class="form-label") }}
+          {{ form.title(class="edit-graph-title hide-title") }}
+      {% endif %}
+      {{ form.submit(class="btn btn-primary save-graph") }}
+    </div>
+  </form>
   <section class="handsontable-container">
+    <small class="table-guide">Click on cells to edit data</small>
     <div id="handsontable"></div>
   </section>
+  <section class="input-overlay">
+    <div class="add-variable">
+      <p>Click here to add your first column</p>
+    </div>
+  </section>
 </div>
+
+<script type="text/javascript" defer>
+  var nan = "N/A";
+  var True = true;
+  var False = false;
+  var data = {{ data | safe }}
+  var csrf = "{{ form.csrf_token._value() }}"
+  var url = "{{ url_for('graphs.input', survey_id=survey_id) }}"
+</script>
 <script src="{{ url_for('static', filename='input.js') }}" defer></script>
 {% endblock content %}

@@ -13,7 +13,8 @@ from flask import Flask, render_template, url_for, request, Blueprint, flash, re
 from flask_login import login_required, current_user
 from surveyapp.graphs.forms import UploadForm, EditForm, SaveGraphForm, StatisticalTestForm
 from bson.objectid import ObjectId
-from surveyapp.graphs.utils import parse_data, save_graph, read_from_file, remove_nan
+from bson.json_util import loads, dumps
+from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan
 
 
 graphs = Blueprint("graphs", __name__)
@@ -29,14 +30,7 @@ graphs = Blueprint("graphs", __name__)
 #     return render_template("import.html", title = "Import file")
 
 # Function for saving file. Generates a random hex for the name
-def save_file(form_file):
-    random_hex = secrets.token_hex(8)
-    # Split the extension from the fileName. I'm not using the filename so variable name is '_' according to PEP8
-    _, f_ext = os.path.splitext(form_file.filename)
-    file_name = random_hex + f_ext
-    file_path = os.path.join(current_app.root_path, "uploads", file_name)
-    form_file.save(file_path)
-    return file_name
+
 
 @graphs.route('/import', methods=['GET', 'POST'])
 # login required decorator prevents people accessing the page when not logged in
@@ -55,58 +49,51 @@ def import_file():
         return redirect(url_for("graphs.table", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
-@graphs.route('/edit', methods=['GET', 'POST'])
+
+@graphs.route('/input', methods=['GET', 'POST'])
 @login_required
-def edit():
-    # Initialise variables
+def input():
+    # Initialise variables (values for data, headers for column headers)
     value_list = []
     header_list = []
     survey_id = request.args.get("survey_id")
-    data_obj = {}
-    # The post method here is from the ajax call in the client javascript
-    if request.method == "POST":
-        # Get the survey ID from the client
-        file_id = ObjectId(request.form["surveyId"])
-        # Get the database object corresponding ton that ID
-        file_obj = mongo.db.surveys.find_one_or_404({"_id":file_id})
-        # Generate a random hex to be the new filename
-        random_hex = secrets.token_hex(8)
-        file_name = random_hex + ".csv"
-        # Get the full path for saving the file
-        file = os.path.join(current_app.root_path, "uploads", file_name)
-        # Create and write the updated table to the file
-        with open(file, "w") as new_file:
-            new_file.write(request.form["table"])
-        # Delete the old file
-        old_file = os.path.join(current_app.root_path, "uploads", file_obj["fileName"])
-        os.remove(old_file)
-        # Update the database entry
-        mongo.db.surveys.update_one({"_id": file_id},\
+    form = EditForm()
+    # Handsontable data cannot be posted using normal WTForms methods.
+    # This post method is from an AJAX call in the client javascript.
+    if form.validate_on_submit():
+        # get the file_obj (if one exists yet)
+        file_obj = mongo.db.surveys.find_one({"_id":ObjectId(survey_id)})
+        # if file already exists we can simply get the name of the file
+        if file_obj:
+            file_name = file_obj["fileName"]
+            file = os.path.join(current_app.root_path, "uploads", file_name)
+        # Else we need to generate a new filename with a new random hex.
+        else:
+            # Generate a random hex to be the new filename
+            random_hex = secrets.token_hex(8)
+            file_name = random_hex + ".csv"
+            file = os.path.join(current_app.root_path, "uploads", file_name)
+        # write/overwrite the table values to the file
+        with open(file, "w") as file_to_write:
+            file_to_write.write(request.form["table"])
+        # Update/insert into the database
+        mongo.db.surveys.update_one({"_id": ObjectId(survey_id)},\
         {"$set": {"fileName" : file_name,\
                 "user" : current_user._id,\
-                "title" : file_obj["title"]}})
+                "title" : form.title.data}}, upsert=True)
+    # If GET request and the survey already exists (i.e. editing an existing survey)
     elif request.method == "GET" and survey_id:
         file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
         if file_obj["user"] != current_user._id:
             flash("You do not have access to that page", "error")
             return redirect(url_for("main.index"))
-        df = read_from_file(file_obj["fileName"])
+        # Read the file and extract the cell values and column headers
+        df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
         value_list = df.values.tolist()
         header_list = df.columns.values.tolist()
-        data_obj = [df.columns.values.tolist()] + df.values.tolist()
-        # data_obj = df.to_dict(orient="records")
-    data = {"values": value_list, "headers": header_list, "surveyId": str(survey_id)}
-    return render_template("edit.html", title = "Edit", data=data)
-
-
-
-@graphs.route('/input', methods=['GET', 'POST'])
-@login_required
-def input():
-    return render_template("input.html", title = "Edit")
-
-
-
+        form.title.data = file_obj["title"]
+    data = {"values": value_list, "headers": header_list}
+    return render_template("input.html", title = "Input", data=data, survey_id=survey_id, form=form)
 
 
 
@@ -117,7 +104,8 @@ def table(survey_id):
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
-    df = read_from_file(file_obj["fileName"])
+    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
+
 
     # TO IMPLEMENT THIS WHEN DEALING WITH DATASETS THAT CONTAIN LEADING EMPTY ROWS/COLUMNS
     # data = remove_nan(df)
@@ -133,9 +121,25 @@ def table(survey_id):
 @login_required
 def home():
     surveys=mongo.db.surveys.find({"user":current_user._id})
-    graphs=mongo.db.graphs.find({"user":current_user._id})
-    tests=mongo.db.tests.find({"user":current_user._id})
-    return render_template("home.html", title="Home", surveys=list(surveys), graphs=list(graphs), tests=list(tests))
+    # graphs=mongo.db.graphs.find({"user":current_user._id})
+    # tests=mongo.db.tests.find({"user":current_user._id})
+    # return render_template("home.html", title="Home", surveys=list(surveys), graphs=list(graphs), tests=list(tests))
+    return render_template("home3.html", title="Home", surveys=list(surveys))
+
+
+@graphs.route('/home/<survey_id>', methods=['GET', 'POST'])
+@login_required
+def dashboard(survey_id):
+    survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
+    graphs = mongo.db.graphs.find({"surveyId":survey_id})
+    tests = mongo.db.tests.find({"surveyId":survey_id})
+    # return render_template("home.html", title="Home", surveys=list(surveys), graphs=list(graphs), tests=list(tests))
+    return render_template("dashboard.html", title="Dashboard", graphs=list(graphs), tests=list(tests), survey=survey)
+
+
+
+
+
 
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
 @graphs.route('/choosegraph/<survey_id>', methods=['GET', 'POST'])
@@ -145,7 +149,7 @@ def choose_graph(survey_id):
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
-    df = read_from_file(file_obj["fileName"])
+    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
     return render_template("choosegraph.html", title="Select Graph", survey_id=file_obj["_id"], columns=list(df))
 
 
@@ -161,7 +165,7 @@ def bar_chart(survey_id):
         return redirect(url_for("main.index"))
 
     # This needs to be specified before 'form.validate_on_submit()' so Flask WTForms knows how to validate it
-    df = read_from_file(file_obj["fileName"])
+    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
     column_info = parse_data(df)
     for column in column_info:
         form.x_axis.choices.append((column["title"], column["title"]))
@@ -240,15 +244,15 @@ def edit_survey(survey_id):
 
 
 # DELETE A Graph
-@graphs.route("/graph/<graph_id>/delete", methods=['POST'])
+@graphs.route("/home/<survey_id>/<graph_id>/delete", methods=['POST'])
 @login_required
-def delete_graph(graph_id):
+def delete_graph(graph_id, survey_id):
     graph_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(graph_id)})
     if graph_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         abort(403)
     mongo.db.graphs.delete_one(graph_obj)
-    return redirect(url_for('graphs.home'))
+    return redirect(url_for('graphs.dashboard', survey_id=survey_id))
 
 
 # Analyse data sets
@@ -261,14 +265,14 @@ def analyse():
     for survey in surveys:
         # Loop through each survey, saving the title (and filename) as well as the variables in the select options
         form.survey.choices.append((survey["_id"], survey["title"]))
-        df = read_from_file(survey["fileName"])
+        df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
         for variable in list(df.columns.values):
             form.independent_variable.choices.append((variable, variable))
             form.dependent_variable.choices.append((variable, variable))
     if form.validate_on_submit():
         # Get the dataset, and save the variables in python variables
         survey = mongo.db.surveys.find_one({"_id": form.survey.data})
-        df = read_from_file(survey["fileName"])
+        df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
         independent_variable = form.independent_variable.data
         dependent_variable = form.dependent_variable.data
         test = form.test.data
@@ -346,26 +350,31 @@ def quick_stats(survey_id):
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
-    df = read_from_file(file_obj["fileName"])
+    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
     rows = len(df.index)
     cols = len(df.columns)
     column_info = parse_data(df);
-    return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info )
+    return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info, survey_id=survey_id )
 
 
 
 
-
-
-
+# A 'helper' route that will return all the tests and graphs associated with a survey
+# Used by a javscript 'fetch' function for creating dynamic homepage
+@graphs.route("/home/<survey_id>")
+def get_survey(survey_id):
+    graphs = dumps(list(mongo.db.graphs.find({"surveyId": survey_id})))
+    print(graphs)
+    tests = list(mongo.db.tests.find({"surveyId": survey_id}))
+    return jsonify({"graphs" : graphs, "tests" : tests})
 
 
 # A 'helper' route that will return all the variables associated with a survey when called.
 # Used by a javscript 'fetch' function for creating dynamic drop down boxes, with options changing based on previous options
 @graphs.route("/analyse/<survey_id>")
-def get_survey(survey_id):
+def get_variables(survey_id):
     survey = mongo.db.surveys.find_one({"_id": ObjectId(survey_id)})
-    df = read_from_file(survey["fileName"])
+    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
     column_info = parse_data(df)
     independent_variables = []
     dependent_variables = []

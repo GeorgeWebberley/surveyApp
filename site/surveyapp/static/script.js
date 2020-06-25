@@ -2,7 +2,7 @@
 
 // ---- ASSIGNMENT OF VARIABLES TO QUERY SELECTORS ---- //
 
-const addGraph = document.querySelector(".add-graph");
+// const addGraph = document.querySelector(".add-graph");
 const dataTables = [...document.querySelectorAll(".home-table")];
 const overlay = document.querySelector(".overlay");
 const close = document.querySelector(".close");
@@ -13,11 +13,11 @@ const editGraphTitle = document.querySelector(".edit-graph-title");
 
 
 // Add graph alert
-if (addGraph != null) {
-  addGraph.addEventListener("click", () => {
-    overlay.classList.add("show-overlay")
-  });
-}
+// if (addGraph != null) {
+//   addGraph.addEventListener("click", () => {
+//     overlay.classList.add("show-overlay")
+//   });
+// }
 
 // Close alert box
 if (close != null) {
