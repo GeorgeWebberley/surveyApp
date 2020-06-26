@@ -1,9 +1,6 @@
 {% extends "layout.html" %} {% block content %}
 <div class="graph-container">
-  <form action="" method="post">
-    {% if form.errors %}
-      {{ form.errors }}
-    {% endif %}
+  <form class="chart-form" action="" method="post" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <div class="save-graph-form">
       {% if form.title.errors %}
@@ -16,7 +13,13 @@
       {% else %}
           {{ form.title(class="edit-graph-title hide-title") }}
       {% endif %}
-      {{ form.submit(class="btn btn-primary save-graph") }}
+      <div class="dropdown">
+        <p>File</p>
+        <div class="dropdown-options">
+          <div class="export dropdown-option">Export as PNG</div>
+          {{ form.submit(class="dropdown-option no-btn") }}
+        </div>
+      </div>
     </div>
     <div class="graph-grid">
       <div class="axis-container grid-section">
@@ -68,4 +71,5 @@
   var graphData = {{ data | safe }}
 </script>
 <script src="{{ url_for('static', filename='d3/barchart.js') }}" defer></script>
+<script src="{{ url_for('static', filename='d3/saveSvgAsPng.js') }}" defer></script>
 {% endblock content %}

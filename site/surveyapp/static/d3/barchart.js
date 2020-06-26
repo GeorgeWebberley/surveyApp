@@ -4,13 +4,13 @@ const yAxisDetails = document.querySelector(".y-axis-details")
 const yAxisAggDom = document.querySelector(".y-axis-aggregation")
 const aggregate = document.querySelector(".aggregate")
 const emptyGraph = document.querySelector(".empty-graph")
+const exportButton = document.querySelector(".export")
 
 // Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
 const axesSettings = document.querySelectorAll(".axis-setting")
 
 // Get the graph data
 const data = graphData["chart_data"]
-
 
 
 // DATA GROUPING FUNCTION. CALLED WHEN AN AXIS SETTING CHANGES
@@ -93,7 +93,8 @@ function axisChange (){
 const width = 1000;
 const height = 640;
 // Create SVG ready for graph
-const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height)
+// const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height)
+const svg = d3.select('#graph').append("svg").attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "xMidYMid meet");
 
 // Set margins around graph for axis and labels
 const margin = { top: 20, right: 20, bottom: 100, left: 100 };
@@ -181,6 +182,7 @@ const render = (data, groupedData) => {
       .attr("y",  yScale(0))
       .attr('x', d => xScale(xValues(d)))
       .attr('width', xScale.bandwidth()) // band width is width of a single bar
+      .style('fill', 'steelblue')
 
 
   // For the colour, I had to convert the 'primary-colour-dark' variable into a hex colour so that the effect can work
@@ -228,3 +230,8 @@ let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
 if(xAxisValue != ''){
   axisChange()
 }
+
+
+exportButton.addEventListener("click", () => {
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+})

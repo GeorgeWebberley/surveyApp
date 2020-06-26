@@ -50,6 +50,13 @@ And then include the following line in the HTML.
 <script type="text/javascript" src="node_modules/d3/build/d3.js"></script>
 ```
 
+For saving graphs produced by D3, I use 'saveSvgAsPng' and 'canvg'
+
+```
+npm install save-svg-as-png
+npm install canvg
+```
+
 
 ### Python packages
 

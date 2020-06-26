@@ -11,6 +11,10 @@ let headers = data["headers"]
 let hot;
 
 
+
+console.log(values);
+console.log(headers);
+
 if(headers.length == 0){
   container.classList.add("hidden")
   addVariable.addEventListener("click", () => {
@@ -25,6 +29,10 @@ if(headers.length == 0){
     }
   })
 } else{
+  // Edge case: handsontable needs a 2d array. If values is empty it needs converting
+  if (values.length == 0){
+    values = [[]]
+  }
   inputOverlay.classList.add("hidden")
   let columns = columnData(headers)
   renderTable(values, headers, columns)
@@ -178,8 +186,8 @@ function postData(dataString){
       data: test,
       // data: {"table": dataString,
       //       "form": $('form').serialize()},
-      success: function (data) {
-          console.log(data)  // display the returned data in the console.
+      success: function () {
+          console.log("Table posted to server")  // display the returned data in the console.
       }
   });
 }

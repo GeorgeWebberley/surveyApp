@@ -188,7 +188,7 @@ def bar_chart(survey_id):
                 "xAxis" : form.x_axis.data,\
                 "yAxis": form.y_axis.data,\
                 "yAggregation": y_agg}}, upsert=True)
-        return redirect(url_for("graphs.home", title="Home"))
+        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
     graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})

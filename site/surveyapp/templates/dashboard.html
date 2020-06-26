@@ -7,8 +7,8 @@
       <div class="dropdown">
         <p>Your data</p>
         <div class="dropdown-options">
-          <a href="{{ url_for('graphs.input', survey_id=survey['_id']) }}">Edit your data</a>
-          <a href="{{ url_for('graphs.quick_stats', survey_id=survey['_id']) }}">Quick Stats</a>
+          <a class="dropdown-option" href="{{ url_for('graphs.input', survey_id=survey['_id']) }}">Edit your data</a>
+          <a class="dropdown-option" href="{{ url_for('graphs.quick_stats', survey_id=survey['_id']) }}">Quick Stats</a>
         </div>
       </div>
     </div>
