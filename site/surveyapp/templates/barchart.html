@@ -21,45 +21,58 @@
         </div>
       </div>
     </div>
-    <div class="graph-grid">
-      <div class="axis-container grid-section">
-        <!-- ------X AXIS------ -->
-        <div class="x-axis-details">
-          <h2 class="grid-section-title">X-axis</h2>
-          <div class="grid-bar"></div>
-          <div class="axis-variable">
-            {{ form.x_axis.label() }}
-            {{ form.x_axis(class="x-axis-value axis-setting") }}
-          </div>
-        </div>
-        <!-- ------Y AXIS------ -->
-        <div class="y-axis-details hidden-axis">
-          <h2 class="grid-section-title">Y-axis</h2>
-          <div class="grid-bar">
-            <div class="axis-variable">
-              {{ form.y_axis.label() }}
-              {{ form.y_axis(class="y-axis-value axis-setting") }}
+
+    <div class="graph-sub-container">
+
+
+      <div class="row h-100 p-3">
+        <!-- Graph -->
+        <div class="col-md-9 p-0  order-md-2">
+          <div id="graph" class="h-100">
+            <!-- ------GRAPH OVERLAY------ -->
+            <div class="empty-graph visible h-100 w-100 mr-2">
+              <h1>Choose an x-axis variable to get started</h1>
             </div>
-            <div class="aggregate hidden-axis">
-              {{ form.y_axis_agg.label() }}
-              {{ form.y_axis_agg(class="y-axis-aggregation axis-setting") }}
+            <!-- ------TOOLTIP------ -->
+            <div class="tooltip tooltip-hidden">
+              <p><span class="tooltip-value"></span></p>
             </div>
           </div>
         </div>
-      </div>
-      <!-- ------GRAPH------ -->
-      <div id="graph">
-        <!-- ------GRAPH OVERLAY------ -->
-        <div class="empty-graph visible">
-          <h1>Choose an x-axis variable to get started</h1>
+
+        <!-- Axes settings -->
+        <div class="col-md-3  order-md-1">
+          <div class="h-100 grid-section p-3">
+            <!-- ------X AXIS------ -->
+            <div class="x-axis-details">
+              <h2 class="grid-section-title">X-axis</h2>
+              <div class="grid-bar"></div>
+              <div class="axis-variable">
+                {{ form.x_axis.label() }}
+                {{ form.x_axis(class="x-axis-value axis-setting") }}
+              </div>
+            </div>
+            <!-- ------Y AXIS------ -->
+            <div class="y-axis-details hidden-axis">
+              <h2 class="grid-section-title">Y-axis</h2>
+              <div class="grid-bar">
+                <div class="axis-variable">
+                  {{ form.y_axis.label() }}
+                  {{ form.y_axis(class="y-axis-value axis-setting") }}
+                </div>
+                <div class="aggregate hidden-axis">
+                  {{ form.y_axis_agg.label() }}
+                  {{ form.y_axis_agg(class="y-axis-aggregation axis-setting") }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- ------TOOLTIP------ -->
-        <div class="tooltip tooltip-hidden">
-          <p><span class="tooltip-value"></span></p>
-        </div>
+        <!-- End of Axis settings -->
       </div>
-      <!-- ------END OF GRAPH------ -->
+
     </div>
+
   <!-- END OF GRAPH GRID -->
   </form>
 </div>
@@ -69,6 +82,9 @@
   var True = true;
   var False = false;
   var graphData = {{ data | safe }}
+  var csrf = "{{ form.csrf_token._value() }}"
+  var url = "{{ url_for('graphs.bar_chart', survey_id=survey_id) }}"
+  var redirectUrl = "{{ url_for('graphs.dashboard', survey_id=survey_id) }}"
 </script>
 <script src="{{ url_for('static', filename='d3/barchart.js') }}" defer></script>
 <script src="{{ url_for('static', filename='d3/saveSvgAsPng.js') }}" defer></script>

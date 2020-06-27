@@ -69,8 +69,6 @@ I also changed the way I save files after a user uploads. Now, all files are con
 
 I am also working on changing the home/dashboard. One user feedback comment said how it would be nicer if the home/dashboard is survey-centric (i.e. the user selects a survey and the dashboard focuses on that, with graphs and statistical tests from that specific survey.) Whilst this is now functional, the appearance is not quite right and will need modifying (e.g. buttons different sizes etc.). Furthermore, I am beginning to find that much of my original code (such as CSS classes) is now obsolete. I will need to spend a day in the near future refactoring code, deleting obsolete code and making my code DRY.
 
-
-<a name="latestEntry"></a>
 ### Frustrating progress (26th June)
 
 Today I wanted to continue working through the feedback comments from the users. One such comment was about making the pages responsive, so that they work on smaller screens. For this I decided to try and integrate some of the bootstrap classes. I have not used bootstrap before, and whilst it started ok on the index page, many of the classes clashed with classes i had personally made, causing many other pages to work incorrectly. Furthermore, many of my javascript functions are already linked with the classes I have been using and therefore removing/changing these affected many of my javascript functions. After spending the morning trying to fix it, I decided that it was likely going to take quite some time to get familiar with bootstrap and integrating it into my application. There are many other pressing matters that need sorting on my application (such as adding more graphs, more statistical tests etc.) that should likely be prioritised first, so i reverted back to a previous git commit and will come back to look at making my pages responsive at a later date when I feel I have more time.
@@ -78,6 +76,17 @@ Today I wanted to continue working through the feedback comments from the users.
 Another comment was about making the dashboard easier to read by providing small images for each graph (as opposed to simply the title of each graph). I spent several hours this afternoon attempting to convert the D3 SVG to jpg/png and then to post this to the server but to no avail. Furthermore, I found that through changing my javascript files to try and do this resulted in many of my old/working javascript functions failing. I think that this method (of first converting to jpg on client side before posting) comes with problems and instead a better route may be simply to render the D3 SVGs themselves on the dashboard, although this would require a lot more data traffic being sent to the client. I will need to think about the pros and cons before coming to a decision.
 
 Overall, it was quite a problematic day, with very little achieved. I hope that soon I will be able to solve some of these problems, or instead I may need to move straight on to adding more graphs/statistical tests with limited time being a factor.
+
+<a name="latestEntry"></a>
+### Improved responsiveness and saving images(27th June)
+
+Following on from yesterday, I continued working on the responsiveness and also on saving images to the server of the graphs produced.
+I realised today that the problems I was having were with the firefox browser. When saving the images using chrome or safari I had no problems. This is something to do with the way that firefox codes the canvas to data URL.
+Furthermore, the responsiveness of the graphs on screen resizing that I worked on yesterday only seemed to work on firefox. I have now fixed this so that it works on chrome and safari too.
+
+I have slowly started to reintegrate some bootstrap classes. I have made my navbar responsive using some bootstrap classes (navbar links collapsing into a menu) and have now placed my graphs inside bootstrap grid systems which helped improve responsiveness.
+
+Tomorrow I will finish off the image 'saving' and also presenting small image 'cards' of each graph on the dashboard. I will then crack on with adding more graphs and statistical tests on Monday (if all goes according to plan!)
 
 ##### Ongoing objectives
 

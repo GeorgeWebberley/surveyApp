@@ -93,36 +93,14 @@ function axisChange (){
 
 
 // Set graph dimensions
-// var width = 1000;
-// var height = 640;
-
-var width = document.getElementById('graph').clientWidth;
-var height = document.getElementById('graph').clientHeight;
-
-
-
-
-
-window.onresize = function(){
-  console.log("test");
-  width = document.getElementById('graph').clientWidth;
-  height = document.getElementById('graph').clientHeight;
-  // d3.select('#graph')
-  //   .attr('width', width)
-  //   .attr('height', height);
-  svg.attr('width', width).attr('height', height);
-}
-
-
+const width = 1000;
+const height = 640;
 // Create SVG ready for graph
-// const svg = d3.select('#graph').append("svg").attr("width", "100%").attr("height", "100%")
-
-
-const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height).attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "none")
-// const svg = d3.select('#graph').append("svg").attr("width", "100%").attr("height", "100%").attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "xMidYMin meet");
+// const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height)
+const svg = d3.select('#graph').append("svg").attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "xMidYMid meet");
 
 // Set margins around graph for axis and labels
-const margin = { top: 20, right: 20, bottom: 60, left: 80 };
+const margin = { top: 20, right: 20, bottom: 100, left: 100 };
 // Set the graph width and height to account for axes
 const gWidth = width - margin.left - margin.right;
 const gHeight = height - margin.top - margin.bottom;
@@ -174,7 +152,7 @@ const render = (data, groupedData) => {
   svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("class", "label")
-      .attr("y", 0)
+      .attr("y", 30)
       .attr("x",0 - (gHeight / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
@@ -186,7 +164,7 @@ const render = (data, groupedData) => {
 
   // Add x axis label
   svg.append("text")
-    .attr("transform",`translate(${width/2}, ${gHeight + margin.top + 55})`)
+    .attr("transform",`translate(${width/2}, ${gHeight + margin.top + 50})`)
     .attr("class", "label")
     .text(xAxisValue);
 
@@ -265,6 +243,20 @@ exportButton.addEventListener("click", () => {
 })
 
 
+// function svg2Png(svg, postData){
+//   var canvas = document.createElement('canvas'); // Create a Canvas element.
+//   var ctx = canvas.getContext('2d'); // For Canvas returns 2D graphic.
+//   var data = svg.outerHTML; // Get SVG element as HTML code.
+//   canvg(canvas, data); // Render SVG on Canvas.
+//   postData(canvas); // Execute callback function.
+// }
+//
+//
+// function postData(canvas){
+//
+// }
+
+
 
 // When the form is submitted, we want to get a jpg image of the svg
 $('form').submit(function (e) {
@@ -315,46 +307,21 @@ $('form').submit(function (e) {
   //
   // // You could also use the actual string without base64 encoding it:
   // // img.src = "data:image/svg+xml;utf8," + svgStr;
-  // // window.open().document.write('<img src="' + img.src + '"/>');
-  //
-  // img.onload = function(){
-  //   var canvas = document.createElement("canvas");
-  //   document.body.appendChild(canvas);
-  //
-  //   canvas.width = width;
-  //   canvas.height = height;
-  //   canvas.getContext("2d").drawImage(img,0,0,width,height);
-  //   var imgData = canvas.toDataURL('image/jpeg');
-  //   canvas.remove();
-  //   console.log("hello");
-  //   // ajax call to send canvas(base64) url to server.
+  // window.open().document.write('<img src="' + img.src + '"/>');
   //
   //
+  // var canvas = document.createElement("canvas");
+  // document.body.appendChild(canvas);
   //
-  //   $.ajaxSetup({
-  //     beforeSend: function(xhr, settings) {
-  //       if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-  //           xhr.setRequestHeader("X-CSRFToken", csrf)
-  //       }
-  //     }
-  //   })
-  //   var postData = $('form').serializeArray()
-  //   postData.push({name: "image", value: imgData})
-  //   $.ajax({
-  //       type: "POST",
-  //       url: url,
-  //       data: postData,
-  //       success: function () {
-  //         // window.location.href = redirectUrl;
-  //         console.log("success");
-  //       }
-  //   });
+  // canvas.width = width;
+  // canvas.height = height;
+  // canvas.getContext("2d").drawImage(img,0,0,width,height);
+  // var imgData = canvas.toDataURL('image/jpeg');
   //
-  // }
   //
+  // imageData = img.src
+// --------------------
 
-
-// --------------------------------------------------------------------
 
   var doctype = '<?xml version="1.0" standalone="no"?>'
                + '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
@@ -363,41 +330,12 @@ $('form').submit(function (e) {
 
   var blob = new Blob([ doctype + source], { type: 'image/svg+xml' });
 
-  var imageURL = window.URL.createObjectURL(blob);
+  var url = window.URL.createObjectURL(blob);
   var img = new Image();
 
 
 
 
-
-
-  // img.onload = async (e) => {
-  //   ctx.drawImage(img, 0, 0);
-  //   ctx.font = "165px Arial";
-  //   ctx.fillStyle = "white";
-  //   b64Code = await (<any>canvas).toDataURL();
-  // }
-
-
-  img.onload = async function(){
-    var canvas = d3.select('body').append('canvas').node();
-    canvas.width = width;
-    canvas.height = height;
-
-    var ctx = canvas.getContext('2d');
-
-    // draw image on canvas
-    ctx.drawImage(img, 0, 0, width, height);
-
-
-    var glContextAttributes = { preserveDrawingBuffer: true };
-    var gl = canvas.getContext("experimental-webgl", glContextAttributes);
-
-
-    var imgData = await canvas.toDataURL("image/png");
-    canvas.remove();
-    console.log("hello");
-    // ajax call to send canvas(base64) url to server.
 
     $.ajaxSetup({
       beforeSend: function(xhr, settings) {
@@ -408,8 +346,8 @@ $('form').submit(function (e) {
     })
 
     var postData = $('form').serializeArray()
-    postData.push({name: "image", value: imgData})
-    console.log(imgData);
+    postData.push({name: "image", value: "hello"})
+    // console.log(imgData);
     $.ajax({
         type: "POST",
         url: url,
@@ -419,11 +357,29 @@ $('form').submit(function (e) {
           console.log("success");
         }
     });
+
+
+
+
+
+
+  img.onload = function(){
+    var canvas = d3.select('body').append('canvas').node();
+    canvas.width = width;
+    canvas.height = height;
+
+    var ctx = canvas.getContext('2d');
+
+    // draw image on canvas
+    ctx.drawImage(img, 0, 0);
+    var imgData = canvas.toDataURL("image/jpeg");
+    canvas.remove();
+    console.log("hello");
+    // ajax call to send canvas(base64) url to server.
+
   }
 
-  img.src =  imageURL;
-  // window.open().document.write('<img src="' + img.src + '"/>');
-
+  img.src =  url;
 
 
 

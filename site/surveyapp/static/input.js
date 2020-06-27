@@ -120,35 +120,6 @@ $('form').submit(function (e) {
 });
 
 
-//
-// // Post table back to server when user clicks on 'save'
-// button.addEventListener('click', () => {
-//   // Remove the 'spare' row before saving
-//   hot.updateSettings({
-//     minSpareRows: 0
-//   })
-//   // Remove empty rows (if any)
-//   let newHot = removeEmptyRows();
-//   let exportPlugin;
-//   if(newHot != undefined){
-//     exportPlugin = newHot.getPlugin('exportFile');
-//   }else{
-//     exportPlugin = hot.getPlugin('exportFile');
-//   }
-//   const string = exportPlugin.exportAsString('csv', {
-//     columnHeaders: true,
-//   });
-//   postData(string)
-//
-//   // Change spare rows back to 1 if user wants to continue editing
-//   hot.updateSettings({
-//     minSpareRows: 1
-//   })
-//   // alert("Your changes have been saved")
-//   info.innerHTML = "Up to date"
-//   info.style.color = "green"
-// })
-
 function removeEmptyRows(){
   let data = hot.getData()
   let emptyRows = []
@@ -163,13 +134,7 @@ function removeEmptyRows(){
 
 
 
-// JQuery function for posting data to the server
 function postData(dataString){
-  // $.post( "/edit", {
-  //   table: string,
-  //   surveyId: data["surveyId"]
-  // });
-
 
   $.ajaxSetup({
     beforeSend: function(xhr, settings) {
@@ -178,16 +143,14 @@ function postData(dataString){
       }
     }
   })
-  var test = $('form').serializeArray()
-  test.push({name: "table", value: dataString})
+  var postData = $('form').serializeArray()
+  postData.push({name: "table", value: dataString})
   $.ajax({
       type: "POST",
       url: url,
-      data: test,
-      // data: {"table": dataString,
-      //       "form": $('form').serialize()},
+      data: postData,
       success: function () {
-          console.log("Table posted to server")  // display the returned data in the console.
+          console.log("Table posted to server")
       }
   });
 }

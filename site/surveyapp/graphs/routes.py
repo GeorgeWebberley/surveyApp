@@ -15,6 +15,10 @@ from surveyapp.graphs.forms import UploadForm, EditForm, SaveGraphForm, Statisti
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
 from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan
+# For converting image base 64 data URI
+from binascii import a2b_base64
+import urllib.parse
+
 
 
 graphs = Blueprint("graphs", __name__)
@@ -176,6 +180,15 @@ def bar_chart(survey_id):
     graph_id = request.args.get("graph_id")
     # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
     if form.validate_on_submit():
+        imageData = request.form["image"]
+        print(imageData)
+        response = urllib.request.urlopen(imageData)
+        # generate a random hex for the filename
+        random_hex = secrets.token_hex(8)
+        file_name = random_hex + ".png"
+        file = os.path.join(current_app.root_path, "graphimages", file_name)
+        with open(file, 'wb') as image_to_write:
+            image_to_write.write(response.file.read())
         if form.x_axis.data == "Amount":
             y_agg = ""
         else:
@@ -187,7 +200,8 @@ def bar_chart(survey_id):
                 "user" : current_user._id,\
                 "xAxis" : form.x_axis.data,\
                 "yAxis": form.y_axis.data,\
-                "yAggregation": y_agg}}, upsert=True)
+                "yAggregation": y_agg,
+                "image": file_name}}, upsert=True)
         return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
@@ -203,7 +217,7 @@ def bar_chart(survey_id):
     # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
     data = {"chart_data": chart_data, "title": file_obj["title"], "column_info" : column_info}
-    return render_template("barchart.html", title="Bar chart", data=data, form=form)
+    return render_template("barchart.html", title="Bar chart", data=data, form=form, survey_id=survey_id)
 
 
 

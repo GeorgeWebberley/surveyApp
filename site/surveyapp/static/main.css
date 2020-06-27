@@ -34,15 +34,15 @@ body {
 
 /* ------NAVBAR CSS------ */
 
-.navbar {
+/* .navbar {
   width: 100%;
   height: 60px;
   background-color: var(--primary-colour);
   margin: 0;
   padding: 0;
-}
+} */
 
-.navbar-center {
+/* .navbar-center {
   display: flex;
   justify-content: space-between;
   max-width: var(--content-width);
@@ -50,20 +50,20 @@ body {
   align-items: center;
   height: 100%;
   font-size: 1.5rem;
-}
+} */
 
-.navbar-logo {
+/* .navbar-logo {
   text-decoration: none;
   color: white;
-}
-
+} */
+/*
 .navbar-links {
   height: 100%;
   display: flex;
   align-items: center;
-}
+} */
 
-.navbar-link {
+/* .navbar-link {
   text-align: center;
   line-height: 60px;
   padding: 0 1rem;
@@ -71,12 +71,12 @@ body {
   color: white;
   height: 100%;
   transition: var(--primary-transition);
-}
-
+} */
+/*
 .navbar-link:hover {
   color: var(--primary-colour);
   background-color: white;
-}
+} */
 
 .bar {
   width: 100%;
@@ -257,12 +257,12 @@ body {
 
 /* ------IMPORT PAGE------ */
 /* ------OLD CODE FOR DROPZONE------ */
-.container {
+/* .container {
   max-width: var(--content-width);
   margin: 1rem auto;
   padding: 1rem;
   position: relative;
-}
+} */
 /*
 .upload {
   display: flex;
@@ -791,6 +791,15 @@ body {
 
 
 /* --------BARCHART 2 PAGE-------- */
+
+/* .chart-form{
+  height: 100vh;
+} */
+
+.graph-sub-container{
+  height: 75vh;
+}
+
 .graph-container{
   margin: 1rem;
   background-color: white;
@@ -798,13 +807,14 @@ body {
   border: 1px solid var(--primary-colour)
 }
 
+
 .graph-grid{
   display: grid;
   grid-template-columns: auto auto auto auto;
   grid-template-rows: auto auto auto;
   justify-content: center;
 }
-
+/*
 .axis-container{
   width: 15rem;
   height: 85%;
@@ -812,16 +822,23 @@ body {
   flex-direction: column;
   grid-column: 1;
   padding: 0 2rem;
-}
+} */
 
-
+/*
 .graph {
   grid-column: 2 / 5;
   grid-row: 1 / 4;
   height: 100%;
   width: auto;
   position: relative;
-}
+} */
+
+
+/* .graph {
+  height: 100%;
+  width: auto;
+  position: relative;
+} */
 
 
 .x-axis-details {
@@ -870,14 +887,15 @@ body {
 .empty-graph {
   box-sizing: border-box;
   position: absolute;
-  width: 950px;
+  /* width: 950px;
   height: 600px;
+   */
   display: flex;
   justify-content: center;
   align-items: center;
   border: 3px dashed var(--primary-colour);
   color: var(--primary-colour);
-  margin: 0 0 40px 50px;
+  /* margin: 0 0 40px 50px; */
   border-radius: 10px;
 }
 
@@ -1140,6 +1158,10 @@ body {
 
 
 /* ------GENERAL------ */
+
+.bg-site-primary {
+  background: var(--primary-colour);
+}
 
 .padding {
   padding: 1rem;

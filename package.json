@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/geoseal/surveyApp#readme",
   "dependencies": {
+    "canvg": "^3.0.6",
     "d3": "^5.16.0",
     "save-svg-as-png": "^1.4.17"
   }
