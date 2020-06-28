@@ -33,34 +33,47 @@
           <div class="row p-2">
             {% for graph in graphs %}
 
-            <div class="col-lg-4 col-md-6 p-2">
+            <div class="col-sm-3 p-2">
 
-              <div class="card">
-                <a href="{{ url_for('graphs.bar_chart', survey_id=graph['surveyId'], column=graph['column'], title=graph['title'], graph_id=graph['_id'] )}}">
-                  <img class="card-img-top" src="{{ url_for('static', filename='graphimages/' + graph.image) }}" alt="Card image cap">
-                </a>
+              <div class="card graph-card" style="width: 18rem;">
+                <img class="card-img-top" src="{{ url_for('static', filename='graphimages/' + graph.image) }}" alt="Card image cap">
                 <div class="card-body bg-dark">
                   <h5 class="card-title">{{ graph["title"] }}</h5>
-                  <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-                  <div class="d-flex justify-content-between">
-                    <a href="{{ url_for('graphs.bar_chart', survey_id=graph['surveyId'], column=graph['column'], title=graph['title'], graph_id=graph['_id'] )}}" class="btn btn-info p-1">Edit</a>
-                    <form action="{{ url_for('graphs.delete_graph', graph_id=graph['_id'], survey_id=survey['_id'] )}}" method="post" onsubmit="return confirm('Are you sure you want to delete this graph?');">
-                      <button class="btn btn-danger" type="submit">Delete</button>
-                    </form>
-                  </div>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
                 </div>
               </div>
 
             </div>
 
+
+
+            <div class="home-table">
+              <a href="{{ url_for('graphs.bar_chart', survey_id=graph['surveyId'], column=graph['column'], title=graph['title'], graph_id=graph['_id'] )}}">{{ graph["title"] }}</a>
+              <div class="edit-delete">
+                <a href="{{ url_for('graphs.bar_chart', graph_id=graph['_id'], survey_id=graph['surveyId'])}}"><i class="edit-icon far fa-edit"></i></a>
+                <form action="{{ url_for('graphs.delete_graph', graph_id=graph['_id'], survey_id=survey['_id'] )}}" method="post" onsubmit="return confirm('Are you sure you want to delete this graph?');">
+                  <button class="delete-icon" type="submit"><i class="fas fa-trash fa-lg"></i></button>
+                </form>
+              </div>
+            </div>
             {% endfor %}
 
           </div>
         </div>
 
-        <a class="add-more" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}">
+
+
+
+
+
+
+
+
+
+        <div class="add-more add-graph">
           <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-        </a>
+        </div>
         {% endif %}
       </div>
       <!-- ------ANALYSE YOUR DATA GRID SECTION------ -->

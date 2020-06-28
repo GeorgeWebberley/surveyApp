@@ -568,8 +568,30 @@ body {
   display: flex;
   color: white;
   justify-content: center;
+  transition: var(--primary-transition);
+}
+
+
+
+.add-more:hover{
+  color: var(--complementary-colour);
   text-decoration: none;
 }
+
+
+
+
+.card {
+  width: 18rem;
+  margin: 0 auto;
+  float: none;
+}
+
+
+.card-img-top {
+  height: 10rem;
+}
+
 
 /* drop-down */
 

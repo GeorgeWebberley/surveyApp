@@ -181,12 +181,11 @@ def bar_chart(survey_id):
     # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
     if form.validate_on_submit():
         imageData = request.form["image"]
-        print(imageData)
         response = urllib.request.urlopen(imageData)
         # generate a random hex for the filename
         random_hex = secrets.token_hex(8)
         file_name = random_hex + ".png"
-        file = os.path.join(current_app.root_path, "graphimages", file_name)
+        file = os.path.join(current_app.root_path, "static/graphimages", file_name)
         with open(file, 'wb') as image_to_write:
             image_to_write.write(response.file.read())
         if form.x_axis.data == "Amount":

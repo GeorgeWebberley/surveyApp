@@ -77,7 +77,6 @@ Another comment was about making the dashboard easier to read by providing small
 
 Overall, it was quite a problematic day, with very little achieved. I hope that soon I will be able to solve some of these problems, or instead I may need to move straight on to adding more graphs/statistical tests with limited time being a factor.
 
-<a name="latestEntry"></a>
 ### Improved responsiveness and saving images(27th June)
 
 Following on from yesterday, I continued working on the responsiveness and also on saving images to the server of the graphs produced.
@@ -88,12 +87,17 @@ I have slowly started to reintegrate some bootstrap classes. I have made my navb
 
 Tomorrow I will finish off the image 'saving' and also presenting small image 'cards' of each graph on the dashboard. I will then crack on with adding more graphs and statistical tests on Monday (if all goes according to plan!)
 
+<a name="latestEntry"></a>
+### Image cards on desktop(28th June)
+
+Today I finished making the image 'cards' on the desktop. For this, I used bootstrap 'cards' which allow for making nicer contained elements with a picture, small amount of text (in my case the title) and also for buttons (edit button and delete button).
+
+From tomorrow I will work at adding another graph/statistical test to the application.
+
 ##### Ongoing objectives
 
 * Add more graphs. I think line graph would be a good next one to look at as it will be quite different to bar charts. Pie-charts I think will be quite similar to bar-charts as it is mostly categorical data and aggregations, only the presentation is different.
 * Add more statistical tests.
-* Add an export feature.
-* Improve CSS to allow for responsive web pages (particularly on the bar chart page).
-* Allow users to input survey data directly.
+* Improve CSS to allow for responsive web pages (particularly on the bar chart page) WORKING ON THIS. BARCHART PAGE NOW MORE RESPONSIVE.
 * To carry out unit testing of the bar-chart, statistics page and dashboard pages.
 * Password reset.
