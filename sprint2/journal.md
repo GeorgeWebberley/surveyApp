@@ -87,12 +87,18 @@ I have slowly started to reintegrate some bootstrap classes. I have made my navb
 
 Tomorrow I will finish off the image 'saving' and also presenting small image 'cards' of each graph on the dashboard. I will then crack on with adding more graphs and statistical tests on Monday (if all goes according to plan!)
 
-<a name="latestEntry"></a>
 ### Image cards on desktop(28th June)
 
 Today I finished making the image 'cards' on the desktop. For this, I used bootstrap 'cards' which allow for making nicer contained elements with a picture, small amount of text (in my case the title) and also for buttons (edit button and delete button).
 
 From tomorrow I will work at adding another graph/statistical test to the application.
+
+<a name="latestEntry"></a>
+### Altered landing page and finished graph cards (29th-30th June)
+
+Today I worked at improving the landing page for visitors. I have added a background image (which I will likely change in the near future) as the previous landing page was very bare with very little content.
+
+The cards which display the users graphs have been finalised with buttons for editing and deleting.
 
 ##### Ongoing objectives
 

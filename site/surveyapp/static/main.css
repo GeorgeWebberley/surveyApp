@@ -91,6 +91,19 @@ body {
 
 /* ------LANDING PAGE CSS------ */
 
+
+
+.masthead{
+  height: calc(100vh - 50px);
+  min-height: 500px;
+  background-image: url('/static/images/forest.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+
 .landing-page {
   display: flex;
   align-items: center;
