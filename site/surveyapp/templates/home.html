@@ -1,136 +1,37 @@
 {% extends "layout.html" %} {% block content %}
-<div class="container">
-  <section class="home">
-    <h1 class="home-title">Your home</h1>
-    <div class="home-grid">
-      <!-- ------YOUR SURVEYS GRID SECTION------ -->
-      <div class="home-tables grid-section">
-        <div class="title-area">
-          <h4>Your surveys</h4>
-        </div>
-        <div class="full-bar"></div>
-        {% if not surveys %}
-        <div class="no-graphs-container">
-          <a href="{{ url_for('graphs.import_file') }}">
-            <div class="empty add-survey">
-              <p>You have no surveys.</p>
-              <p>Click here to get started.</p>
-              <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-            </div>
-          </a>
-        </div>
-        {% else %}
-          {% for survey in surveys %}
-            <div class="home-table">
-              <a href="{{ url_for('graphs.table', survey_id=survey['_id'] )}}">{{ survey["title"] }}</a>
-              <div class="edit-delete">
-                <a href="{{ url_for('graphs.input', survey_id=survey['_id'] )}}"><i class="edit-icon far fa-edit"></i></a>
-                <form action="{{ url_for('graphs.delete_survey', survey_id=survey['_id'] )}}" method="post" onsubmit="return confirm('Are you sure you want to delete this survey You will also lose all associated graphs/analysis?');">
-                  <button class="delete-icon" type="submit"><i class="fas fa-trash fa-lg"></i></button>
-                </form>
-              </div>
-            </div>
-          {% endfor %}
-          <a class="add-more" href="{{ url_for('graphs.import_file') }}">
-            <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-          </a>
-        {% endif %}
-      </div>
-      <!-- ------YOUR GRAPHS GRID SECTION------ -->
-      <div class="home-graphs grid-section">
-        <div class="title-area">
-          <h4>Your graphs</h4>
-        </div>
-        <div class="full-bar"></div>
-        {% if not graphs %}
-        <div class="no-graphs-container">
-          <div class="empty add-graph">
-            <p>You have no graphs.</p>
-            <p>Click here to get started.</p>
-            <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-          </div>
-        </div>
-        {% else %}
-        {% for graph in graphs %}
-          <div class="home-table">
-            <a href="{{ url_for('graphs.bar_chart', survey_id=graph['surveyId'], column=graph['column'], title=graph['title'], graph_id=graph['_id'] )}}">{{ graph["title"] }}</a>
-            <div class="edit-delete">
-              <a href="{{ url_for('graphs.bar_chart', graph_id=graph['_id'], survey_id=graph['surveyId'])}}"><i class="edit-icon far fa-edit"></i></a>
-              <form action="{{ url_for('graphs.delete_graph', graph_id=graph['_id'] )}}" method="post" onsubmit="return confirm('Are you sure you want to delete this graph?');">
-                <button class="delete-icon" type="submit"><i class="fas fa-trash fa-lg"></i></button>
-              </form>
-            </div>
-          </div>
-        {% endfor %}
-        <div class="add-more add-graph">
-          <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-        </div>
-        {% endif %}
-      </div>
-      <!-- ------ANALYSE YOUR DATA GRID SECTION------ -->
-      <div class="home-stats grid-section">
-        <div class="title-area">
-          <h4>Analyse your data</h4>
-        </div>
-        <div class="full-bar"></div>
-        {% if not tests %}
-        <div class="no-graphs-container">
-          <a href="{{ url_for('graphs.analyse')}}">
-            <div class="empty">
-              <p>You have no statistical tests.</p>
-              <p>Click here to get started.</p>
-              <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-            </div>
-          </a>
-        </div>
-        {% else %}
-          {% for test in tests %}
-            <div class="home-table">
-              <a href="{{ url_for('graphs.result',
-                          test_id=test['_id'],
-                          survey=test['survey'],
-                          test=test['test'],
-                          p_value=test['p'],
-                          independent_variable=test['independentVariable'],
-                          dependent_variable=test['dependentVariable'],
-                          title=test['title'] )}}">{{ test["title"] }}</a>
-              <div class="edit-delete">
-                <form action="{{ url_for('graphs.delete_test', test_id=test['_id'] )}}" method="post"
-                    onsubmit="return confirm('Are you sure you want to delete this test?');">
-                  <button class="delete-icon" type="submit"><i class="fas fa-trash fa-lg"></i></button>
-                </form>
-              </div>
-            </div>
-          {% endfor %}
-          <a class="add-more" href="{{ url_for('graphs.analyse') }}">
-            <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-          </a>
-        {% endif %}
-      </div>
+<section class="container">
+  <h1 class="home-title my-3">Your home</h1>
+  <!-- ------YOUR SURVEYS GRID SECTION------ -->
+  <div class="grid-section">
+    <div class="title-area">
+      <h4>Your surveys</h4>
     </div>
-  </section>
-</div>
-<!-- MODAL FOR CHOOSING SURVEY -->
-<div class="overlay">
-  <div class="choose-survey">
+    <div class="full-bar"></div>
     {% if not surveys %}
-    <div class="choose-survey-title">
-      <i class="fa fa-times close" aria-hidden="true"></i>
-      <p>You need to add a survey first!</p>
-    </div>
+    <a class="text-decoration-none" href="{{ url_for('graphs.import_file') }}">
+      <div class="empty add-survey">
+        <p>You have no surveys.</p>
+        <p>Click here to get started.</p>
+        <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
+      </div>
+    </a>
     {% else %}
-    <div class="choose-survey-title">
-      <i class="fa fa-times close" aria-hidden="true"></i>
-      <p>Which survey would you like to use?</p>
-    </div>
-    <div class="bar"></div>
       {% for survey in surveys %}
-        <div class="test">
-          <a class="choose-survey-table" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id']) }}">{{ survey["title"] }}</a>
+        <div class="home-table">
+          <a href="{{ url_for('graphs.dashboard', survey_id=survey['_id'] )}}">{{ survey["title"] }}</a>
+          <div class="d-flex">
+            <a href="{{ url_for('graphs.input', survey_id=survey['_id'] )}}"><i class="edit-icon far fa-edit"></i></a>
+            <form class="mx-3" action="{{ url_for('graphs.delete_survey', survey_id=survey['_id'] )}}" method="post" onsubmit="return confirm('Are you sure you want to delete this survey You will also lose all associated graphs/analysis?');">
+              <button class="delete-icon" type="submit"><i class="fas fa-trash fa-lg"></i></button>
+            </form>
+          </div>
         </div>
       {% endfor %}
+      <a class="add-more" href="{{ url_for('graphs.import_file') }}">
+        <i class="fa fa-plus-circle fa-lg padding" aria-hidden="true"></i>
+      </a>
     {% endif %}
   </div>
-</div>
+</section>
 
 {% endblock content %}

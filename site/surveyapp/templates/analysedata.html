@@ -1,16 +1,10 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <div class="sub-container">
+  <div class="sub-container mt-3">
+
     <form action="" method="post">
     {{ form.hidden_tag() }}
-
-    <div class="survey-analyse">
-      <div class="analyse-question">
-        <h3>Which survey would you like to analyse?</h3>
-      </div>
-      {{ form.survey(class="analyse-option analyse-survey") }}
-    </div>
-    <div class="analyse-transition statistical-tests hidden-axis">
+    <div class="analyse-transition statistical-tests">
       <div class="full-bar"></div>
       <div class="analyse-question">
         <h3>What test would you like to apply?</h3>

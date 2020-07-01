@@ -354,7 +354,7 @@ $('form').submit(function (e) {
         data: postData,
         success: function () {
           // window.location.href = redirectUrl;
-          console.log("success");
+          // console.log("success");
         }
     });
 

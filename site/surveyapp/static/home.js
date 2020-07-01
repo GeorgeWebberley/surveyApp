@@ -5,15 +5,15 @@ const noGraphs = document.querySelector(".no-graphs")
 const yesGraphs = document.querySelector(".yes-graphs")
 const noTests = document.querySelector(".no-tests")
 const yesTests = document.querySelector(".yes-tests")
-const graphsSection = document.querySelector(".home-graphs")
-const testsSection = document.querySelector(".home-stats")
+// const graphsSection = document.querySelector(".home-graphs")
+// const testsSection = document.querySelector(".home-stats")
 
 
 surveysDOM.forEach(survey=> {
   survey.addEventListener("click", (event)=> {
     // if(event.target.class != "home-table") return;
-    graphsSection.classList.remove("no-display")
-    testsSection.classList.remove("no-display")
+    // graphsSection.classList.remove("no-display")
+    // testsSection.classList.remove("no-display")
     fetch("/home/" + survey.dataset.id)
       .then(response => response.json())
       .then(data => {

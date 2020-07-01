@@ -15,7 +15,7 @@ class EditForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     submit = SubmitField("Save")
 
-class SaveGraphForm(FlaskForm):
+class BarchartForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
     # We will append variables to x/y axis choices based on the data
     x_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
@@ -24,10 +24,18 @@ class SaveGraphForm(FlaskForm):
     y_axis_agg = SelectField("Aggregation:", choices=[("Average", "Average"), ("Highest", "Highest"), ("Lowest", "Lowest"), ("Sum", "Sum")])
     submit = SubmitField("Save")
 
+class ScatterchartForm(FlaskForm):
+    title = StringField(validators=[DataRequired()])
+    # We will append variables to x/y axis choices based on the data
+    x_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
+    # Bar chart will default to "Amount" on y axis. Will also append all numerical variable types from the data set.
+    y_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
+    submit = SubmitField("Save")
+
 class StatisticalTestForm(FlaskForm):
     # We will append choices to drop down depending on the data and what is selected by the upser
     # as survey takes an objectId as the value, we need to initialise it and also tell it to coerce ObjectIds
-    survey = SelectField(choices=[("000000000000000000000000", " -- select an option -- ")], coerce=ObjectId, validators=[DataRequired()])
+    # survey = SelectField(choices=[("000000000000000000000000", " -- select an option -- ")], coerce=ObjectId, validators=[DataRequired()])
     test = SelectField(choices=[("", " -- select an option -- "), ("Kruskall Wallis Test", "Kruskall Wallis Test")], validators=[DataRequired()])
     independent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
     dependent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])

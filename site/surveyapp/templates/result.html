@@ -1,11 +1,11 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <div class="grid-section">
+  <div class="grid-section mt-3">
     <div class="title-area">
       <h3>Test results</h3>
     </div>
     <div class="full-bar"></div>
-    <div class="result-container">
+    <div class="mt-4">
       <form action="" method="post">
         {{ form.hidden_tag() }}
         {{ form.title.label(class="result-form-title") }}
@@ -39,7 +39,7 @@
            {% endif %}
          </tr>
         </table>
-        <div class="btn-row result-buttons">
+        <div class="d-flex justify-content-between m-3">
           <a class="btn btn-secondary" href="{{ url_for('graphs.home') }}">Cancel</a>
           {{ form.submit(class="btn btn-primary") }}
         </div>

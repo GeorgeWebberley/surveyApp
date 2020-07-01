@@ -5,38 +5,16 @@ const dependentVariables = document.querySelector(".dependent-variables")
 const continueButton = document.querySelector(".analyse-continue")
 
 // The DOM elements representing the select fields
-const surveyList = document.querySelector(".analyse-survey")
 const independentVariableList = document.querySelector(".independent-variable")
 const dependentVariableList = document.querySelector(".dependent-variable")
 const statisticalTestList = document.querySelector(".statistical-test")
 
 function setEventListeners() {
 
-  surveyList.onchange = function() {
-    statisticalTests.classList.remove("hidden-axis");
-    surveyList.firstChild.hidden = true;
-    survey = surveyList.value
-    fetch("/analyse/" + survey)
-      .then(response => response.json())
-      .then(data => {
-        let independentSelect = "<option value=''> -- select an option -- </option>";
-        data.independentVariables.forEach(variable => {
-          independentSelect += "<option value='" + variable + "'>" + variable + "</option>";
-        })
-        let dependentSelect = "<option value=''> -- select an option -- </option>";
-        data.dependentVariables.forEach(variable => {
-          dependentSelect += "<option value='" + variable + "'>" + variable + "</option>";
-        })
-        independentVariableList.innerHTML = independentSelect;
-        dependentVariableList.innerHTML = dependentSelect;
-      })
-  }
-
   statisticalTestList.onchange = function() {
     independentVariables.classList.remove("hidden-axis");
     statisticalTestList.firstChild.hidden = true;
   }
-
   onChangeListener(independentVariableList, dependentVariableList, dependentVariables);
   onChangeListener(dependentVariableList, independentVariableList, continueButton);
 

@@ -1,57 +1,14 @@
 const xAxisSelect = document.querySelector(".x-axis-value")
 const yAxisSelect = document.querySelector(".y-axis-value")
 const yAxisDetails = document.querySelector(".y-axis-details")
-const yAxisAggDom = document.querySelector(".y-axis-aggregation")
-const aggregate = document.querySelector(".aggregate")
 const emptyGraph = document.querySelector(".empty-graph")
 const exportButton = document.querySelector(".export")
-// const saveJpg = document.querySelector(".save-as-jpg")
-// const form = document.querySelector(".chart-form")
 
 // Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
 const axesSettings = document.querySelectorAll(".axis-setting")
 
 // Get the graph data
 const data = graphData["chart_data"]
-
-
-
-// DATA GROUPING FUNCTION. CALLED WHEN AN AXIS SETTING CHANGES
-function groupData(xAxisValue, yAxisValue){
-  // We can create a 'nested' D3 object, with the key as the chosen x-axis variable
-  let nestedData = d3.nest().key(function(d) { return d[xAxisValue]; })
-
-  // If the y axis is just to count the values, we can group and perform a roll up on the calculation of the length
-  if(yAxisValue == "Amount"){
-    return nestedData
-    .rollup(function(v) { return v.length; })
-    .entries(data)
-  }
-  // Else, we need to see which y-axis aggregation was chosen
-  let yAxisAgg = yAxisAggDom.options[yAxisAggDom.selectedIndex].value;
-  if(yAxisAgg == "Average"){
-    return nestedData
-      .rollup(function(v) { return d3.mean(v, function(d) { return d[yAxisValue]; }); })
-      .entries(data)
-  }
-  if(yAxisAgg == "Highest"){
-    return nestedData
-      .rollup(function(v) { return d3.max(v, function(d) { return d[yAxisValue]; }); })
-      .entries(data)
-  }
-  if(yAxisAgg == "Lowest"){
-    return nestedData
-      .rollup(function(v) { return d3.min(v, function(d) { return d[yAxisValue]; }); })
-      .entries(data)
-  }
-  if(yAxisAgg == "Sum"){
-    return nestedData
-      .rollup(function(v) { return d3.sum(v, function(d) { return d[yAxisValue]; }); })
-      .entries(data)
-  }
-}
-
-
 
 // When the axes are altered, we need to re-group the data depending on the variables set
 axesSettings.forEach(setting => {
@@ -61,33 +18,28 @@ axesSettings.forEach(setting => {
 })
 
 
+
 function axisChange (){
     let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
     let yAxisValue = yAxisSelect.options[yAxisSelect.selectedIndex].value;
 
-    // Hide the overlay
-    emptyGraph.classList.remove("visible");
-    emptyGraph.classList.add("hidden");
-
     // Remove the ' -- select an option -- ' option
     xAxisSelect.firstChild.hidden = true;
+    yAxisSelect.firstChild.hidden = true;
+
     // Reveal the y-axis variable for the user to select
     yAxisDetails.classList.remove('hidden-axis')
 
+    // If the user has selected variables for both the x and the y axes
+    if (xAxisValue != "" && yAxisValue != ""){
+      // Make the overlay hidden
+      emptyGraph.classList.remove("visible");
+      emptyGraph.classList.add("hidden");
 
-    // If the chosen y variable is equal to 'Amount' then we don't want to give the user the option to perform data aggregations
-    if(yAxisValue != 'Amount'){
-      aggregate.classList.remove('hidden-axis')
-      aggregate.classList.add('visible')
-    } else{
-      aggregate.classList.remove('visible')
-      aggregate.classList.add('hidden-axis')
+      // re-draw the graph with the chosen variables
+      render(data);
     }
-    // A function that carries ou the grouping, based on the chosen settings
-    let groupedData = groupData(xAxisValue, yAxisValue);
 
-    // re-draw the graph with the chosen variables
-    render(groupedData);
 }
 
 
@@ -95,15 +47,8 @@ function axisChange (){
 // Set graph dimensions
 var width = document.getElementById('graph').clientWidth;
 var height = document.getElementById('graph').clientHeight;
-// var width = 1000
-// var height = 640
-
-
-
-
 
 window.onresize = function(){
-  console.log("test");
   width = document.getElementById('graph').clientWidth;
   height = document.getElementById('graph').clientHeight;
   svg.attr('width', width).attr('height', height);
@@ -111,11 +56,7 @@ window.onresize = function(){
 
 
 // Create SVG ready for graph
-// const svg = d3.select('#graph').append("svg").attr("width", "100%").attr("height", "100%")
-
-
 const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height).attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "none")
-// const svg = d3.select('#graph').append("svg").attr("width", "100%").attr("height", "100%").attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "xMidYMin meet");
 
 // Set margins around graph for axis and labels
 const margin = { top: 20, right: 20, bottom: 60, left: 80 };
@@ -127,19 +68,13 @@ const gHeight = height - margin.top - margin.bottom;
 var graph = svg.append('g').attr("transform", `translate(${margin.left}, ${margin.top})`)
 
 
-const render = (groupedData) => {
+const render = (data) => {
   let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
   let yAxisValue = yAxisSelect.options[yAxisSelect.selectedIndex].value;
-  let yAxisAgg = yAxisAggDom.options[yAxisAggDom.selectedIndex].value;
 
-
-  // Specify the x-axis values and the y-axis valus
-  const xValues = d => d.key;
-  const yValues = d => d.value;
-  // Remove old graph and old axes when new graph is produced.
-  // graph.remove()
-
-
+  // Specify the x-axis values and the y-axis values
+  const xValues = d => d[xAxisValue];
+  const yValues = d => d[yAxisValue];
 
   // Remove old axes (if they exist)
   d3.selectAll('.axis').remove();
@@ -147,21 +82,16 @@ const render = (groupedData) => {
   d3.selectAll('.label').remove();
 
   // sort the grouped data keys in ascending order (i.e. so the x-axis is in numerical order)
-  groupedData.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
+  data.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
   // Set the scale for the x-axis
-  const xScale = d3.scaleBand()
-    .domain(groupedData.map(xValues))
+  const xScale = d3.scaleLinear()
+    .domain([0, d3.max(data, xValues)])
     .range([0, gWidth])
-    .paddingInner(0.1)
 
   // Set the scale for the y-axis
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(groupedData, yValues)])
+    .domain([0, d3.max(data, yValues)])
     .range([gHeight, 0])
-
-  // Create graph element, factoring in space for axes.
-  // graph = svg.append('g')
-  // .attr("transform", `translate(${margin.left}, ${margin.top})`)
 
   // Add new y axis
   graph.append('g').attr("class", "axis").call(d3.axisLeft(yScale))
@@ -174,7 +104,7 @@ const render = (groupedData) => {
       .attr("x",0 - (gHeight / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text(`${yAxisAgg}: ${yAxisValue}`);
+      .text(yAxisValue);
 
   // Add new x axis
   graph.append('g').attr("class", "axis").call(d3.axisBottom(xScale))
@@ -187,27 +117,26 @@ const render = (groupedData) => {
     .text(xAxisValue);
 
   // Select all 'rect' DOM elements (if they exist)
-  var rect = graph.selectAll('rect').data(groupedData)
+  var circle = graph.selectAll('circle').data(data)
 
   // D3 'exit()' is what happens to DOM elements that no longer have data bound to them
   // Given a transition that shrinks them down to the x-axis
-  rect.exit().transition()
+  circle.exit().transition()
   .duration(1000)
-  .attr("y", yScale(0))
-  .attr('height', 0)
+  .attr("cy", yScale(0))
   .remove()
 
   // D3 'enter()' is the creation of DOM elements bound to the data
-  var bar = rect.enter()
-  .append('rect')
-      .attr("y",  yScale(0))
-      .attr('x', d => xScale(xValues(d)))
-      .attr('width', xScale.bandwidth()) // band width is width of a single bar
+  var plot = circle.enter()
+  .append('circle')
+      .attr("cy",  yScale(0))
+      .attr('cx', d => xScale(xValues(d)))
+      .attr("r", 3)
       .style('fill', 'steelblue')
 
 
   // For the colour, I had to convert the 'primary-colour-dark' variable into a hex colour so that the effect can work
-  bar.on('mouseenter', function(d) {
+  plot.on('mouseenter', function(d) {
     d3.select(this)
     .transition()
     .duration(100)
@@ -239,14 +168,13 @@ const render = (groupedData) => {
     d3.select(".graph-tooltip").classed("tooltip-hidden", true);
   })
 
-  bar.merge(rect)  // 'merge' merges the 'enter' and 'update' groups
+  plot.merge(circle)  // 'merge' merges the 'enter' and 'update' groups
       .transition()
       .delay(d =>  xScale(xValues(d))/2 )
       .duration(1000)
-      .attr('height', d => gHeight - yScale(yValues(d)))
-      .attr('y', d=>  yScale(yValues(d)))
-      .attr('x', d => xScale(xValues(d)))
-      .attr('width', xScale.bandwidth()) // band width is width of a single bar
+      .attr('cy', d=>  yScale(yValues(d)))
+      .attr('cx', d => xScale(xValues(d)))
+
 }
 
 let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
@@ -394,7 +322,6 @@ $('form').submit(function (e) {
 
     var imgData = await canvas.toDataURL("image/png");
     canvas.remove();
-    console.log("hello");
     // ajax call to send canvas(base64) url to server.
 
     $.ajaxSetup({
@@ -407,14 +334,12 @@ $('form').submit(function (e) {
 
     var postData = $('form').serializeArray()
     postData.push({name: "image", value: imgData})
-    console.log(imgData);
     $.ajax({
         type: "POST",
         url: url,
         data: postData,
         success: function () {
           window.location.href = redirectUrl;
-          // console.log("success");
         }
     });
   }

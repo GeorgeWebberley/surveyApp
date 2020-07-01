@@ -31,7 +31,7 @@
           <div id="graph" class="h-100 position-relative">
             <!-- ------GRAPH OVERLAY------ -->
             <div class="empty-graph visible h-100 w-100 mr-2">
-              <h1>Choose an x-axis variable to get started</h1>
+              <h1>Choose your axis variables to get started</h1>
             </div>
             <!-- ------TOOLTIP------ -->
             <div class="graph-tooltip tooltip-hidden">
@@ -60,10 +60,6 @@
                   {{ form.y_axis.label() }}
                   {{ form.y_axis(class="y-axis-value axis-setting") }}
                 </div>
-                <div class="aggregate hidden-axis">
-                  {{ form.y_axis_agg.label() }}
-                  {{ form.y_axis_agg(class="y-axis-aggregation axis-setting") }}
-                </div>
               </div>
             </div>
           </div>
@@ -83,9 +79,9 @@
   var False = false;
   var graphData = {{ data | safe }}
   var csrf = "{{ form.csrf_token._value() }}"
-  var url = "{{ url_for('graphs.graph', survey_id=survey_id, graph_id=graph_id, chart_type='Bar chart') }}"
+  var url = "{{ url_for('graphs.graph', survey_id=survey_id, graph_id=graph_id, chart_type='Scatter chart') }}"
   var redirectUrl = "{{ url_for('graphs.dashboard', survey_id=survey_id) }}"
 </script>
-<script src="{{ url_for('static', filename='d3/barchart.js') }}" defer></script>
+<script src="{{ url_for('static', filename='d3/scatterchart.js') }}" defer></script>
 <script src="{{ url_for('static', filename='d3/saveSvgAsPng.js') }}" defer></script>
 {% endblock content %}

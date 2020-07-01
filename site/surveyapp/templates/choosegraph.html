@@ -2,26 +2,14 @@
 <div class="container">
   <h1 class="home-title">What type of graph would you like to make?</h1>
   <div class="select-graphs">
-    <a class="select-graph-link" href="{{ url_for('graphs.bar_chart', survey_id=survey_id) }}">
+    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Bar chart') }}">
       <img class="graph-img" src="{{ url_for('static', filename='images/barchart.png') }}" class="graph-img"/>
       <p class="select-graph-type">Bar Chart</p>
     </a>
-    <div class="graph-type">
-    </div>
-    <div class="graph-type">
-    </div>
+    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Scatter chart') }}">
+      <img class="graph-img" src="{{ url_for('static', filename='images/scatterchart.png') }}" class="graph-img"/>
+      <p class="select-graph-type">Scatter Chart</p>
+    </a>
   </div>
 </div>
-<!-- <div class="overlay">
-  <div class="choose-survey">
-    <div class="choose-survey-title">
-      <i class="fa fa-times close" aria-hidden="true"></i>
-      <p>Which variable would you like to plot?</p>
-    </div>
-    <div class="bar"></div>
-    {% for column in columns %}
-      <a class="choose-survey-table" href="{{ url_for('graphs.bar_chart', survey_id=survey_id, column=column) }}">{{ column }}</a>
-    {% endfor %}
-  </div>
-</div> -->
 {% endblock content %}

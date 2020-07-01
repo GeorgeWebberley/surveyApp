@@ -93,12 +93,18 @@ Today I finished making the image 'cards' on the desktop. For this, I used boots
 
 From tomorrow I will work at adding another graph/statistical test to the application.
 
-<a name="latestEntry"></a>
 ### Altered landing page and finished graph cards (29th-30th June)
 
 Today I worked at improving the landing page for visitors. I have added a background image (which I will likely change in the near future) as the previous landing page was very bare with very little content.
 
 The cards which display the users graphs have been finalised with buttons for editing and deleting.
+
+<a name="latestEntry"></a>
+### Altered landing page and finished graph cards (1st July)
+
+I have altered the statistical page data (as the dashboard is now centered around one survey, so i no longer need to ask the user which survey they would like to use).
+
+I have worked at adding a 'scatter plot' type of chart. Whilst I was able to do this without too many difficulties, the problem I am now experiencing is with regards to how to structure my code and to organise it with the different types of graphs. Initially I made different HTML pages, different routes and different javascripts for each of the different graph types. I have now tried to reduce the number of different routes, with one single 'graph' route which will process the graphs depending on what type of chart. Whilst this is almost working, the server is generating an error when trying to edit a graph (as it does not know which type of graph it is). I will continue working on this tomorrow, as I feel it is quite an important thing to get right in my project.
 
 ##### Ongoing objectives
 
