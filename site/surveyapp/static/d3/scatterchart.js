@@ -4,6 +4,17 @@ const yAxisDetails = document.querySelector(".y-axis-details")
 const emptyGraph = document.querySelector(".empty-graph")
 const exportButton = document.querySelector(".export")
 
+const addLine = document.querySelector(".add-line")
+
+const axesRange = document.querySelectorAll(".axis-range")
+
+const xFrom = document.querySelector(".x-from")
+const yFrom = document.querySelector(".y-from")
+const xTo = document.querySelector(".x-to")
+const yTo = document.querySelector(".y-to")
+
+
+
 // Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
 const axesSettings = document.querySelectorAll(".axis-setting")
 
@@ -16,7 +27,6 @@ axesSettings.forEach(setting => {
     axisChange()
   }
 })
-
 
 
 function axisChange (){
@@ -35,12 +45,47 @@ function axisChange (){
       // Make the overlay hidden
       emptyGraph.classList.remove("visible");
       emptyGraph.classList.add("hidden");
-
+      addLine.disabled = false;
       // re-draw the graph with the chosen variables
       render(data);
     }
-
 }
+
+
+addLine.addEventListener("change", function(){
+  if(this.checked){
+    // d3.selectAll('.graph-line').attr("opacity",1);
+    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "visible");
+    render(data)
+  } else {
+    // d3.selectAll('.graph-line').attr("opacity",0);
+    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "hidden");
+    render(data)
+  }
+})
+
+axesRange.forEach(input => {
+  input.onchange = function() {
+    render(data)
+  }
+})
+
+
+
+addLine.addEventListener("change", function(){
+  if(this.checked){
+    // d3.selectAll('.graph-line').attr("opacity",1);
+    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "visible");
+    render(data)
+  } else {
+    // d3.selectAll('.graph-line').attr("opacity",0);
+    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "hidden");
+    render(data)
+  }
+})
+
+
+
 
 
 
@@ -67,8 +112,8 @@ const gHeight = height - margin.top - margin.bottom;
 // Add the graph area to the SVG, factoring in the margin dimensions
 var graph = svg.append('g').attr("transform", `translate(${margin.left}, ${margin.top})`)
 
-
 const render = (data) => {
+
   let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
   let yAxisValue = yAxisSelect.options[yAxisSelect.selectedIndex].value;
 
@@ -77,24 +122,75 @@ const render = (data) => {
   const yValues = d => d[yAxisValue];
 
   // Remove old axes (if they exist)
-  d3.selectAll('.axis').remove();
+  // d3.selectAll('.axis').remove();
   // Remove old axes labels (if they exist)
   d3.selectAll('.label').remove();
 
   // sort the grouped data keys in ascending order (i.e. so the x-axis is in numerical order)
-  data.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
+  // data.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
+  data.sort(function(a, b) {
+    return d3.ascending(parseInt(a[xAxisValue]), parseInt(b[xAxisValue]))
+  });
+
+
+  // set the input fields for the domain (i.e. range of values) if not yet set
+  if(xFrom.value == "") xFrom.value = d3.min(data, xValues)
+  if(xTo.value == "") xTo.value = d3.max(data, xValues)
+  if(yFrom.value == "") yFrom.value = d3.min(data, yValues)
+  if(yTo.value == "") yTo.value = d3.max(data, yValues)
+
+  // Now extract the range from the values (if they are specifed by user)
+  // If the values specified by the user are outside the range of the data, increase the range
+  // else use the range of the data as default.
+  xFromValue = Math.min(d3.min(data, xValues), xFrom.value)
+  xToValue = Math.max(d3.max(data, xValues), xTo.value)
+  yFromValue = Math.min(d3.min(data, yValues), yFrom.value)
+  yToValue = Math.max(d3.max(data, yValues), yTo.value)
+
   // Set the scale for the x-axis
   const xScale = d3.scaleLinear()
-    .domain([0, d3.max(data, xValues)])
+    .domain([xFromValue, xToValue]).nice()
     .range([0, gWidth])
 
   // Set the scale for the y-axis
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(data, yValues)])
+    .domain([yFromValue, yToValue])
     .range([gHeight, 0])
 
-  // Add new y axis
-  graph.append('g').attr("class", "axis").call(d3.axisLeft(yScale))
+
+  // Select the axes (if they exist)
+  var yAxis = d3.selectAll(".yAxis")
+  var xAxis = d3.selectAll(".xAxis")
+
+  // Get the position of the axes. Either set to 0 or set to the far left/bottom
+  xPosition = (0 > yFromValue && 0 < yToValue) ? yScale(0) : gHeight
+  yPosition = (0 > xFromValue && 0 < xToValue) ? xScale(0) : 0
+
+
+  // If they dont exist, we create them. If they do, we update them
+  if (yAxis.empty() && xAxis.empty()){
+    // For the x-axis we create an axisBottom and 'translate' it so it appears on the bottom of the graph
+    graph.append('g').attr("class", "xAxis").call(d3.axisBottom(xScale))
+    .attr("transform", `translate(0, ${xPosition})`)
+    // For why axis we do not need to translate it, as the default is on the left
+    graph.append('g').attr("class", "yAxis").call(d3.axisLeft(yScale))
+    .attr("transform", `translate(${yPosition}, 0)`)
+  } else {
+    // Adjust the x-axis according the x-axis variable data
+    xAxis.transition()
+      .duration(1000)
+      .call(d3.axisBottom(xScale))
+      .attr("transform", `translate(0, ${xPosition})`)
+    // Adjust the y-axis according the y-axis variable data
+    yAxis.transition()
+      .duration(1000)
+      .call(d3.axisLeft(yScale))
+      .attr("transform", `translate(${yPosition}, 0)`)
+  }
+
+
+
+
 
   // Add y axis label
   svg.append("text")
@@ -106,9 +202,7 @@ const render = (data) => {
       .style("text-anchor", "middle")
       .text(yAxisValue);
 
-  // Add new x axis
-  graph.append('g').attr("class", "axis").call(d3.axisBottom(xScale))
-    .attr("transform", `translate(0, ${gHeight})`)
+
 
   // Add x axis label
   svg.append("text")
@@ -116,7 +210,37 @@ const render = (data) => {
     .attr("class", "label")
     .text(xAxisValue);
 
-  // Select all 'rect' DOM elements (if they exist)
+
+  var line = d3.line()
+    .x(d => xScale(xValues(d)))
+    .y(d => yScale(yValues(d)))
+
+  var startingLine = d3.line()
+    .x(d => xScale(xValues(d)))
+    .y(d => yScale(0))
+
+
+  var path = graph.selectAll('.graph-line').data(data)
+
+
+
+  if(addLine.checked == true){
+    path
+     .enter()
+     .append("path")
+     .attr("class","graph-line")
+     .merge(path)
+     .transition()
+     .duration(1000)
+     .attr("d", line(data))
+       .attr("fill", "none")
+       .attr("stroke", "steelblue")
+       .attr("stroke-width", 2.5)
+  }
+
+
+
+  // Select all 'circle' DOM elements (if they exist)
   var circle = graph.selectAll('circle').data(data)
 
   // D3 'exit()' is what happens to DOM elements that no longer have data bound to them
@@ -177,12 +301,13 @@ const render = (data) => {
 
 }
 
+
+
+
 let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
 if(xAxisValue != ''){
   axisChange()
 }
-
-
 
 
 
@@ -195,115 +320,15 @@ exportButton.addEventListener("click", () => {
 // When the form is submitted, we want to get a jpg image of the svg
 $('form').submit(function (e) {
 
+  // Prevent default submission of form
   e.preventDefault();
-  // svg.node().setAttribute('xlink', 'http://www.w3.org/1999/xlink');
-  // var serializer = new XMLSerializer();
-	// var svgString = serializer.serializeToString(svg.node());
-  // var imgsrc = 'data:image/svg+xml;base64,'+ btoa( unescape( encodeURIComponent( svgString ) ) ); // Convert SVG string to data URL
-  //
-	// var canvas = document.createElement("canvas");
-	// var context = canvas.getContext("2d");
-  // let form = this
-	// canvas.width = width;
-	// canvas.height = height;
-  //
-	// var image = new Image();
-	// image.onload = function() {
-	// 	context.clearRect ( 0, 0, width, height );
-	// 	context.drawImage(image, 0, 0, width, height);
-	// 	canvas.toBlob( function(blob) {
-	// 		var filesize = Math.round( blob.length/1024 ) + ' KB';
-	// 		// if ( callback ) callback( blob, filesize );
-	// 	});
-	// };
-
-  // svg2Png(svg, postData)
-
-  //
-  // let canvas = document.createElement('canvas');
-  // const ctx = canvas.getContext('2d');
-  // let image = canvg.Canvg.fromString(ctx, svg.outerHTML);
-  // image.start()
-  // console.log(image.toDataURL('image/png'));
-  // // let imageData = image.toDataURL('image/png');
-  // // canvg(canvas, svg);
-  // // let imgData = canvas.toDataURL('image/png');
-
-
-
-
-// -------THIS NEARLY WORKS------
-  // var img = new Image(),
-  //     serializer = new XMLSerializer(),
-  //     svgStr = serializer.serializeToString(svg.node());
-  //
-  // img.src = 'data:image/svg+xml;base64,'+window.btoa(svgStr);
-  //
-  // // You could also use the actual string without base64 encoding it:
-  // // img.src = "data:image/svg+xml;utf8," + svgStr;
-  // // window.open().document.write('<img src="' + img.src + '"/>');
-  //
-  // img.onload = function(){
-  //   var canvas = document.createElement("canvas");
-  //   document.body.appendChild(canvas);
-  //
-  //   canvas.width = width;
-  //   canvas.height = height;
-  //   canvas.getContext("2d").drawImage(img,0,0,width,height);
-  //   var imgData = canvas.toDataURL('image/jpeg');
-  //   canvas.remove();
-  //   console.log("hello");
-  //   // ajax call to send canvas(base64) url to server.
-  //
-  //
-  //
-  //   $.ajaxSetup({
-  //     beforeSend: function(xhr, settings) {
-  //       if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-  //           xhr.setRequestHeader("X-CSRFToken", csrf)
-  //       }
-  //     }
-  //   })
-  //   var postData = $('form').serializeArray()
-  //   postData.push({name: "image", value: imgData})
-  //   $.ajax({
-  //       type: "POST",
-  //       url: url,
-  //       data: postData,
-  //       success: function () {
-  //         // window.location.href = redirectUrl;
-  //         console.log("success");
-  //       }
-  //   });
-  //
-  // }
-  //
-
-
-// --------------------------------------------------------------------
-
   var doctype = '<?xml version="1.0" standalone="no"?>'
                + '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
 
   var source = (new XMLSerializer()).serializeToString(svg.node());
-
   var blob = new Blob([ doctype + source], { type: 'image/svg+xml' });
-
   var imageURL = window.URL.createObjectURL(blob);
   var img = new Image();
-
-
-
-
-
-
-  // img.onload = async (e) => {
-  //   ctx.drawImage(img, 0, 0);
-  //   ctx.font = "165px Arial";
-  //   ctx.fillStyle = "white";
-  //   b64Code = await (<any>canvas).toDataURL();
-  // }
-
 
   img.onload = async function(){
     var canvas = d3.select('body').append('canvas').node();
@@ -315,15 +340,13 @@ $('form').submit(function (e) {
     // draw image on canvas
     ctx.drawImage(img, 0, 0, width, height);
 
-
     var glContextAttributes = { preserveDrawingBuffer: true };
     var gl = canvas.getContext("experimental-webgl", glContextAttributes);
 
-
     var imgData = await canvas.toDataURL("image/png");
     canvas.remove();
-    // ajax call to send canvas(base64) url to server.
 
+    // ajax call to send canvas(base64) url to server.
     $.ajaxSetup({
       beforeSend: function(xhr, settings) {
         if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
@@ -345,9 +368,5 @@ $('form').submit(function (e) {
   }
 
   img.src =  imageURL;
-  // window.open().document.write('<img src="' + img.src + '"/>');
-
-
-
 
 });

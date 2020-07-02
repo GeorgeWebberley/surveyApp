@@ -99,17 +99,29 @@ Today I worked at improving the landing page for visitors. I have added a backgr
 
 The cards which display the users graphs have been finalised with buttons for editing and deleting.
 
-<a name="latestEntry"></a>
 ### Altered landing page and finished graph cards (1st July)
 
 I have altered the statistical page data (as the dashboard is now centered around one survey, so i no longer need to ask the user which survey they would like to use).
 
 I have worked at adding a 'scatter plot' type of chart. Whilst I was able to do this without too many difficulties, the problem I am now experiencing is with regards to how to structure my code and to organise it with the different types of graphs. Initially I made different HTML pages, different routes and different javascripts for each of the different graph types. I have now tried to reduce the number of different routes, with one single 'graph' route which will process the graphs depending on what type of chart. Whilst this is almost working, the server is generating an error when trying to edit a graph (as it does not know which type of graph it is). I will continue working on this tomorrow, as I feel it is quite an important thing to get right in my project.
 
+<a name="latestEntry"></a>
+### Line graph, value ranges, negative graph values, graph edits (2nd July)
+
+This morning I was able to fix a bug that was not allowing the graphs to be edited (this was introduced yesterday when I condensed the two different graph routes (scatter and bar) down to one route that calls different functions depending on the graph type). Although it is now working, i am still not really happy with my code. This is because there are lots of small differences between bar charts and line graphs, meaning that most of the code is 'similar' but very slightly different, making it difficult to prevent the code seeming to repeatable. This will be a problem I will likely continue to face as I add more graphs and statistical tests.
+
+I decided today to also add a line chart. After starting it, however, I soon realised that it is very similar the scatter chart made yesterday (in fact it is the same, just with a connecting line). Therefore, I decided to combine the the graphs together and simply having a 'scatter graph' but with an optional extra check box that the user can tick if they want to connect their points with a line.
+
+For a while I have wanted to give the user the opportunity to set their own ranges in their graphs (this is called the 'domain' in D3). I have therefore added some extra input boxes where the users can specify upper and lower bounds for their graphs. I have also adjusted the axes, fixing them to the 0 value when needed.
+
+The next thing to add here will be to save these extra features to the database (the line and the ranges). I then want to maybe create one more chart (a pie chart perhaps) before adding more statistical tests.
+
+Following having more statistical tests, I then want to work at improving the current graphs (such as making them interactive, zooming in on sections etc.)
+
 ##### Ongoing objectives
 
-* Add more graphs. I think line graph would be a good next one to look at as it will be quite different to bar charts. Pie-charts I think will be quite similar to bar-charts as it is mostly categorical data and aggregations, only the presentation is different.
+* Save extra graph features (connecting line, axes ranges etc.)
+* Add an extra graph type (perhaps pie chart).
 * Add more statistical tests.
-* Improve CSS to allow for responsive web pages (particularly on the bar chart page) WORKING ON THIS. BARCHART PAGE NOW MORE RESPONSIVE.
-* To carry out unit testing of the bar-chart, statistics page and dashboard pages.
+* To carry out unit testing of the graph page, statistics page and dashboard pages.
 * Password reset.

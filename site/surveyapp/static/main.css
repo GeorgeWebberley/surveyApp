@@ -795,10 +795,12 @@ body {
 /* ------BARCHART PAGE------ */
 
 .save-graph-form{
+  width: 50%;
+
   display: flex;
   position: relative;
   justify-content: center;
-  margin: 2rem;
+  margin: 2rem auto 2rem auto;
 }
 
 .edit-graph-title{

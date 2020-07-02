@@ -2,28 +2,35 @@
 <div class="graph-container">
   <form class="chart-form" action="" method="post" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
-    <div class="save-graph-form">
-      {% if form.title.errors %}
-          {{ form.title(class="edit-graph-title form-upload-error") }}
-          <div class="invalid">
-              {% for error in form.title.errors %}
-                  <span>{{ error }}</span>
-              {% endfor %}
+    <div class="container">
+      <div class="row mt-3">
+        <div class="d-flex col-sm-6 offset-md-4">
+          {% if form.title.errors %}
+              {{ form.title(class="edit-graph-title form-upload-error") }}
+              <div class="invalid">
+                  {% for error in form.title.errors %}
+                      <span>{{ error }}</span>
+                  {% endfor %}
+              </div>
+          {% else %}
+              {{ form.title(class="edit-graph-title hide-title") }}
+          {% endif %}
+          <div class="dropdown">
+            <p>File</p>
+            <div class="dropdown-options">
+              <div class="export dropdown-option">Export as PNG</div>
+              {{ form.submit(class="dropdown-option no-btn") }}
+            </div>
           </div>
-      {% else %}
-          {{ form.title(class="edit-graph-title hide-title") }}
-      {% endif %}
-      <div class="dropdown">
-        <p>File</p>
-        <div class="dropdown-options">
-          <div class="export dropdown-option">Export as PNG</div>
-          {{ form.submit(class="dropdown-option no-btn") }}
+        </div>
+        <div class="col-sm-2 align-self-end hidden">
+          <h6 class="text-muted visible">Add connecting line: <input type="checkbox" class="add-line" disabled></h6>
         </div>
       </div>
     </div>
 
-    <div class="graph-sub-container">
 
+    <div class="graph-sub-container">
 
       <div class="row vh-75 p-3">
         <!-- Graph -->
@@ -51,7 +58,15 @@
                 {{ form.x_axis.label() }}
                 {{ form.x_axis(class="x-axis-value axis-setting") }}
               </div>
+              <div class="axis-variable">
+                <p>X-axis range</p>
+                <div class="d-flex justify-content-between">
+                  From <input type="number" class="axis-range x-from w-25">
+                  To <input type="number" class="axis-range x-to w-25">
+                </div>
+              </div>
             </div>
+            <div class="full-bar"></div>
             <!-- ------Y AXIS------ -->
             <div class="y-axis-details hidden-axis">
               <h2 class="grid-section-title">Y-axis</h2>
@@ -59,6 +74,13 @@
                 <div class="axis-variable">
                   {{ form.y_axis.label() }}
                   {{ form.y_axis(class="y-axis-value axis-setting") }}
+                </div>
+                <div class="axis-variable">
+                  <p>Y-axis range</p>
+                  <div class="d-flex justify-content-between">
+                    From <input type="number" class="axis-range y-from w-25">
+                    To <input type="number" class="axis-range y-to w-25">
+                  </div>
                 </div>
               </div>
             </div>

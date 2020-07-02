@@ -136,13 +136,7 @@ const render = (groupedData) => {
   // Specify the x-axis values and the y-axis valus
   const xValues = d => d.key;
   const yValues = d => d.value;
-  // Remove old graph and old axes when new graph is produced.
-  // graph.remove()
 
-
-
-  // Remove old axes (if they exist)
-  d3.selectAll('.axis').remove();
   // Remove old axes labels (if they exist)
   d3.selectAll('.label').remove();
 
@@ -159,12 +153,37 @@ const render = (groupedData) => {
     .domain([0, d3.max(groupedData, yValues)])
     .range([gHeight, 0])
 
-  // Create graph element, factoring in space for axes.
-  // graph = svg.append('g')
-  // .attr("transform", `translate(${margin.left}, ${margin.top})`)
 
-  // Add new y axis
-  graph.append('g').attr("class", "axis").call(d3.axisLeft(yScale))
+
+    // Select the axes (if they exist)
+    var yAxis = d3.selectAll(".yAxis")
+    var xAxis = d3.selectAll(".xAxis")
+
+    // If they dont exist, we create them. If they do, we update them
+    if (yAxis.empty() && xAxis.empty()){
+      // For the x-axis we create an axisBottom and 'translate' it so it appears on the bottom of the graph
+      graph.append('g').attr("class", "xAxis").call(d3.axisBottom(xScale))
+      .attr("transform", `translate(0, ${gHeight})`)
+      // For why axis we do not need to translate it, as the default is on the left
+      graph.append('g').attr("class", "yAxis").call(d3.axisLeft(yScale))
+    } else {
+      // Adjust the x-axis according the x-axis variable data
+      xAxis.transition()
+        .duration(1000)
+        .call(d3.axisBottom(xScale))
+      // Adjust the y-axis according the y-axis variable data
+      yAxis.transition()
+        .duration(1000)
+        .call(d3.axisLeft(yScale))
+    }
+
+  let yAxisLabel
+
+  if(yAxisValue == 'Amount'){
+    yAxisLabel = 'Amount'
+  } else{
+    yAxisLabel = `${yAxisAgg}: ${yAxisValue}`
+  }
 
   // Add y axis label
   svg.append("text")
@@ -174,11 +193,7 @@ const render = (groupedData) => {
       .attr("x",0 - (gHeight / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text(`${yAxisAgg}: ${yAxisValue}`);
-
-  // Add new x axis
-  graph.append('g').attr("class", "axis").call(d3.axisBottom(xScale))
-    .attr("transform", `translate(0, ${gHeight})`)
+      .text(yAxisLabel);
 
   // Add x axis label
   svg.append("text")
@@ -266,115 +281,16 @@ exportButton.addEventListener("click", () => {
 
 // When the form is submitted, we want to get a jpg image of the svg
 $('form').submit(function (e) {
-
+  // prevent default form submission
   e.preventDefault();
-  // svg.node().setAttribute('xlink', 'http://www.w3.org/1999/xlink');
-  // var serializer = new XMLSerializer();
-	// var svgString = serializer.serializeToString(svg.node());
-  // var imgsrc = 'data:image/svg+xml;base64,'+ btoa( unescape( encodeURIComponent( svgString ) ) ); // Convert SVG string to data URL
-  //
-	// var canvas = document.createElement("canvas");
-	// var context = canvas.getContext("2d");
-  // let form = this
-	// canvas.width = width;
-	// canvas.height = height;
-  //
-	// var image = new Image();
-	// image.onload = function() {
-	// 	context.clearRect ( 0, 0, width, height );
-	// 	context.drawImage(image, 0, 0, width, height);
-	// 	canvas.toBlob( function(blob) {
-	// 		var filesize = Math.round( blob.length/1024 ) + ' KB';
-	// 		// if ( callback ) callback( blob, filesize );
-	// 	});
-	// };
-
-  // svg2Png(svg, postData)
-
-  //
-  // let canvas = document.createElement('canvas');
-  // const ctx = canvas.getContext('2d');
-  // let image = canvg.Canvg.fromString(ctx, svg.outerHTML);
-  // image.start()
-  // console.log(image.toDataURL('image/png'));
-  // // let imageData = image.toDataURL('image/png');
-  // // canvg(canvas, svg);
-  // // let imgData = canvas.toDataURL('image/png');
-
-
-
-
-// -------THIS NEARLY WORKS------
-  // var img = new Image(),
-  //     serializer = new XMLSerializer(),
-  //     svgStr = serializer.serializeToString(svg.node());
-  //
-  // img.src = 'data:image/svg+xml;base64,'+window.btoa(svgStr);
-  //
-  // // You could also use the actual string without base64 encoding it:
-  // // img.src = "data:image/svg+xml;utf8," + svgStr;
-  // // window.open().document.write('<img src="' + img.src + '"/>');
-  //
-  // img.onload = function(){
-  //   var canvas = document.createElement("canvas");
-  //   document.body.appendChild(canvas);
-  //
-  //   canvas.width = width;
-  //   canvas.height = height;
-  //   canvas.getContext("2d").drawImage(img,0,0,width,height);
-  //   var imgData = canvas.toDataURL('image/jpeg');
-  //   canvas.remove();
-  //   console.log("hello");
-  //   // ajax call to send canvas(base64) url to server.
-  //
-  //
-  //
-  //   $.ajaxSetup({
-  //     beforeSend: function(xhr, settings) {
-  //       if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-  //           xhr.setRequestHeader("X-CSRFToken", csrf)
-  //       }
-  //     }
-  //   })
-  //   var postData = $('form').serializeArray()
-  //   postData.push({name: "image", value: imgData})
-  //   $.ajax({
-  //       type: "POST",
-  //       url: url,
-  //       data: postData,
-  //       success: function () {
-  //         // window.location.href = redirectUrl;
-  //         console.log("success");
-  //       }
-  //   });
-  //
-  // }
-  //
-
-
-// --------------------------------------------------------------------
-
   var doctype = '<?xml version="1.0" standalone="no"?>'
                + '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
-
+  // serialise the graph svg
   var source = (new XMLSerializer()).serializeToString(svg.node());
-
+  // convert to Blob
   var blob = new Blob([ doctype + source], { type: 'image/svg+xml' });
-
   var imageURL = window.URL.createObjectURL(blob);
   var img = new Image();
-
-
-
-
-
-
-  // img.onload = async (e) => {
-  //   ctx.drawImage(img, 0, 0);
-  //   ctx.font = "165px Arial";
-  //   ctx.fillStyle = "white";
-  //   b64Code = await (<any>canvas).toDataURL();
-  // }
 
 
   img.onload = async function(){
@@ -386,7 +302,6 @@ $('form').submit(function (e) {
 
     // draw image on canvas
     ctx.drawImage(img, 0, 0, width, height);
-
 
     var glContextAttributes = { preserveDrawingBuffer: true };
     var gl = canvas.getContext("experimental-webgl", glContextAttributes);

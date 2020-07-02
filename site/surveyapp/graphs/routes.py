@@ -149,7 +149,7 @@ def choose_graph(survey_id):
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
     df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
-    return render_template("choosegraph.html", title="Select Graph", survey_id=file_obj["_id"], columns=list(df))
+    return render_template("choosegraph.html", title="Select Graph", survey_id=file_obj["_id"])
 
 
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
@@ -274,22 +274,23 @@ def scatter_chart(survey_id):
 @login_required
 def graph(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
-    chart_type = request.args.get("chart_type")
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "error")
         return redirect(url_for("main.index"))
     # Get the id of the graph (if it exists yet)
     graph_id = request.args.get("graph_id")
+    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
+    if graph_obj:
+        chart_type = graph_obj["type"]
+    else:
+        chart_type = request.args.get("chart_type")
+
     # Read the csv file in
     df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
     # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
     # parse the columns to get information regarding type of data
     column_info = parse_data(df)
-
-    print("Chart_type")
-    print(chart_type)
-
 
 
     # ----------BAR CHART----------
@@ -299,6 +300,7 @@ def graph(survey_id):
     # ----------SCATTER CHART----------
     elif chart_type == "Scatter chart":
         return scatter_chart(survey_id, column_info, chart_data, df, graph_id, file_obj["title"])
+
 
 
 
@@ -351,6 +353,7 @@ def bar_chart(survey_id, column_info, chart_data, df, graph_id, title):
     return render_template("barchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
 
 
+# Almost exactly the same as scatter plot
 def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
     form = ScatterchartForm()
     for column in column_info:
