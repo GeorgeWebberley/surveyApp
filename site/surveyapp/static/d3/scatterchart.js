@@ -121,8 +121,6 @@ const render = (data) => {
   const xValues = d => d[xAxisValue];
   const yValues = d => d[yAxisValue];
 
-  // Remove old axes (if they exist)
-  // d3.selectAll('.axis').remove();
   // Remove old axes labels (if they exist)
   d3.selectAll('.label').remove();
 
@@ -142,10 +140,13 @@ const render = (data) => {
   // Now extract the range from the values (if they are specifed by user)
   // If the values specified by the user are outside the range of the data, increase the range
   // else use the range of the data as default.
-  xFromValue = Math.min(d3.min(data, xValues), xFrom.value)
-  xToValue = Math.max(d3.max(data, xValues), xTo.value)
-  yFromValue = Math.min(d3.min(data, yValues), yFrom.value)
-  yToValue = Math.max(d3.max(data, yValues), yTo.value)
+  xFromValue = xFrom.value = Math.min(d3.min(data, xValues), xFrom.value)
+  xToValue = xTo.value = Math.max(d3.max(data, xValues), xTo.value)
+  yFromValue = yFrom.value = Math.min(d3.min(data, yValues), yFrom.value)
+  yToValue = yTo.value = Math.max(d3.max(data, yValues), yTo.value)
+
+  // Reveal the 'add-line' select option
+  document.querySelector(".form-add-line").classList.remove("hidden")
 
   // Set the scale for the x-axis
   const xScale = d3.scaleLinear()

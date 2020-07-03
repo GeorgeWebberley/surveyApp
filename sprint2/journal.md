@@ -105,7 +105,6 @@ I have altered the statistical page data (as the dashboard is now centered aroun
 
 I have worked at adding a 'scatter plot' type of chart. Whilst I was able to do this without too many difficulties, the problem I am now experiencing is with regards to how to structure my code and to organise it with the different types of graphs. Initially I made different HTML pages, different routes and different javascripts for each of the different graph types. I have now tried to reduce the number of different routes, with one single 'graph' route which will process the graphs depending on what type of chart. Whilst this is almost working, the server is generating an error when trying to edit a graph (as it does not know which type of graph it is). I will continue working on this tomorrow, as I feel it is quite an important thing to get right in my project.
 
-<a name="latestEntry"></a>
 ### Line graph, value ranges, negative graph values, graph edits (2nd July)
 
 This morning I was able to fix a bug that was not allowing the graphs to be edited (this was introduced yesterday when I condensed the two different graph routes (scatter and bar) down to one route that calls different functions depending on the graph type). Although it is now working, i am still not really happy with my code. This is because there are lots of small differences between bar charts and line graphs, meaning that most of the code is 'similar' but very slightly different, making it difficult to prevent the code seeming to repeatable. This will be a problem I will likely continue to face as I add more graphs and statistical tests.
@@ -117,6 +116,13 @@ For a while I have wanted to give the user the opportunity to set their own rang
 The next thing to add here will be to save these extra features to the database (the line and the ranges). I then want to maybe create one more chart (a pie chart perhaps) before adding more statistical tests.
 
 Following having more statistical tests, I then want to work at improving the current graphs (such as making them interactive, zooming in on sections etc.)
+
+<a name="latestEntry"></a>
+### Attempt at pie chart (3rd July)
+
+I have now expanded on the database design for scatter charts, so that it can now save information regarding the ranges specified by the user, as well as whether or not they want to add a line to their chart.
+
+I have began a page to render pie charts for the user. Whilst this is similar to bar charts (in the way that the data has to be aggregated before hand) it is very different in terms of rendering the SVG. I have now managed to get it working, however adding the labels has proven to be difficult (as labels are of varying sizes and therefore their anchors need to be varying distances from the pie chart). I will continue to work on this tomorrow. If i continue to struggle then I may instead attempt to use a legend instead.
 
 ##### Ongoing objectives
 

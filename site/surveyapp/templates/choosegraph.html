@@ -10,6 +10,10 @@
       <img class="graph-img" src="{{ url_for('static', filename='images/scatterchart.png') }}" class="graph-img"/>
       <p class="select-graph-type">Scatter Chart</p>
     </a>
+    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Pie chart') }}">
+      <img class="graph-img" src="{{ url_for('static', filename='images/scatterchart.png') }}" class="graph-img"/>
+      <p class="select-graph-type">Pie Chart</p>
+    </a>
   </div>
 </div>
 {% endblock content %}

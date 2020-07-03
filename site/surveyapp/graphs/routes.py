@@ -152,123 +152,6 @@ def choose_graph(survey_id):
     return render_template("choosegraph.html", title="Select Graph", survey_id=file_obj["_id"])
 
 
-# RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
-# ALSO NEEDS REFACTORING AS GETTING QUITE LONG
-@graphs.route('/barchart/<survey_id>', methods=['GET', 'POST'])
-@login_required
-def bar_chart(survey_id):
-    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
-    form = BarchartForm()
-    if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
-        return redirect(url_for("main.index"))
-    # This needs to be specified before 'form.validate_on_submit()' so Flask WTForms knows how to validate it
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
-    column_info = parse_data(df)
-    for column in column_info:
-        form.x_axis.choices.append((column["title"], column["title"]))
-        if column["data_type"] == "numerical":
-            # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
-            form.y_axis.choices.append((column["title"], column["title"]))
-    # Get the ID of the graph (if it exists yet)
-    graph_id = request.args.get("graph_id")
-    # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
-    if form.validate_on_submit():
-        imageData = request.form["image"]
-        response = urllib.request.urlopen(imageData)
-        # generate a random hex for the filename
-        random_hex = secrets.token_hex(8)
-        file_name = random_hex + ".png"
-        file = os.path.join(current_app.root_path, "static/graphimages", file_name)
-        with open(file, 'wb') as image_to_write:
-            image_to_write.write(response.file.read())
-        if form.x_axis.data == "Amount":
-            y_agg = ""
-        else:
-            y_agg = form.y_axis_agg.data
-        # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
-        mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
-        {"$set": {"title" : form.title.data,\
-                "surveyId": survey_id,\
-                "user" : current_user._id,\
-                "type" : "Bar chart",\
-                "xAxis" : form.x_axis.data,\
-                "yAxis": form.y_axis.data,\
-                "yAggregation": y_agg,
-                "image": file_name}}, upsert=True)
-        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
-    # If we are editing the graph instead of creating new, we want to prepopulate the fields
-    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
-    if graph_obj:
-        form.x_axis.data = graph_obj["xAxis"]
-        form.y_axis.data = graph_obj["yAxis"]
-        form.y_axis_agg.data = graph_obj["yAggregation"]
-        form.title.data = graph_obj["title"]
-    else:
-        form.title.data = "Bar chart - " + file_obj["title"]
-    # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
-    chart_data = df.to_dict(orient='records')
-    data = {"chart_data": chart_data, "title": file_obj["title"], "column_info" : column_info}
-    return render_template("barchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
-
-
-@graphs.route('/scatterchart/<survey_id>', methods=['GET', 'POST'])
-@login_required
-def scatter_chart(survey_id):
-    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
-    form = ScatterchartForm()
-    if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
-        return redirect(url_for("main.index"))
-    # This needs to be specified before 'form.validate_on_submit()' so Flask WTForms knows how to validate it
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
-    column_info = parse_data(df)
-    for column in column_info:
-        # Scatter charts require both x and y axis to have some numerical value (i.e. ordinal/interval but not categorical)
-        if column["data_type"] == "numerical":
-            # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
-            form.x_axis.choices.append((column["title"], column["title"]))
-            form.y_axis.choices.append((column["title"], column["title"]))
-    # Get the id of the graph (if it exists yet)
-    graph_id = request.args.get("graph_id")
-    # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
-    if form.validate_on_submit():
-        imageData = request.form["image"]
-        response = urllib.request.urlopen(imageData)
-        # generate a random hex for the filename
-        random_hex = secrets.token_hex(8)
-        file_name = random_hex + ".png"
-        file = os.path.join(current_app.root_path, "static/graphimages", file_name)
-        with open(file, 'wb') as image_to_write:
-            image_to_write.write(response.file.read())
-        # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
-        mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
-        {"$set": {"title" : form.title.data,\
-                "surveyId": survey_id,\
-                "user" : current_user._id,\
-                "type" : "Scatter chart",\
-                "xAxis" : form.x_axis.data,\
-                "yAxis": form.y_axis.data,\
-                "image": file_name}}, upsert=True)
-        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
-    graph_id = request.args.get("graph_id")
-    # If we are editing the graph instead of creating new, we want to prepopulate the fields
-    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
-    if graph_obj:
-        form.x_axis.data = graph_obj["xAxis"]
-        form.y_axis.data = graph_obj["yAxis"]
-        form.title.data = graph_obj["title"]
-    else:
-        form.title.data = "Scatter chart - " + file_obj["title"]
-    # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
-    chart_data = df.to_dict(orient='records')
-    data = {"chart_data": chart_data, "title": file_obj["title"], "column_info" : column_info}
-    return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
-
-
-
-
-
 
 @graphs.route('/graph/<survey_id>', methods=['GET', 'POST'])
 @login_required
@@ -300,6 +183,10 @@ def graph(survey_id):
     # ----------SCATTER CHART----------
     elif chart_type == "Scatter chart":
         return scatter_chart(survey_id, column_info, chart_data, df, graph_id, file_obj["title"])
+
+    # ----------PIE CHART----------
+    elif chart_type == "Pie chart":
+        return pie_chart(survey_id, column_info, chart_data, df, graph_id, file_obj["title"])
 
 
 
@@ -353,7 +240,7 @@ def bar_chart(survey_id, column_info, chart_data, df, graph_id, title):
     return render_template("barchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
 
 
-# Almost exactly the same as scatter plot
+
 def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
     form = ScatterchartForm()
     for column in column_info:
@@ -362,7 +249,7 @@ def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
             # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
             form.x_axis.choices.append((column["title"], column["title"]))
             form.y_axis.choices.append((column["title"], column["title"]))
-    # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
+    # Now we have specified the 'select' options for the form, we can prevalidate for 'form.validate_on_submit'
     if form.validate_on_submit():
         imageData = request.form["image"]
         response = urllib.request.urlopen(imageData)
@@ -379,7 +266,69 @@ def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
                 "user" : current_user._id,\
                 "type" : "Scatter chart",\
                 "xAxis" : form.x_axis.data,\
+                "xAxisFrom" : form.x_axis_from.data,\
+                "xAxisTo" : form.x_axis_to.data,\
                 "yAxis": form.y_axis.data,\
+                "yAxisFrom": form.y_axis_from.data,\
+                "yAxisTo": form.y_axis_to.data,\
+                "line": form.line.data,\
+                "image": file_name}}, upsert=True)
+        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
+
+    # If we are editing the graph instead of creating new, we want to prepopulate the fields
+    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
+
+    if graph_obj:
+        form.x_axis.data = graph_obj["xAxis"]
+        form.x_axis_from.data = graph_obj["xAxisFrom"]
+        form.x_axis_to.data = graph_obj["xAxisTo"]
+        form.y_axis.data = graph_obj["yAxis"]
+        form.y_axis_from.data = graph_obj["yAxisFrom"]
+        form.y_axis_to.data = graph_obj["yAxisTo"]
+        form.line.data = graph_obj["line"]
+        form.title.data = graph_obj["title"]
+    else:
+        form.title.data = "Graph - " + title
+
+    data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
+    return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+
+
+
+
+
+def pie_chart(survey_id, column_info, chart_data, df, graph_id, title):
+    # Pie charts are very similar to barcharts
+    form = BarchartForm()
+    for column in column_info:
+        form.x_axis.choices.append((column["title"], column["title"]))
+        if column["data_type"] == "numerical":
+            # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
+            form.y_axis.choices.append((column["title"], column["title"]))
+    # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
+    if form.validate_on_submit():
+        imageData = request.form["image"]
+        response = urllib.request.urlopen(imageData)
+        # generate a random hex for the filename
+        random_hex = secrets.token_hex(8)
+        file_name = random_hex + ".png"
+        file = os.path.join(current_app.root_path, "static/graphimages", file_name)
+        with open(file, 'wb') as image_to_write:
+            image_to_write.write(response.file.read())
+        if form.x_axis.data == "Amount":
+            y_agg = ""
+        else:
+            y_agg = form.y_axis_agg.data
+        # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
+        # At the moment i have kep the variable names xAxis (to represent the variable) and yAxis (to represent how the data is aggregated)
+        mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
+        {"$set": {"title" : form.title.data,\
+                "surveyId": survey_id,\
+                "user" : current_user._id,\
+                "type" : "Pie chart",\
+                "xAxis" : form.x_axis.data,\
+                "yAxis": form.y_axis.data,\
+                "yAggregation": y_agg,
                 "image": file_name}}, upsert=True)
         return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
@@ -389,14 +338,13 @@ def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
     if graph_obj:
         form.x_axis.data = graph_obj["xAxis"]
         form.y_axis.data = graph_obj["yAxis"]
+        form.y_axis_agg.data = graph_obj["yAggregation"]
         form.title.data = graph_obj["title"]
     else:
-        form.title.data = "Scatter chart - " + title
+        form.title.data = "Graph - " + title
 
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
-    return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
-
-
+    return render_template("piechart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
 
 
 

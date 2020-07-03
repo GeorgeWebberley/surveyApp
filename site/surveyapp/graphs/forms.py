@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, FileField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, FileField, SelectField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from bson.objectid import ObjectId
 
@@ -28,8 +28,13 @@ class ScatterchartForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
     # We will append variables to x/y axis choices based on the data
     x_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
+    x_axis_from = IntegerField("From")
+    x_axis_to = IntegerField("To")
     # Bar chart will default to "Amount" on y axis. Will also append all numerical variable types from the data set.
     y_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
+    y_axis_from = IntegerField("From")
+    y_axis_to = IntegerField("To")
+    line = BooleanField("Add connecting line: ")
     submit = SubmitField("Save")
 
 class StatisticalTestForm(FlaskForm):
