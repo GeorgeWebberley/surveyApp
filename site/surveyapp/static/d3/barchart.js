@@ -5,8 +5,6 @@ const yAxisAggDom = document.querySelector(".y-axis-aggregation")
 const aggregate = document.querySelector(".aggregate")
 const emptyGraph = document.querySelector(".empty-graph")
 const exportButton = document.querySelector(".export")
-// const saveJpg = document.querySelector(".save-as-jpg")
-// const form = document.querySelector(".chart-form")
 
 // Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
 const axesSettings = document.querySelectorAll(".axis-setting")
@@ -95,15 +93,9 @@ function axisChange (){
 // Set graph dimensions
 var width = document.getElementById('graph').clientWidth;
 var height = document.getElementById('graph').clientHeight;
-// var width = 1000
-// var height = 640
-
-
-
 
 
 window.onresize = function(){
-  console.log("test");
   width = document.getElementById('graph').clientWidth;
   height = document.getElementById('graph').clientHeight;
   svg.attr('width', width).attr('height', height);
@@ -111,11 +103,7 @@ window.onresize = function(){
 
 
 // Create SVG ready for graph
-// const svg = d3.select('#graph').append("svg").attr("width", "100%").attr("height", "100%")
-
-
 const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height).attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "none")
-// const svg = d3.select('#graph').append("svg").attr("width", "100%").attr("height", "100%").attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "xMidYMin meet");
 
 // Set margins around graph for axis and labels
 const margin = { top: 20, right: 20, bottom: 60, left: 80 };
@@ -262,6 +250,11 @@ const render = (groupedData) => {
       .attr('y', d=>  yScale(yValues(d)))
       .attr('x', d => xScale(xValues(d)))
       .attr('width', xScale.bandwidth()) // band width is width of a single bar
+
+
+
+
+      console.log(svg.node());
 }
 
 let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
@@ -291,6 +284,7 @@ $('form').submit(function (e) {
   var blob = new Blob([ doctype + source], { type: 'image/svg+xml' });
   var imageURL = window.URL.createObjectURL(blob);
   var img = new Image();
+
 
 
   img.onload = async function(){

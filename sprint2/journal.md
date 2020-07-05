@@ -117,12 +117,20 @@ The next thing to add here will be to save these extra features to the database 
 
 Following having more statistical tests, I then want to work at improving the current graphs (such as making them interactive, zooming in on sections etc.)
 
-<a name="latestEntry"></a>
+
 ### Attempt at pie chart (3rd July)
 
 I have now expanded on the database design for scatter charts, so that it can now save information regarding the ranges specified by the user, as well as whether or not they want to add a line to their chart.
 
 I have began a page to render pie charts for the user. Whilst this is similar to bar charts (in the way that the data has to be aggregated before hand) it is very different in terms of rendering the SVG. I have now managed to get it working, however adding the labels has proven to be difficult (as labels are of varying sizes and therefore their anchors need to be varying distances from the pie chart). I will continue to work on this tomorrow. If i continue to struggle then I may instead attempt to use a legend instead.
+
+<a name="latestEntry"></a>
+### Finish pie chart (preliminary) and adding more statistical tests. (3rd July)
+
+I have finished up with working on the pie chart for the time being, by adding a title to the graph and correcting the variable names. I have also corrected a bug where the image was not saving when attempting to save a pie chart (to do with how the SVG was formed).
+
+I have started working at adding more statistical tests (Mann whitney U test). At the moment I am finding it hard to work out how to guide users through this stage. Initially, I wanted to be able to suggest statistical tests to users based on the types of variables (or visa versa, to limit the types of variables presented to the user after they select a type of test). However, whilst some data types can be easily calculated (i.e. numerical vs non-numerical) others cannot (such as a likert scale, usually presented from 1-5 should be treated as categorical rather than continuous data). Instead, what I may do for the time being is simply give users the options to select any variable/test combination but guide them through the process (e.g. when they pick a statistical test, information is presented to the user regarding what type of independent/dependent variables they should pick).
+
 
 ##### Ongoing objectives
 

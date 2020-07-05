@@ -9,21 +9,43 @@
       <div class="analyse-question">
         <h3>What test would you like to apply?</h3>
       </div>
-      {{ form.test(class="analyse-option statistical-test") }}
+      <div class="row">
+        <div class="col-sm-3">
+          {{ form.test(class="analyse-option statistical-test") }}
+        </div>
+        <div class="col-sm-9">
+          <p class="test-info"></p>
+        </div>
+      </div>
     </div>
+
     <div class="analyse-transition independent-variables hidden-axis">
       <div class="full-bar"></div>
       <div class="analyse-question">
         <h3>Please select your independent variable.</h3>
       </div>
-      {{ form.independent_variable(class="analyse-option independent-variable") }}
+      <div class="row">
+        <div class="col-sm-3">
+          {{ form.independent_variable(class="analyse-option independent-variable") }}
+        </div>
+        <div class="col-sm-9">
+          <p class="iv-info"></p>
+        </div>
+      </div>
     </div>
     <div class="analyse-transition dependent-variables hidden-axis">
       <div class="full-bar"></div>
       <div class="analyse-question">
         <h3>Please select your dependent variable.</h3>
       </div>
-      {{ form.dependent_variable(class="analyse-option dependent-variable") }}
+      <div class="row">
+        <div class="col-sm-3">
+          {{ form.dependent_variable(class="analyse-option dependent-variable") }}
+        </div>
+        <div class="col-sm-9">
+          <p class="dv-info"></p>
+        </div>
+      </div>
     </div>
     <div class="analyse-transition analyse-continue hidden-axis">
       <div class="full-bar"></div>
