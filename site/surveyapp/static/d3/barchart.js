@@ -251,10 +251,6 @@ const render = (groupedData) => {
       .attr('x', d => xScale(xValues(d)))
       .attr('width', xScale.bandwidth()) // band width is width of a single bar
 
-
-
-
-      console.log(svg.node());
 }
 
 let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;

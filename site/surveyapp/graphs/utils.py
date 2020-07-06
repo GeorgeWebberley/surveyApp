@@ -43,14 +43,16 @@ def parse_data(df):
         temp_dict = {
         "title": column_title
         }
-        if column_data.dtypes == object:
+        print("Type: ")
+        print(column_data.dtypes)
+        if column_data.dtypes == 'object':
             temp_dict["data_type"] = "categorical"
             temp_dict["num_unique"] = df[column_title].nunique()
             temp_dict["quantities"] = column_data.value_counts().to_dict()
-        if column_data.dtypes == np.bool:
+        elif column_data.dtypes == np.bool:
             temp_dict["data_type"] = "true/false"
             temp_dict["quantities"] = column_data.value_counts().to_dict()
-        if column_data.dtypes == np.int64:
+        elif column_data.dtypes == np.int64:
             temp_dict["data_type"] = "numerical"
             temp_dict["num_unique"] = df[column_title].nunique()
             temp_dict["average"] = column_data.agg("mean");

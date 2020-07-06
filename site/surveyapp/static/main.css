@@ -1249,3 +1249,9 @@ body {
 .no-display{
   display: none;
 }
+
+
+
+.badge{
+  cursor: help;
+}

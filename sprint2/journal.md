@@ -124,18 +124,23 @@ I have now expanded on the database design for scatter charts, so that it can no
 
 I have began a page to render pie charts for the user. Whilst this is similar to bar charts (in the way that the data has to be aggregated before hand) it is very different in terms of rendering the SVG. I have now managed to get it working, however adding the labels has proven to be difficult (as labels are of varying sizes and therefore their anchors need to be varying distances from the pie chart). I will continue to work on this tomorrow. If i continue to struggle then I may instead attempt to use a legend instead.
 
-<a name="latestEntry"></a>
-### Finish pie chart (preliminary) and adding more statistical tests. (3rd July)
+### Finish pie chart (preliminary) and adding more statistical tests. (4th July)
 
 I have finished up with working on the pie chart for the time being, by adding a title to the graph and correcting the variable names. I have also corrected a bug where the image was not saving when attempting to save a pie chart (to do with how the SVG was formed).
 
 I have started working at adding more statistical tests (Mann whitney U test). At the moment I am finding it hard to work out how to guide users through this stage. Initially, I wanted to be able to suggest statistical tests to users based on the types of variables (or visa versa, to limit the types of variables presented to the user after they select a type of test). However, whilst some data types can be easily calculated (i.e. numerical vs non-numerical) others cannot (such as a likert scale, usually presented from 1-5 should be treated as categorical rather than continuous data). Instead, what I may do for the time being is simply give users the options to select any variable/test combination but guide them through the process (e.g. when they pick a statistical test, information is presented to the user regarding what type of independent/dependent variables they should pick).
 
+<a name="latestEntry"></a>
+### Adding statistical tests. (5th July)
+
+I have added chi square statistical test and also Mann Whitney U test. The server can now compute the answers to these tests, using Pengouin and Scipy. I have also corrected the javascript on this page which contained a few bugs.
+
+I have added tooltips which will guide the user through selecting their test and the correct variables. I have added some validators that check the user has selected the correct variable types for the specific tests.
+
+Tomorrow I will add some more tests commonly used in surveys. Then I will spend a few days reviewing my code, refactoring and also reviewing the user interface.
 
 ##### Ongoing objectives
 
-* Save extra graph features (connecting line, axes ranges etc.)
-* Add an extra graph type (perhaps pie chart).
 * Add more statistical tests.
 * To carry out unit testing of the graph page, statistics page and dashboard pages.
 * Password reset.

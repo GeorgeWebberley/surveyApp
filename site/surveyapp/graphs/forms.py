@@ -41,7 +41,7 @@ class StatisticalTestForm(FlaskForm):
     # We will append choices to drop down depending on the data and what is selected by the upser
     # as survey takes an objectId as the value, we need to initialise it and also tell it to coerce ObjectIds
     # survey = SelectField(choices=[("000000000000000000000000", " -- select an option -- ")], coerce=ObjectId, validators=[DataRequired()])
-    test = SelectField(choices=[("", " -- select an option -- "), ("Kruskall Wallis Test", "Kruskall Wallis Test"), ("Mann-Whitney U Test", "Mann-Whitney U Test")], validators=[DataRequired()])
+    test = SelectField(choices=[("", " -- select an option -- "), ("Kruskall Wallis Test", "Kruskall Wallis Test"), ("Mann-Whitney U Test", "Mann-Whitney U Test"), ("Chi-Square Test", "Chi-Square Test")], validators=[DataRequired()])
     independent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
     dependent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
     submit = SubmitField("Continue")

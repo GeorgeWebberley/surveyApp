@@ -3,11 +3,15 @@ import secrets
 import bson
 import json
 import pandas as pd
+from pandas.api.types import is_string_dtype
+from pandas.api.types import is_numeric_dtype
 import numpy as np
 # from scipy.stats import kruskal
+# from scipy.stats import mannwhitneyu
+from scipy.stats import chi2_contingency, chisquare
 import pingouin as pg
 import pyexcel as p
-from pingouin import kruskal
+from pingouin import kruskal, mwu, chi2_independence
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
 from flask_login import login_required, current_user
@@ -89,7 +93,7 @@ def input():
     elif request.method == "GET" and survey_id:
         file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
         if file_obj["user"] != current_user._id:
-            flash("You do not have access to that page", "error")
+            flash("You do not have access to that page", "danger")
             return redirect(url_for("main.index"))
         # Read the file and extract the cell values and column headers
         df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
@@ -106,7 +110,7 @@ def input():
 def table(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         return redirect(url_for("main.index"))
     df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
     # TO IMPLEMENT THIS WHEN DEALING WITH DATASETS THAT CONTAIN LEADING EMPTY ROWS/COLUMNS
@@ -146,7 +150,7 @@ def dashboard(survey_id):
 def choose_graph(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         return redirect(url_for("main.index"))
     df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
     return render_template("choosegraph.html", title="Select Graph", survey_id=file_obj["_id"])
@@ -158,7 +162,7 @@ def choose_graph(survey_id):
 def graph(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         return redirect(url_for("main.index"))
     # Get the id of the graph (if it exists yet)
     graph_id = request.args.get("graph_id")
@@ -363,7 +367,7 @@ def pie_chart(survey_id, column_info, chart_data, df, graph_id, title):
 def delete_survey(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         abort(403)
     graphs = mongo.db.graphs.find({"surveyId":survey_id})
     # print(graphs)
@@ -379,7 +383,7 @@ def delete_survey(survey_id):
 def edit_survey(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         abort(403)
     form = EditForm()
     if form.validate_on_submit():
@@ -397,7 +401,7 @@ def edit_survey(survey_id):
 def delete_graph(graph_id, survey_id):
     graph_obj = mongo.db.graphs.find_one_or_404({"_id":ObjectId(graph_id)})
     if graph_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         abort(403)
     mongo.db.graphs.delete_one(graph_obj)
     return redirect(url_for('graphs.dashboard', survey_id=survey_id))
@@ -446,9 +450,13 @@ def analyse():
     survey_id = request.args.get("survey_id")
     survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
     if survey["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         abort(403)
     df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
+
+
+    # group_by = df.groupby('Gender')
+    # print(df['Gender'].unique())
     for variable in list(df.columns.values):
         form.independent_variable.choices.append((variable, variable))
         form.dependent_variable.choices.append((variable, variable))
@@ -458,9 +466,43 @@ def analyse():
         dependent_variable = form.dependent_variable.data
         test = form.test.data
         if test == "Kruskall Wallis Test":
+            if is_string_dtype(df[dependent_variable]):
+                flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
+                return render_template("analysedata.html", form=form)
             kruskal_result = kruskal(data=df, dv=dependent_variable, between=independent_variable)
             # get the p-value (p-unc) from the kruskal test and convert to 4 decimal places only
             p_value = "%.4f" % kruskal_result["p-unc"][0]
+        # AT THE MOMENT, THIS TEST IS 2 TAILED. MAY WANT TO ADD OPTIONS FOR 1 TAILED TESTS
+        elif test == "Mann-Whitney U Test":
+            if is_string_dtype(df[dependent_variable]):
+                flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
+                return render_template("analysedata.html", form=form)
+            group_by = df.groupby(independent_variable)
+            group_array = [group_by.get_group(x) for x in group_by.groups]
+            if len(group_array) != 2:
+                flash("Independent variable '" + independent_variable + "' has too many groups, only 2 allowed for Mann-Whitney U Test.", "danger")
+                return render_template("analysedata.html", form=form)
+            x = group_array[0][dependent_variable].values
+            y = group_array[1][dependent_variable].values
+            mwu_result = mwu(x, y)
+            p_value = "%.4f" % mwu_result['p-val'].values[0]
+        elif test == "Mann-Whitney U Test":
+            if is_string_dtype(df[dependent_variable]):
+                flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
+                return render_template("analysedata.html", form=form)
+            group_by = df.groupby(independent_variable)
+            group_array = [group_by.get_group(x) for x in group_by.groups]
+            if len(group_array) != 2:
+                flash("Independent variable '" + independent_variable + "' has too many groups, only 2 allowed for Mann-Whitney U Test.", "danger")
+                return render_template("analysedata.html", form=form)
+            x = group_array[0][dependent_variable].values
+            y = group_array[1][dependent_variable].values
+            mwu_result = mwu(x, y)
+            p_value = "%.4f" % mwu_result['p-val'].values[0]
+        elif test == "Chi-Square Test":
+            contingency_table = pd.crosstab(df[independent_variable], df[dependent_variable])
+            print(contingency_table)
+            _, p_value, _, _ = chi2_contingency(contingency_table, correction=False)
         return redirect(url_for('graphs.result',\
                                 survey=survey_id,\
                                 test=test,\
@@ -520,7 +562,7 @@ def result():
 def delete_test(test_id):
     test_obj = mongo.db.tests.find_one_or_404({"_id":ObjectId(test_id)})
     if test_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         abort(403)
     mongo.db.tests.delete_one(test_obj)
     return redirect(url_for('graphs.home'))
@@ -534,7 +576,7 @@ def delete_test(test_id):
 def quick_stats(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "error")
+        flash("You do not have access to that page", "danger")
         return redirect(url_for("main.index"))
     df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
     rows = len(df.index)
@@ -550,7 +592,6 @@ def quick_stats(survey_id):
 @graphs.route("/home/<survey_id>")
 def get_survey(survey_id):
     graphs = dumps(list(mongo.db.graphs.find({"surveyId": survey_id})))
-    print(graphs)
     tests = list(mongo.db.tests.find({"surveyId": survey_id}))
     return jsonify({"graphs" : graphs, "tests" : tests})
 
