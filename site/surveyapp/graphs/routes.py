@@ -11,17 +11,18 @@ import numpy as np
 from scipy.stats import chi2_contingency, chisquare
 import pingouin as pg
 import pyexcel as p
-from pingouin import kruskal, mwu, chi2_independence
+from pingouin import kruskal, mwu
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import UploadForm, EditForm, BarchartForm, ScatterchartForm, StatisticalTestForm
+from surveyapp.graphs.forms import UploadForm, EditForm, BarchartForm, ScatterchartForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
 from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan
 # For converting image base 64 data URI
 from binascii import a2b_base64
 import urllib.parse
+
 
 
 
@@ -466,6 +467,9 @@ def analyse():
         dependent_variable = form.dependent_variable.data
         test = form.test.data
         if test == "Kruskall Wallis Test":
+            if dependent_variable == "":
+                flash("You must select a dependent variable for this test.", "danger")
+                return render_template("analysedata.html", form=form)
             if is_string_dtype(df[dependent_variable]):
                 flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
                 return render_template("analysedata.html", form=form)
@@ -474,19 +478,9 @@ def analyse():
             p_value = "%.4f" % kruskal_result["p-unc"][0]
         # AT THE MOMENT, THIS TEST IS 2 TAILED. MAY WANT TO ADD OPTIONS FOR 1 TAILED TESTS
         elif test == "Mann-Whitney U Test":
-            if is_string_dtype(df[dependent_variable]):
-                flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
+            if dependent_variable == "":
+                flash("You must select a dependent variable for this test.", "danger")
                 return render_template("analysedata.html", form=form)
-            group_by = df.groupby(independent_variable)
-            group_array = [group_by.get_group(x) for x in group_by.groups]
-            if len(group_array) != 2:
-                flash("Independent variable '" + independent_variable + "' has too many groups, only 2 allowed for Mann-Whitney U Test.", "danger")
-                return render_template("analysedata.html", form=form)
-            x = group_array[0][dependent_variable].values
-            y = group_array[1][dependent_variable].values
-            mwu_result = mwu(x, y)
-            p_value = "%.4f" % mwu_result['p-val'].values[0]
-        elif test == "Mann-Whitney U Test":
             if is_string_dtype(df[dependent_variable]):
                 flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
                 return render_template("analysedata.html", form=form)
@@ -500,9 +494,13 @@ def analyse():
             mwu_result = mwu(x, y)
             p_value = "%.4f" % mwu_result['p-val'].values[0]
         elif test == "Chi-Square Test":
+            if dependent_variable == "":
+                flash("You must select a dependent variable for this test.", "danger")
+                return render_template("analysedata.html", form=form)
             contingency_table = pd.crosstab(df[independent_variable], df[dependent_variable])
-            print(contingency_table)
             _, p_value, _, _ = chi2_contingency(contingency_table, correction=False)
+        elif test == "Chi-Square goodness of fit":
+            return redirect(url_for('graphs.chi_goodness', survey=survey_id, variable=independent_variable, survey_id=survey_id))
         return redirect(url_for('graphs.result',\
                                 survey=survey_id,\
                                 test=test,\
@@ -511,8 +509,68 @@ def analyse():
                                 dependent_variable=dependent_variable))
     return render_template("analysedata.html", form=form)
 
+# # Analyse data sets
+# @graphs.route("/chi", methods=['GET', 'POST'])
+# @login_required
+# def chi_goodness():
+#     # Get request arguments
+#     survey_id = request.args.get("survey_id")
+#     variable = request.args.get("variable")
+#     # Get survey object and datafram
+#     survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
+#     df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
+#     group_by = df.groupby(variable)
+#     # Populate the form with unique groups in the given variable
+#     form = ChiGoodnessForm()
+#     for key in group_by.groups.keys():
+#         field_form = ChiGoodnessEntryForm()
+#         field_form.expected.label.text = Label(field_id = "name", text = "Your New Field Description Goes Here.")
+#         form.field.append_entry(field_form)
+#     if form.validate_on_submit():
+#         print("lol")
+#     return render_template("chisquare.html", form=form, keys=list(group_by.groups.keys()))
+#
 
 
+
+# Chi goodness of fit - extra form for expected values
+@graphs.route("/chi", methods=['GET', 'POST'])
+@login_required
+def chi_goodness():
+    # Get request arguments
+    survey_id = request.args.get("survey_id")
+    variable = request.args.get("variable")
+    # Get survey object and datafram
+    survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
+    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
+    group_by = df.groupby(variable)
+    keys = list(group_by.groups.keys())
+    # Populate the form with unique groups in the given variable
+    key_list = []
+    for key in keys:
+        key_list.append({"expected": 0, "key": key})
+    form = ChiGoodnessForm(field=key_list)
+    if form.validate_on_submit():
+        total_count = len(df.index)
+        actual_distribution = []
+        expected_distribution = []
+        for key in keys:
+            key_count = df[df[variable] == key].shape[0]
+            actual_distribution.append((key_count*100)/total_count)
+            for input in form.field.data:
+                if key == input['key']:
+                    expected_distribution.append(input['expected'])
+        if sum(expected_distribution) == 0:
+            _, p_value = chisquare(actual_distribution)
+        else:
+            _, p_value = chisquare(actual_distribution, expected_distribution)
+        return redirect(url_for('graphs.result',\
+            survey=survey_id,\
+            test="Chi-Square goodness of fit",\
+            p_value=p_value,\
+            independent_variable=variable,))
+
+    return render_template("chisquare.html", form=form, keys=keys)
 
 
 
@@ -530,6 +588,8 @@ def result():
     test=request.args.get("test")
     independent_variable=request.args.get("independent_variable")
     dependent_variable=request.args.get("dependent_variable")
+    if not dependent_variable:
+        dependent_variable = ""
     # Get the survey variable so the test result can be saved and reference the survey
     survey=request.args.get("survey")
     test_id=request.args.get("test_id")

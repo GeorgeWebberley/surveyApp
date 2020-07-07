@@ -28,7 +28,11 @@
            <th>Conclusion</th>
          </tr>
          <tr>
-           <td>The distribution of <strong>{{ result["dv"] }}</strong> is the same across groups of <strong>{{ result["iv"] }}</strong></td>
+           {% if result["test"] == "Chi-Square goodness of fit" %}
+            <td>There is no significant difference between the observed and the expected values.</td>
+           {% else %}
+            <td>The distribution of <strong>{{ result["dv"] }}</strong> is the same across groups of <strong>{{ result["iv"] }}</strong></td>
+           {% endif %}
            <td>{{ result["test"] }}</td>
            <td>{{ result["alpha"] }}</td>
            <td>{{ result["p"] }}</td>

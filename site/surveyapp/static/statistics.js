@@ -4,6 +4,11 @@ const independentVariables = document.querySelector(".independent-variables")
 const dependentVariables = document.querySelector(".dependent-variables")
 const continueButton = document.querySelector(".analyse-continue")
 
+// The DOM elements representing the question text
+const firstQuestion = document.querySelector(".first-variable-question")
+const secondQuestion = document.querySelector(".second-variable-question")
+
+
 // The DOM elements representing the select fields
 const independentVariableList = document.querySelector(".independent-variable")
 const dependentVariableList = document.querySelector(".dependent-variable")
@@ -13,6 +18,9 @@ const statisticalTestList = document.querySelector(".statistical-test")
 const testInfo = document.querySelector(".test-info")
 const independentInfo = document.querySelector(".iv-info")
 const dependentInfo = document.querySelector(".dv-info")
+
+// A boolean flag, to keep track of how many variables in the chosen statistical test
+let one_variable = false
 
 
 // Information boxes for different data types
@@ -33,59 +41,122 @@ Ratio</span>`
 const tests = [
   {
     "name": "Kruskall Wallis Test",
-    "iv": [nominal, ordinal],
-    "dv": [ordinal, interval, ratio],
+    "variable1": {
+      "name": "independent variable",
+      "type": [nominal, ordinal]
+    },
+    "variable2": {
+      "name": "dependent variable",
+      "type": [ordinal, interval, ratio]
+    },
     "info": ""
   },
   {
     "name": "Mann-Whitney U Test",
-    "iv": [nominal, ordinal],
-    "dv": [ordinal, interval, ratio],
+    "variable1": {
+      "name": "independent variable",
+      "type": [nominal, ordinal]
+    },
+    "variable2": {
+      "name": "dependent variable",
+      "type": [ordinal, interval, ratio]
+    },
     "info": `The Mann-Whitney U test requires that the independent variable consists of just 2
               categorical groups (e.g. questions with yes/no answers). If your independent variable
               contains more groups then the Kruskall Wallis test should be used.`
   },
   {
     "name": "Chi-Square Test",
-    "iv": [nominal, ordinal],
-    "dv": [nominal, ordinal],
+    "variable1": {
+      "name": "first variable",
+      "type": [nominal, ordinal]
+    },
+    "variable2": {
+      "name": "second variable",
+      "type": [nominal, ordinal]
+    },
     "info": `The Chi Square test requires that both variables be categorical (i.e. nominal or ordinal).
               Both variables should contain 2 or more distinct categorical groups (e.g.
               2 groups: yes/no answers, 3 groups: low/medium/high income) Furthermore, these groups must
               be independent (i.e. no subjects are in more than one group).`
+  },
+  {
+    "name": "Chi-Square goodness of fit",
+    "variable1": {
+      "name": "first variable",
+      "type": [nominal, ordinal]
+    },
+    "info": `The Chi Square goodness of fit takes one categorical variable. It is used to see if the
+              different categories in that variable follow the same distribution that you would expect.`
   }
 ]
 
 
-// set page event listeners on each of the drop down menus
-function setEventListeners() {
-
-  revealHtml(statisticalTestList, independentVariables)
-  revealHtml(independentVariableList, dependentVariables)
-  revealHtml(dependentVariableList, continueButton)
-  populateInfo()
-  statisticalTestList.onchange = function() {
-    independentVariables.classList.remove("hidden-axis");
-    statisticalTestList.firstChild.hidden = true;
-    // Loop through each test and check to see if it is the one selected
-    populateInfo()
-    // Using Jquery, initialise Popper.js tooltips
-    $('[data-toggle="tooltip"]').tooltip()
-  }
-
+if(statisticalTestList.value != ""){
+  populateInfo();
   // Add event listeners that re-sets the options whenever one is changed
   independentVariableList.onchange = function(){
-    setSelectOptions(independentVariableList, dependentVariableList, dependentVariables);
+    setSelectOptions(independentVariableList, dependentVariableList);
   }
   dependentVariableList.onchange = function(){
-    setSelectOptions(dependentVariableList, independentVariableList, continueButton);
+    setSelectOptions(dependentVariableList, independentVariableList);
   }
 }
 
 
+statisticalTestList.onchange = function (){
+  populateInfo();
+  // Add event listeners that re-sets the options whenever one is changed
+  independentVariableList.onchange = function(){
+    setSelectOptions(independentVariableList, dependentVariableList);
+  }
+  dependentVariableList.onchange = function(){
+    setSelectOptions(dependentVariableList, independentVariableList);
+  }
+}
+
+
+
+//
+//
+// // set page event listeners on each of the drop down menus
+// function setEventListeners() {
+//
+//   revealHtml(statisticalTestList, independentVariables)
+//   if(one_variable){
+//     revealHtml(independentVariableList, continueButton)
+//     dependentVariables.classList.add("hidden-axis")
+//   }else{
+//     revealHtml(independentVariableList, dependentVariables)
+//   }
+//   revealHtml(dependentVariableList, continueButton)
+//   populateInfo()
+//   statisticalTestList.onchange = function() {
+//     independentVariables.classList.remove("hidden-axis");
+//     dependentVariables.classList.add("hidden-axis");
+//     statisticalTestList.firstChild.hidden = true;
+//     // Loop through each test and check to see if it is the one selected
+//     populateInfo()
+//     // Using Jquery, initialise Popper.js tooltips
+//     $('[data-toggle="tooltip"]').tooltip()
+//   }
+//   // Add event listeners that re-sets the options whenever one is changed
+//   independentVariableList.onchange = function(){
+//     if(one_variable){
+//       setSelectOptions(independentVariableList, dependentVariableList, continueButton);
+//       dependentVariables.classList.add("hidden-axis")
+//     }else{
+//       setSelectOptions(independentVariableList, dependentVariableList, dependentVariables);
+//     }
+//   }
+//   dependentVariableList.onchange = function(){
+//     setSelectOptions(dependentVariableList, independentVariableList, continueButton);
+//   }
+// }
+
+
 // A function that hides some select options, preventing user from picking the same option for both variables
-function setSelectOptions(currentSelect, otherSelect, nextSection){
-  revealHtml(currentSelect, nextSection)
+function setSelectOptions(currentSelect, otherSelect){
   variable = currentSelect.value
   for (var i=0; i < otherSelect.length; i++) {
       if (otherSelect.options[i].value == variable){
@@ -105,24 +176,48 @@ function revealHtml(currentSelect, nextSection){
 
 // Function that populates the html with information regarding the statistical test chosen and the variables required
 function populateInfo(){
-  tests.forEach(test => {
-    if(test.name == statisticalTestList.value){
-      testInfo.innerHTML = test.info;
-      // Populate the HTML based on the selected test
-      let ivTypes = `The independent variable can be of type:`
-      test.iv.forEach(variable => {
-        ivTypes += variable
-      })
-      independentInfo.innerHTML = ivTypes
-      let dvTypes = `The dependent variable can be of type:`
-      test.dv.forEach(variable => {
+  let test = getTest(statisticalTestList.value)
+  if(test){
+    // Populate the question titles, information and data types based on the selected test
+    // Question 1
+    firstQuestion.innerHTML = test.variable1.name
+    testInfo.innerHTML = test.info;
+    let ivTypes = `For this test the independent variable can be:`
+    test.variable1.type.forEach(variable => {
+      ivTypes += variable
+    })
+    independentInfo.innerHTML = ivTypes
+    if(test.variable2 == undefined){
+      // one_variable = true;
+      independentVariables.classList.remove("hidden-axis");
+      dependentVariables.classList.add("hidden-axis");
+      revealHtml(independentVariableList, continueButton)
+    }else{
+      independentVariables.classList.remove("hidden-axis");
+      dependentVariables.classList.remove("hidden-axis");
+      revealHtml(dependentVariableList, continueButton)
+      // one_variable = false;
+      // Question 2
+      secondQuestion.innerHTML = test.variable2.name
+      let dvTypes = `For this test the dependent variable can be:`
+      test.variable2.type.forEach(variable => {
         dvTypes += variable
       })
       dependentInfo.innerHTML = dvTypes
     }
-  })
+  }
 }
 
 
+function getTest(name){
+  let result
+  tests.forEach(test => {
+    if(test.name == name){
+      result = test;
+    }
+  })
+  return result
+}
 
-setEventListeners()
+
+// setEventListeners()

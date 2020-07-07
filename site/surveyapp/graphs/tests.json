@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Kruskall Wallis Test",
+    "variable1": {
+      "name": "independent variable",
+      "type": [nominal, ordinal]
+    },
+    "variable2": {
+      "name": "dependent variable",
+      "type": [ordinal, interval, ratio]
+    },
+    "info": ""
+  },
+  {
+    "name": "Mann-Whitney U Test",
+    "variable1": {
+      "name": "independent variable",
+      "type": [nominal, ordinal]
+    },
+    "variable2": {
+      "name": "dependent variable",
+      "type": [ordinal, interval, ratio]
+    },
+    "info": "The Mann-Whitney U test requires that the independent variable consists of just 2
+              categorical groups (e.g. questions with yes/no answers). If your independent variable
+              contains more groups then the Kruskall Wallis test should be used."
+  },
+  {
+    "name": "Chi-Square Test",
+    "variable1": {
+      "name": "first variable",
+      "type": [nominal, ordinal]
+    },
+    "variable2": {
+      "name": "second variable",
+      "type": [nominal, ordinal]
+    },
+    "info": "The Chi Square test requires that both variables be categorical (i.e. nominal or ordinal).
+              Both variables should contain 2 or more distinct categorical groups (e.g.
+              2 groups: yes/no answers, 3 groups: low/medium/high income) Furthermore, these groups must
+              be independent (i.e. no subjects are in more than one group)."
+  },
+  {
+    "name": "Chi-Square goodness of fit",
+    "variable1": {
+      "name": "first variable",
+      "type": [nominal, ordinal]
+    },
+    "info": "The Chi Square goodness of fit takes one categorical variable. It is used to see if the
+              different categories in that variable follow the same distribution that you would expect.",
+    "nullHypothesis": "There is no significant difference between the observed and the expected value."
+  }
+]

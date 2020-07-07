@@ -1,0 +1,47 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="sub-container mt-3">
+    <form action="" method="post">
+      <div class="title-area">
+        <h3>Please Enter the expected percentage of each category.</h3>
+      </div>
+      <div class="full-bar"></div>
+      <p class="mx-4 my-0">
+        A Chi-square goodness of fit test will compare the values you obtained from
+        your survey with what you would expect from the sample population.  It is used
+        to determine whether your sample data is consistent with a specific distribution.
+        The test will assume equal distribution if left as '0'</p>
+      {{ form.hidden_tag() }}
+      <div class="row">
+        {% for i in range(form.field|length)  %}
+          <div class="col-sm-3 mx-4 mt-2 d-flex flex-column mb-4">
+            <span>% {{ keys[i] }}</span>
+            {{ form.field[i].expected() }}
+            {% if form.field[i].errors %}
+              {% for error in form.field.errors %}
+                {% for e in error['expected'] %}
+                  <small>{{ e }}</small>
+                {% endfor %}
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="row">
+        <div class="col-sm-4 ml-4">
+          <h4>Total must equal to 0 or 100%</h4>
+        </div>
+        <div class="col-sm-4 ml-4">
+          <h4>Current total: <span class="chi-total"></span></h4>
+        </div>
+
+      </div>
+      <div class="analyse-continue hidden-axis">
+        <div class="full-bar"></div>
+        {{ form.submit(class="btn btn-secondary") }}
+      </div>
+    </form>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='chi.js') }}" defer></script>
+{% endblock content %}

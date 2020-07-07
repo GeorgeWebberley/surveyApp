@@ -130,7 +130,6 @@ I have finished up with working on the pie chart for the time being, by adding a
 
 I have started working at adding more statistical tests (Mann whitney U test). At the moment I am finding it hard to work out how to guide users through this stage. Initially, I wanted to be able to suggest statistical tests to users based on the types of variables (or visa versa, to limit the types of variables presented to the user after they select a type of test). However, whilst some data types can be easily calculated (i.e. numerical vs non-numerical) others cannot (such as a likert scale, usually presented from 1-5 should be treated as categorical rather than continuous data). Instead, what I may do for the time being is simply give users the options to select any variable/test combination but guide them through the process (e.g. when they pick a statistical test, information is presented to the user regarding what type of independent/dependent variables they should pick).
 
-<a name="latestEntry"></a>
 ### Adding statistical tests. (5th July)
 
 I have added chi square statistical test and also Mann Whitney U test. The server can now compute the answers to these tests, using Pengouin and Scipy. I have also corrected the javascript on this page which contained a few bugs.
@@ -138,6 +137,13 @@ I have added chi square statistical test and also Mann Whitney U test. The serve
 I have added tooltips which will guide the user through selecting their test and the correct variables. I have added some validators that check the user has selected the correct variable types for the specific tests.
 
 Tomorrow I will add some more tests commonly used in surveys. Then I will spend a few days reviewing my code, refactoring and also reviewing the user interface.
+
+<a name="latestEntry"></a>
+### Difficulties adding more tests. (6th July)
+
+I am finding that as my application grows bigger, it is very difficult to integrate new features that are similar but slightly different from existing features. This is particularly apparent with the statistical tests.
+
+Many statistical tests have similar features (such as needing a variable, producing a p-value) but have minor differences. For example, some take 1 independent and 1 dependent variable, some just take 2 variables in general, some take one variable. Also, some tests take additional information (such as chi goodness of fit which also needs to take input from the user regarding the expected distribution of categories). It is very difficult to not make the code repetitive. Either I have to make separate routes and HTML pages for each (which can make the code very repetitive) or I have to try and factor all the differences in to single routes/templates that can account for all the minor changes (which often results in lots of if-statements to check what is needed). This will likely be a problem as I continue to expand on my project.
 
 ##### Ongoing objectives
 

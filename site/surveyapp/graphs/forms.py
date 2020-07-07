@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, FileField, SelectField, BooleanField, IntegerField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import Form, StringField, PasswordField, SubmitField, FileField, SelectField, BooleanField, IntegerField, FormField, FieldList
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from bson.objectid import ObjectId
+
+from wtforms import Label
 
 
 class UploadForm(FlaskForm):
@@ -40,10 +42,24 @@ class ScatterchartForm(FlaskForm):
 class StatisticalTestForm(FlaskForm):
     # We will append choices to drop down depending on the data and what is selected by the upser
     # as survey takes an objectId as the value, we need to initialise it and also tell it to coerce ObjectIds
-    # survey = SelectField(choices=[("000000000000000000000000", " -- select an option -- ")], coerce=ObjectId, validators=[DataRequired()])
-    test = SelectField(choices=[("", " -- select an option -- "), ("Kruskall Wallis Test", "Kruskall Wallis Test"), ("Mann-Whitney U Test", "Mann-Whitney U Test"), ("Chi-Square Test", "Chi-Square Test")], validators=[DataRequired()])
+    test = SelectField(choices=[("", " -- select an option -- "), ("Kruskall Wallis Test", "Kruskall Wallis Test"), ("Mann-Whitney U Test", "Mann-Whitney U Test"), ("Chi-Square Test", "Chi-Square Test"), ("Chi-Square goodness of fit", "Chi-Square goodness of fit")], validators=[DataRequired()])
     independent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
-    dependent_variable = SelectField(choices=[("", " -- select an option -- ")], validators=[DataRequired()])
+    # Having a second variable is optional in some tests (that only require a single variable) therefore have not included DataRequired()
+    dependent_variable = SelectField(choices=[("", " -- select an option -- ")])
     submit = SubmitField("Continue")
+
+
+class ChiGoodnessEntryForm(Form):
+    key = StringField()
+    expected = IntegerField(validators=[NumberRange(min=0, max=100)])
+
+
+class ChiGoodnessForm(FlaskForm):
+    field = FieldList(FormField(ChiGoodnessEntryForm))
+    submit = SubmitField("Continue")
+
+
+
+
 
 # FileAllowed([".xls", ".xlt", ".xla", ".xlsx", ".xltx", ".xlsb", ".xlsm", ".xltm", ".xlam", ".csv"], message="Only CSV files or Excel Spreadsheets allowed.")

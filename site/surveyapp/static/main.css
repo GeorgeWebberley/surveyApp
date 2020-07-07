@@ -132,7 +132,11 @@ body {
   float: right;
 }
 
-.btn {
+.btn{
+  z-index: 1000;
+}
+
+/* .btn {
   text-decoration: none;
   border: 1px solid grey;
   border-radius: 5px;
@@ -142,7 +146,7 @@ body {
   padding: 0.5rem;
   cursor: pointer;
   text-align: center;
-}
+} */
 
 .no-btn {
   background: none;
@@ -151,12 +155,12 @@ body {
   width: 100%;
   text-align: left;
 }
-
+/*
 .btn-primary {
   background-color: var(--primary-colour);
   color: white;
   transition: var(--primary-transition);
-}
+} */
 
 .btn-primary:hover {
   color: var(--primary-colour);
