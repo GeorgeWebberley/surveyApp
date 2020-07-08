@@ -105,13 +105,21 @@ if(statisticalTestList.value != ""){
 
 
 statisticalTestList.onchange = function (){
+  // Using Jquery, initialise Popper.js tooltips
+  $(function () {
+      $("[data-toggle='tooltip']").tooltip();
+  });
   populateInfo();
   // Add event listeners that re-sets the options whenever one is changed
   independentVariableList.onchange = function(){
+    if(one_variable == true){
+      revealHtml(independentVariableList, continueButton)    
+    }
     setSelectOptions(independentVariableList, dependentVariableList);
   }
   dependentVariableList.onchange = function(){
     setSelectOptions(dependentVariableList, independentVariableList);
+    revealHtml(dependentVariableList, continueButton)
   }
 }
 
@@ -188,7 +196,7 @@ function populateInfo(){
     })
     independentInfo.innerHTML = ivTypes
     if(test.variable2 == undefined){
-      // one_variable = true;
+      one_variable = true;
       independentVariables.classList.remove("hidden-axis");
       dependentVariables.classList.add("hidden-axis");
       revealHtml(independentVariableList, continueButton)
@@ -196,7 +204,7 @@ function populateInfo(){
       independentVariables.classList.remove("hidden-axis");
       dependentVariables.classList.remove("hidden-axis");
       revealHtml(dependentVariableList, continueButton)
-      // one_variable = false;
+      one_variable = false;
       // Question 2
       secondQuestion.innerHTML = test.variable2.name
       let dvTypes = `For this test the dependent variable can be:`

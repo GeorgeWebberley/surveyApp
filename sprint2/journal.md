@@ -145,8 +145,15 @@ I am finding that as my application grows bigger, it is very difficult to integr
 
 Many statistical tests have similar features (such as needing a variable, producing a p-value) but have minor differences. For example, some take 1 independent and 1 dependent variable, some just take 2 variables in general, some take one variable. Also, some tests take additional information (such as chi goodness of fit which also needs to take input from the user regarding the expected distribution of categories). It is very difficult to not make the code repetitive. Either I have to make separate routes and HTML pages for each (which can make the code very repetitive) or I have to try and factor all the differences in to single routes/templates that can account for all the minor changes (which often results in lots of if-statements to check what is needed). This will likely be a problem as I continue to expand on my project.
 
+<a name="latestEntry"></a>
+### UI. (7th July)
+
+Some comments from user feedback were with regards to the user interface. For a while I have wanted to review my general user interface and CSS to make the site seem more professional. At present, it very much still looks like a prototype or MVP. Another comment was also to make the site work better on a smaller screen (one user accessed the site on their i-Pad and many of the pages did not fit well). In order to tackle this, I have gradually been trying to integrate [Bootstrap](https://getbootstrap.com/) classes into my pages, which are useful for trying to adapt the site to work on smaller devices.
+
+Over today and likely the next few days, I will go back through all my old pages, improving the user interface and making the pages responsive. I will be able to remove many of my old CSS classes and replace them with Bootstrap only classes, reducing the amount of code needed whilst improving the design and responsiveness. Today I completely changed my landing page, adding screenshots and also a video tutorial to show users how to use the site. I have also changed the login, register and form upload pages. Tomorrow I will review my edit table/manual input page as this is my least favourite page on the site with regards to user interface!
+
 ##### Ongoing objectives
 
-* Add more statistical tests.
+* Review the UI, make pages responsive.
 * To carry out unit testing of the graph page, statistics page and dashboard pages.
 * Password reset.

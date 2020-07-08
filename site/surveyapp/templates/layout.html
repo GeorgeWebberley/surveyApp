@@ -8,50 +8,32 @@
     {% else %}
     <title>Survey</title>
     {% endif %}
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{{ url_for('static', filename='main.css') }}"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap"
-      rel="stylesheet"
-    />
-
-
-    <!-- Required meta tags -->
-
-
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}"/>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
-
-
-
-
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet"/>
     <!-- D3 javascript -->
     <script src="https://d3js.org/d3.v5.min.js" defer></script>
-
     <!-- Fontawesome icons -->
     <script src="https://kit.fontawesome.com/cba779aa10.js" crossorigin="anonymous"></script>
-
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-
     <!-- Jquery -->
     <script
 			  src="https://code.jquery.com/jquery-3.5.1.js"
 			  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
 			  crossorigin="anonymous"></script>
-
+    <!-- canvg, for exporting SVG as iamges -->
     <script type="text/javascript" src="https://unpkg.com/canvg@3.0.4/lib/umd.js"></script>
-
-    <!-- dropzone css -->
-    {{ dropzone.load_css() }} {{ dropzone.style(' height: 100%; width: 100%; border: none;
-     font-size: 4rem; font-family: "Ubuntu", sans-serif; color: var(--primary-colour);') }}
-
     <!-- handsontable -->
     <script src="https://cdn.jsdelivr.net/npm/handsontable@7.4.2/dist/handsontable.full.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/handsontable@7.4.2/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
+
+
+
+    <!-- dropzone css -->
+    <!-- {{ dropzone.load_css() }} {{ dropzone.style(' height: 100%; width: 100%; border: none;
+     font-size: 4rem; font-family: "Ubuntu", sans-serif; color: var(--primary-colour);') }} -->
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-site-primary shadow sticky-top" role="navigation">

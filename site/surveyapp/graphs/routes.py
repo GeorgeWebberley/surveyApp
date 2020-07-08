@@ -55,7 +55,7 @@ def import_file():
         "title" : form.title.data})
         flash("File uploaded successfully!", "success")
         survey_id = table.inserted_id
-        return redirect(url_for("graphs.table", survey_id=survey_id))
+        return redirect(url_for("graphs.input", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
 
@@ -104,24 +104,6 @@ def input():
     data = {"values": value_list, "headers": header_list}
     return render_template("input.html", title = "Input", data=data, survey_id=survey_id, form=form)
 
-
-
-@graphs.route('/table/<survey_id>', methods=['GET', 'POST'])
-@login_required
-def table(survey_id):
-    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
-    if file_obj["user"] != current_user._id:
-        flash("You do not have access to that page", "danger")
-        return redirect(url_for("main.index"))
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
-    # TO IMPLEMENT THIS WHEN DEALING WITH DATASETS THAT CONTAIN LEADING EMPTY ROWS/COLUMNS
-    # data = remove_nan(df)
-    # # set the 'header' to the first row in the table
-    # new_header = data.iloc[0]
-    # data = data[1:]
-    # data.columns=new_header
-    return render_template("table2.html", title="Table", data=df, survey=file_obj)
-    # return render_template("table.html", title="Table", data=data)
 
 
 @graphs.route('/home', methods=['GET', 'POST'])

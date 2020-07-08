@@ -1,51 +1,55 @@
 {% extends "layout.html" %} {% block content %}
-  <section class="form-container">
-    <!-- action is empty string so that we post back to our current route -->
-    <form class="form" action="" method="post">
-      <!-- hidden tag helps protect against CSRF (by using CSRF token) -->
-      {{ form.hidden_tag() }}
-      <fieldset class="fieldset">
-        <div class="form-title">Login</div>
-          <div class="bar"></div>
-          <div class="form-fields">
-            <div class="form-field">
-              {{ form.email.label(class="form-label") }}
-              {% if form.email.errors %}
-                  {{ form.email(class="form-input form-input-error") }}
-                  <div class="invalid">
-                      {% for error in form.email.errors %}
-                          <span>{{ error }}</span>
-                      {% endfor %}
+  <section class="container mt-4">
+    <div class="row justify-content-center">
+      <!-- action is empty string so that we post back to our current route -->
+      <form class="col-md-6" action="" method="post">
+        <!-- hidden tag helps protect against CSRF (by using CSRF token) -->
+        {{ form.hidden_tag() }}
+        <fieldset class="bg-white rounded shadow border">
+          <div class="text-center h3 primary-colour m-2 pb-2 border-bottom">Login</div>
+            <div class="p-3">
+              <div class="form-group">
+                {{ form.email.label(class="primary-colour") }}
+                {% if form.email.errors %}
+                  {{ form.email(class="form-control is-invalid") }}
+                  <div class="text-danger">
+                    {% for error in form.email.errors %}
+                      <small>{{ error }}</small>
+                    {% endfor %}
                   </div>
-              {% else %}
-                  {{ form.email(class="form-input") }}
-              {% endif %}
-            </div>
+                {% else %}
+                    {{ form.email(class="form-control", placeholder="Enter email") }}
+                {% endif %}
+              </div>
 
-            <div class="form-field">
-              {{ form.password.label(class="form-label") }}
-              {% if form.password.errors %}
-                  {{ form.password(class="form-input form-input-error") }}
-                  <div class="invalid">
+              <div class="form-group">
+                {{ form.password.label(class="primary-colour") }}
+                {% if form.password.errors %}
+                  {{ form.password(class="form-control is-invalid") }}
+                  <div class="text-danger">
                       {% for error in form.password.errors %}
-                          <span>{{ error }}</span>
+                          <small>{{ error }}</small>
                       {% endfor %}
                   </div>
-              {% else %}
-                  {{ form.password(class="form-input") }}
-              {% endif %}
-            </div>
+                {% else %}
+                    {{ form.password(class="form-control", placeholder="Enter password") }}
+                {% endif %}
+              </div>
 
-            <div class="btn-row btn-form">
-              <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Cancel</a>
-              {{ form.submit(class="btn btn-primary") }}
-            </div>
+              <div class="d-flex justify-content-between">
+                <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Cancel</a>
+                {{ form.submit(class="btn btn-primary") }}
+              </div>
 
-          </div>
-      </fieldset>
-    </form>
-    <small class="login-link">
-      Need to sign up? <a href="{{ url_for('users.register') }}">Register</a>
-    </small>
+            </div>
+        </fieldset>
+      </form>
+    </div>
+    <div class="d-flex justify-content-center">
+      <small class="primary-colour mt-3">
+        Need to sign up? <a href="{{ url_for('users.register') }}">Register</a>
+      </small>
+    </div>
+
   </section>
 {% endblock content %}

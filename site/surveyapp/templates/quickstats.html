@@ -24,9 +24,9 @@
             <div class="bar"></div>
             {% for key in column["quantities"] %}
             <div class="grid-entry">
-              <h5>{{ key }}</h5>
+              <h5 class="text-dark">{{ key }}</h5>
               <span class="bar-grid-element"></span>
-              <h5>{{ column["quantities"][key] }}</h5>
+              <h5 class="text-dark">{{ column["quantities"][key] }}</h5>
             </div>
             {% endfor %}
           </div>
@@ -36,24 +36,24 @@
           <h4>Aggregations</h4>
           <div class="bar"></div>
           <div class="grid-entry">
-            <h5>Average</h5>
+            <h5 class="text-dark">Average</h5>
             <span class="bar-grid-element"></span>
-            <h5>{{ column["average"] }}</h5>
+            <h5 class="text-dark">{{ column["average"] }}</h5>
           </div>
           <div class="grid-entry">
-            <h5>Highest value</h5>
+            <h5 class="text-dark">Highest value</h5>
             <span class="bar-grid-element"></span>
-            <h5>{{ column["max"] }}</h5>
+            <h5 class="text-dark">{{ column["max"] }}</h5>
           </div>
           <div class="grid-entry">
-            <h5>Lowest value</h5>
+            <h5 class="text-dark">Lowest value</h5>
             <span class="bar-grid-element"></span>
-            <h5>{{ column["min"] }}</h5>
+            <h5 class="text-dark">{{ column["min"] }}</h5>
           </div>
           <div class="grid-entry">
-            <h5>Sum of values</h5>
+            <h5 class="text-dark">Sum of values</h5>
             <span class="bar-grid-element"></span>
-            <h5>{{ column["sum"] }}</h5>
+            <h5 class="text-dark">{{ column["sum"] }}</h5>
           </div>
         </div>
         {% endif %}
