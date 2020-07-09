@@ -1,9 +1,14 @@
 const button = document.querySelector(".save")
+const infoRow = document.querySelector(".info-row")
 const info = document.querySelector(".table-guide")
 const container = document.querySelector(".handsontable-container")
 const table = document.getElementById('handsontable');
 const addVariable = document.querySelector(".add-variable")
 const inputOverlay = document.querySelector(".input-overlay")
+const addColumn = document.querySelector(".add-column")
+
+const newVariable = document.querySelector(".heading")
+
 
 
 let values = data["values"]
@@ -11,25 +16,12 @@ let headers = data["headers"]
 let hot;
 
 
-
-console.log(values);
-console.log(headers);
-
+// If the table has not yet been created then we want to hide the DOM elements
 if(headers.length == 0){
   container.classList.add("hidden")
-  addVariable.addEventListener("click", () => {
-    firstVariable = prompt("Enter your first column heading")
-    if(firstVariable){
-      container.classList.remove("hidden")
-      inputOverlay.classList.add("hidden")
-      headers.push(firstVariable)
-      let columns = columnData(headers)
-      values=[[]]
-      renderTable(values, headers, columns)
-    }
-  })
+  infoRow.classList.add("hidden")
 } else{
-  // Edge case: handsontable needs a 2d array. If values is empty it needs converting
+  // Edge case: handsontable needs a 2d array. If 'values' is empty it needs converting
   if (values.length == 0){
     values = [[]]
   }
@@ -37,6 +29,46 @@ if(headers.length == 0){
   let columns = columnData(headers)
   renderTable(values, headers, columns)
 }
+
+addColumn.addEventListener('click', function () {
+  triggerModal()
+});
+
+
+function triggerModal(){
+  if(newVariable.value == ""){
+    // If the user tries to enter in an empty string, modal remains open with warning class
+    newVariable.classList.add("is-invalid")
+  }else{
+    // Remove the warning box class if the user has previously tried to enter an empty string
+    newVariable.classList.remove("is-invalid")
+    // Add new column heading
+    headers.push(newVariable.value)
+    // Close the modal and reset the input box to be empty
+    $('#new-column-modal').modal('toggle');
+    newVariable.value = ""
+    // If the table does not yet exist, we need to remove the overlay and make the table visible
+    if(hot == undefined){
+      container.classList.remove("hidden")
+      infoRow.classList.remove("hidden")
+      inputOverlay.classList.add("hidden")
+      // Populate column headers with provided headers
+      let columns = columnData(headers)
+      // Intialise empty 2d array to represent the cells in the table
+      values=[[]]
+      // Render the table
+      renderTable(values, headers, columns)
+      // If table already exists we can simply update it
+    }else{
+      hot.alter('insert_col', headers.length, 1)
+      // Necessary, since 'insert_col' will add an an 'undefined' header to the header list
+      // (which is not needed since we have already added the header with the specified name)
+      headers.pop()
+    }
+  }
+}
+
+
 
 function columnData(headers){
   columns = []
@@ -50,8 +82,10 @@ function columnData(headers){
 function renderTable(values, headers){
   hot = new Handsontable(table, {
     data: values,
-    minRows: 1,
+    // 23 rows will fill up the view for the user
+    minRows: 23,
     minCols: 1,
+    stretchH: 'all',
     rowHeaders: true,
     colHeaders: true,
     minSpareRows: 1,
@@ -89,6 +123,21 @@ function renderTable(values, headers){
     }
   });
 }
+
+
+
+// function triggerModal(){
+//   if(newVariable.value == ""){
+//     newVariable.classList.add("is-invalid")
+//   }else{
+//     headers.push(newVariable.value)
+//     newVariable.value = ""
+//     hot.alter('insert_col', headers.length, 1)
+//     headers.pop()
+//     $('#new-column-modal').modal('toggle');
+//   }
+// }
+
 
 
 

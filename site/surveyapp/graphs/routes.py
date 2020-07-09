@@ -624,7 +624,7 @@ def quick_stats(survey_id):
     rows = len(df.index)
     cols = len(df.columns)
     column_info = parse_data(df);
-    return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info, survey_id=survey_id )
+    return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info, survey_id=survey_id, survey_title=file_obj["title"] )
 
 
 

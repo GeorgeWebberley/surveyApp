@@ -1,4 +1,4 @@
-Gender,Heart Disease
+﻿"Gender","Heart Disease"
 M,Yes
 M,No
 M,Yes
@@ -31,3 +31,4 @@ F,Yes
 F,No
 F,Yes
 F,No
+M,Yes

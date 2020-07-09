@@ -1,66 +1,68 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <a class="back-btn" href="{{ url_for('graphs.dashboard', survey_id=survey_id) }}">Back</a>
-  <h3 class="form-title">Quick Stats</h3>
-  <div class="grid-section overall-data">
-    <p>Number of rows: {{ rows }}</p>
-    <p>Number of columns: {{ cols }}</p>
+  <div class="row mt-4">
+    <div class="col-3">
+      <a class="btn btn-secondary" href="{{ url_for('graphs.dashboard', survey_id=survey_id) }}">Back</a>
+    </div>
+    <div class="col-6">
+      <h1 class="text-center h1 font-weight-light">Quick Stats: {{ survey_title }}</h1>
+    </div>
+  </div>
+  <div class="my-3 d-flex justify-content-center bg-white rounded shadow border p-2">
+    <p class="h4 mx-4 my-0 font-weight-light">Number of rows: {{ rows }}</p>
+    <p class="h4 mx-4 my-0 font-weight-light">Number of columns: {{ cols }}</p>
   </div>
   <div class="stats-grid">
   {% for column in column_info %}
-    <div class="grid-section grid-element">
-      <div class="title-area">
-        <h3 class="grid-title">{{ column["title"] }}</h3>
+    <div class="bg-light shadow rounded grid-element">
+      <div class="text-center">
+        <h1 class="h5 primary-colour-bg p-2 text-light rounded-top">{{ column["title"] }}</h1>
       </div>
-      <div class="full-bar"></div>
-      <div class="grid-section-contents">
-        <h4>Data type: {{ column["data_type"] }}</h4>
+      <div class="p-3">
+        <p class="lead">Data type: {{ column["data_type"] }}</p>
         {% if column["data_type"] != "true/false" %}
-          <h4>Unique values: {{ column["num_unique"] }}</h4>
+          <p class="lead">Unique values: {{ column["num_unique"] }}</p>
         {% endif %}
         {% if column["quantities"] %}
-          <div class="sub-grid-section">
-            <h4>Quantities</h4>
-            <div class="bar"></div>
-            {% for key in column["quantities"] %}
-            <div class="grid-entry">
-              <h5 class="text-dark">{{ key }}</h5>
-              <span class="bar-grid-element"></span>
-              <h5 class="text-dark">{{ column["quantities"][key] }}</h5>
-            </div>
-            {% endfor %}
+          <div class="bg-white border rounded shadow-sm">
+            <h4 class="h5 grey-background p-2 rounded-top mb-0">Quantities</h4>
+            <ul class="list-group text-dark">
+              {% for key in column["quantities"] %}
+              <li class="list-group-item d-flex justify-content-between">
+                <p class="m-0">{{ key }}</p>
+                <p class="m-0">{{ column["quantities"][key] }}</p>
+              </li>
+              {% endfor %}
+            </ul>
           </div>
         {% endif %}
         {% if column["data_type"] == "numerical" %}
-        <div class="sub-grid-section">
-          <h4>Aggregations</h4>
-          <div class="bar"></div>
-          <div class="grid-entry">
-            <h5 class="text-dark">Average</h5>
-            <span class="bar-grid-element"></span>
-            <h5 class="text-dark">{{ column["average"] }}</h5>
-          </div>
-          <div class="grid-entry">
-            <h5 class="text-dark">Highest value</h5>
-            <span class="bar-grid-element"></span>
-            <h5 class="text-dark">{{ column["max"] }}</h5>
-          </div>
-          <div class="grid-entry">
-            <h5 class="text-dark">Lowest value</h5>
-            <span class="bar-grid-element"></span>
-            <h5 class="text-dark">{{ column["min"] }}</h5>
-          </div>
-          <div class="grid-entry">
-            <h5 class="text-dark">Sum of values</h5>
-            <span class="bar-grid-element"></span>
-            <h5 class="text-dark">{{ column["sum"] }}</h5>
-          </div>
+        <div class="bg-white border rounded shadow-sm">
+          <h1 class="h5 grey-background p-2 rounded-top mb-0">Aggregations</h1>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between">
+                <p class="m-0">Average</p>
+                <p class="m-0">{{ column["average"] }}</p>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <p class="m-0">Highest value</p>
+                <p class="m-0">{{ column["max"] }}</p>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <p class="m-0">Lowest value</p>
+                <p class="m-0">{{ column["min"] }}</p>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <p class="m-0">Sum of values</p>
+                <p class="m-0">{{ column["sum"] }}</p>
+              </li>
+            </ul>
         </div>
         {% endif %}
       </div>
     </div>
   {% endfor %}
-</div>
+  </div>
 </div>
 
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" defer></script>
