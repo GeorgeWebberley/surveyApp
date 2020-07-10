@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, RadioField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from surveyapp import mongo, login_manager
 
@@ -26,6 +26,7 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
 
@@ -42,3 +43,19 @@ class UpdateAccountForm(FlaskForm):
             user_exists = mongo.db.users.find_one({"email" : email.data})
             if user_exists:
                 raise ValidationError("Account already exists with that email address.")
+
+
+class RequestPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request password reset')
+
+    def validate_email(self, email):
+        user_exists = mongo.db.users.find_one({"email" : email.data})
+        if not user_exists:
+            raise ValidationError("No account exists with that email.")
+
+
+class PasswordResetForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    password2 = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Update password')

@@ -1,3 +1,5 @@
+"use strict";
+
 // Select DOM elements
 const total = document.querySelector(".chi-total")
 const inputs = document.querySelectorAll("input[type=text]")

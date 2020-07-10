@@ -397,10 +397,10 @@ body {
   color: white;
 }
 
-.edit-icon {
+/* .edit-icon {
   color: green;
   transition: var(--primary-transition);
-}
+} */
 
 .delete-icon {
   border: 0;
@@ -419,9 +419,9 @@ body {
   cursor: pointer;
 }
 
-.home-table:hover .edit-icon{
+/* .home-table:hover .edit-icon{
   color: white;
-}
+} */
 
 .home-table:hover .delete-icon{
   color: white;
@@ -453,7 +453,7 @@ body {
   text-decoration: none;
 } */
 
-.empty {
+/* .empty {
   color: white;
   display: flex;
   flex-direction: column;
@@ -465,17 +465,15 @@ body {
   transition: var(--primary-transition);
   border-radius: 10px;
   cursor: pointer;
-}
+} */
 
-.empty p{
-  margin: 0.5rem;
-  padding: 0;
-}
 
+/*
 .empty:hover{
   background-color: white;
   color: var(--complementary-colour);
-}
+} */
+
 
 /* .edit-delete{
   display: flex;
@@ -485,20 +483,20 @@ body {
   margin-left: 0.5rem;
 } */
 
-.add-more{
+/* .add-more{
   margin: 1rem;
   display: flex;
   color: white;
   justify-content: center;
   transition: var(--primary-transition);
-}
+} */
 
 
 
-.add-more:hover{
+/* .add-more:hover{
   color: var(--complementary-colour);
   text-decoration: none;
-}
+} */
 
 
 .card {
@@ -1152,6 +1150,10 @@ body {
 
 .add-variable:hover {
   box-shadow: 5px 5px 5px grey;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 

@@ -19,6 +19,7 @@ python-dotenv = "*"
 xlrd = "*"
 scipy = "*"
 pingouin = "*"
+flask-mail = "*"
 
 [requires]
 python_version = "3.7"

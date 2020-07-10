@@ -1,135 +1,110 @@
 {% extends "layout.html" %} {% block content %}
 <section class="container">
-  <div class="d-flex justify-content-between my-3">
-    <a class="back-btn" href="{{ url_for('graphs.home') }}">Back</a>
-    <h1 class="table-title">{{ survey["title"] }}</h1>
-    <div class="dropdown">
-      <p>Your data</p>
-      <div class="dropdown-options">
-        <a class="dropdown-option" href="{{ url_for('graphs.input', survey_id=survey['_id']) }}">Edit your data</a>
-        <a class="dropdown-option" href="{{ url_for('graphs.quick_stats', survey_id=survey['_id']) }}">Quick Stats</a>
-      </div>
+  <div class="d-flex justify-content-between align-items-center my-3">
+    <a class="btn btn-secondary" href="{{ url_for('graphs.home') }}">Back</a>
+    <h1 class="h3 primary-colour mt-2 mb-3 text-center"><u>{{ survey["title"] }}</u></h1>
+
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Your data
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="{{ url_for('graphs.import_file') }}">Edit your data</a>
+      <a class="dropdown-item" href="{{ url_for('graphs.input') }}">Quick stats</a>
     </div>
   </div>
-  <div class="row mb-3">
-    <div class="col-12">
-      <div class="grid-section">
-        <div class="title-area">
-          <h4>Your graphs</h4>
+  <div class="row">
+    <!-- ------YOUR GRAPHS GRID SECTION------ -->
+    <div class="col-md-8 mb-3">
+      <div class="bg-light shadow rounded">
+        <div class="text-center">
+          <h1 class="h5 primary-colour-bg p-2 text-light rounded-top  mb-0">Graphs</h1>
         </div>
-        <div class="full-bar"></div>
         {% if not graphs %}
-        <a class="text-decoration-none" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}">
-          <div class="empty">
-            <p>You have no graphs.</p>
-            <p>Click here to get started.</p>
-            <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-          </div>
-        </a>
+        <div class="p-3">
+          <a class="text-decoration-none text-center" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}">
+            <div class="p-4 rounded border bg-white add-variable">
+              <p class="lead m-0 text-muted">No graphs yet! Click here to add your first graph.</p>
+              <div class="mt-2">
+                <i class="fa fa-plus-circle fa-lg text-primary" aria-hidden="true"></i>
+              </div>
+            </div>
+          </a>
+        </div>
         {% else %}
-
         <div class="container">
           <div class="row p-2">
             {% for graph in graphs %}
-
-            <div class="col-lg-4 col-md-6 p-2">
-
-              <div class="card">
+            <div class="col-lg-6 p-2">
+              <div class="card shadow-sm">
                 <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'] )}}">
                   <img class="card-img-top" src="{{ url_for('static', filename='graphimages/' + graph.image) }}" alt="Card image cap">
                 </a>
-                <div class="card-body bg-dark">
+                <div class="card-body rounded-bottom bg-dark text-light">
                   <h5 class="card-title">{{ graph["title"] }}</h5>
                   <h6 class="card-subtitle mb-2 text-muted">{{ graph["type"] }}</h6>
                   <div class="d-flex justify-content-between">
-                    <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'])}}" class="btn btn-info p-1">Edit</a>
+                    <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'])}}" class="btn btn-info">Edit</a>
                     <form action="{{ url_for('graphs.delete_graph', graph_id=graph['_id'], survey_id=survey['_id'] )}}" method="post" onsubmit="return confirm('Are you sure you want to delete this graph?');">
                       <button class="btn btn-danger" type="submit">Delete</button>
                     </form>
                   </div>
                 </div>
               </div>
-
             </div>
-
             {% endfor %}
-
           </div>
         </div>
-
-        <a class="add-more" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}">
-          <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
+        <a class="text-center d-flex flex-column text-decoration-none" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}">
+          <p class="mb-1">Add new graph</p>
+          <i class="mb-3 fa fa-plus-circle fa-lg text-primary" title="Add survey" aria-hidden="true"></i>
         </a>
         {% endif %}
       </div>
     </div>
-  </div>
-  <!-- ------YOUR GRAPHS GRID SECTION------ -->
-
-  <!-- ------ANALYSE YOUR DATA GRID SECTION------ -->
-  <div class="row mb-3">
-    <div class="col-12">
-      <div class="grid-section">
-        <div class="title-area">
-          <h4>Analyse your data</h4>
+    <!-- ------ANALYSE YOUR DATA GRID SECTION------ -->
+    <div class="col-md-4 mb-3">
+      <div class="bg-light shadow rounded">
+        <div class="text-center">
+          <h4 class="h5 primary-colour-bg p-2 text-light rounded-top mb-0">Statistical tests</h4>
         </div>
-        <div class="full-bar"></div>
         {% if not tests %}
-        <a class="text-decoration-none" href="{{ url_for('graphs.analyse', survey_id=survey['_id'])}}">
-          <div class="empty">
-            <p>You have no statistical tests.</p>
-            <p>Click here to get started.</p>
-            <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
-          </div>
-        </a>
+        <div class="p-3">
+          <a class="text-decoration-none text-center" href="{{ url_for('graphs.analyse', survey_id=survey['_id'])}}">
+            <div class="p-4 rounded border bg-white add-variable">
+              <p class="lead m-0 text-muted">No tests yet! Click here to add your first statistical test.</p>
+              <div class="mt-2">
+                <i class="fa fa-plus-circle fa-lg text-primary" aria-hidden="true"></i>
+              </div>
+            </div>
+          </a>
+        </div>
         {% else %}
           {% for test in tests %}
             <div class="home-table">
-              <a  class="text-decoration-none" href="{{ url_for('graphs.result',
+              <a  class="text-decoration-none primary-colour" href="{{ url_for('graphs.result',
                           test_id=test['_id'],
-                          survey=test['survey'],
+                          survey=test['surveyId'],
                           test=test['test'],
                           p_value=test['p'],
                           independent_variable=test['independentVariable'],
                           dependent_variable=test['dependentVariable'],
                           title=test['title'] )}}">{{ test["title"] }}</a>
               <div class="edit-delete">
-                <form action="{{ url_for('graphs.delete_test', test_id=test['_id'] )}}" method="post"
+                <form action="{{ url_for('graphs.delete_test', test_id=test['_id'], survey_id=survey['_id'] )}}" method="post"
                     onsubmit="return confirm('Are you sure you want to delete this test?');">
                   <button class="delete-icon" type="submit"><i class="fas fa-trash fa-lg"></i></button>
                 </form>
               </div>
             </div>
           {% endfor %}
-          <a class="add-more" href="{{ url_for('graphs.analyse', survey_id=survey['_id']) }}">
-            <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
+          <a class="my-1 text-center d-flex flex-column text-decoration-none" href="{{ url_for('graphs.analyse', survey_id=survey['_id']) }}">
+            <p class="mb-1">Add new tests</p>
+            <i class="mb-3 fa fa-plus-circle fa-lg text-primary" title="Add survey" aria-hidden="true"></i>
           </a>
         {% endif %}
       </div>
     </div>
   </div>
 </section>
-<!-- MODAL FOR CHOOSING SURVEY -->
-<div class="overlay">
-  <div class="choose-survey">
-    {% if not surveys %}
-    <div class="choose-survey-title">
-      <i class="fa fa-times close" aria-hidden="true"></i>
-      <p>You need to add a survey first!</p>
-    </div>
-    {% else %}
-    <div class="choose-survey-title">
-      <i class="fa fa-times close" aria-hidden="true"></i>
-      <p>Which survey would you like to use?</p>
-    </div>
-    <div class="bar"></div>
-      {% for survey in surveys %}
-        <div class="test">
-          <a class="choose-survey-table" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id']) }}">{{ survey["title"] }}</a>
-        </div>
-      {% endfor %}
-    {% endif %}
-  </div>
-</div>
 
 {% endblock content %}

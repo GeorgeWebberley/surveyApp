@@ -15,30 +15,13 @@ from pingouin import kruskal, mwu
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import UploadForm, EditForm, BarchartForm, ScatterchartForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
+from surveyapp.graphs.forms import UploadForm, EditForm, BarPieForm, ScatterchartForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
-from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan
-# For converting image base 64 data URI
-from binascii import a2b_base64
-import urllib.parse
-
-
+from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file
 
 
 graphs = Blueprint("graphs", __name__)
-
-# ------OLD CODE FOR DROPZONE------
-# @graphs.route('/import', methods=['GET', 'POST'])
-# # login required decorator prevents people accessing the page when not logged in
-# @login_required
-# def import_file():
-#     if request.method == "POST":
-#         f = request.files.get('file')
-#         f.save(os.path.join('app/uploads', f.filename))
-#     return render_template("import.html", title = "Import file")
-
-# Function for saving file. Generates a random hex for the name
 
 
 @graphs.route('/import', methods=['GET', 'POST'])
@@ -49,12 +32,13 @@ def import_file():
     # Checks validation when form is submitted with submit button
     if form.validate_on_submit():
         file_name = save_file(form.file.data)
-        table = mongo.db.surveys.insert_one({\
+        survey = mongo.db.surveys.insert_one({\
         "fileName" : file_name,\
         "user" : current_user._id,\
         "title" : form.title.data})
+        # Get the id of the survey just inserted
+        survey_id = survey.inserted_id
         flash("File uploaded successfully!", "success")
-        survey_id = table.inserted_id
         return redirect(url_for("graphs.input", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
@@ -62,13 +46,13 @@ def import_file():
 @graphs.route('/input', methods=['GET', 'POST'])
 @login_required
 def input():
-    # Initialise variables (values for data, headers for column headers)
-    value_list = []
+    # Initialise variables for handsontable (2d array for values, 1d array for column headers)
+    value_list = [[]]
     header_list = []
     survey_id = request.args.get("survey_id")
     form = EditForm()
     # Handsontable data cannot be posted using normal WTForms methods.
-    # This post method is from an AJAX call in the client javascript.
+    # Post needs to be from combined WTForm and AJAX
     if form.validate_on_submit():
         # get the file_obj (if one exists yet)
         file_obj = mongo.db.surveys.find_one({"_id":ObjectId(survey_id)})
@@ -97,12 +81,12 @@ def input():
             flash("You do not have access to that page", "danger")
             return redirect(url_for("main.index"))
         # Read the file and extract the cell values and column headers
-        df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
+        df = read_file(file_obj["fileName"])
         value_list = df.values.tolist()
         header_list = df.columns.values.tolist()
         form.title.data = file_obj["title"]
     data = {"values": value_list, "headers": header_list}
-    return render_template("input.html", title = "Input", data=data, survey_id=survey_id, form=form)
+    return render_template("input.html", title="Input", data=data, survey_id=survey_id, form=form)
 
 
 
@@ -110,24 +94,33 @@ def input():
 @login_required
 def home():
     surveys=mongo.db.surveys.find({"user":current_user._id})
-    return render_template("home.html", title="Home", surveys=list(surveys))
+    survey_list = []
+    for survey in surveys:
+        graphs = mongo.db.graphs.count({"surveyId":survey["_id"]})
+        tests = mongo.db.graphs.count({"surveyId":survey["_id"]})
+        # Send information to home page regarding the surveys, number of graphs and tests
+        survey_list.append({"title": survey["title"],\
+                            "_id": survey["_id"],\
+                            "numGraphs": graphs,\
+                            "numTests": tests})
+    return render_template("home.html", title="Home", surveys=survey_list)
 
 
+# Dasboard page for each survey
+# Renders a page with all graphs and surveys relating to the chosen survey
 @graphs.route('/home/<survey_id>', methods=['GET', 'POST'])
 @login_required
 def dashboard(survey_id):
     survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
     graphs = mongo.db.graphs.find({"surveyId":survey_id})
     tests = mongo.db.tests.find({"surveyId":survey_id})
-    # return render_template("home.html", title="Home", surveys=list(surveys), graphs=list(graphs), tests=list(tests))
     return render_template("dashboard.html", title="Dashboard", graphs=list(graphs), tests=list(tests), survey=survey)
 
 
 
-
-
-
 # RELOOK AT THIS. AT THE MOMENT I AM SENDING THE FILE ID BACK AND FORTH FROM THE SERVER. MIGHT BE BETTER TO USE LOCAL STORAGE??
+# IS PAGE NEEDED AT ALL? INSTEAD COULD HAVE A MODAL WHERE SUER SELECTS THE TYPE OF GRAPH THEY WANT
+# Page where user chooses the type of graph they would like to create for their survey
 @graphs.route('/choosegraph/<survey_id>', methods=['GET', 'POST'])
 @login_required
 def choose_graph(survey_id):
@@ -135,14 +128,14 @@ def choose_graph(survey_id):
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
         return redirect(url_for("main.index"))
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
-    return render_template("choosegraph.html", title="Select Graph", survey_id=file_obj["_id"])
+    return render_template("choosegraph.html", title="Select Graph", survey_id=survey_id)
 
 
 
 @graphs.route('/graph/<survey_id>', methods=['GET', 'POST'])
 @login_required
 def graph(survey_id):
+    # Get the file object so that we can load the data
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
@@ -150,37 +143,33 @@ def graph(survey_id):
     # Get the id of the graph (if it exists yet)
     graph_id = request.args.get("graph_id")
     graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
+    # i.e. if user is choosing to edit an existing graph
     if graph_obj:
         chart_type = graph_obj["type"]
+    # Else user is creating a new graph of a chosen type
     else:
         chart_type = request.args.get("chart_type")
-
     # Read the csv file in
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
-    # Converting the dataframe to a dict of records to be handled by D3.js on the client side.
+    df = read_file(file_obj["fileName"])
+    # Convert the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
     # parse the columns to get information regarding type of data
     column_info = parse_data(df)
-
-
-    # ----------BAR CHART----------
-    if chart_type == "Bar chart":
-        return bar_chart(survey_id, column_info, chart_data, df, graph_id, file_obj["title"])
-
+    # ----------SAME ROUTE USED FOR BAR AND PIE CHART----------
+    if chart_type == "Bar chart" or chart_type == "Pie chart":
+        return pie_bar_chart(survey_id, column_info, chart_data, graph_id, file_obj["title"], chart_type)
     # ----------SCATTER CHART----------
     elif chart_type == "Scatter chart":
         return scatter_chart(survey_id, column_info, chart_data, df, graph_id, file_obj["title"])
-
-    # ----------PIE CHART----------
-    elif chart_type == "Pie chart":
-        return pie_chart(survey_id, column_info, chart_data, df, graph_id, file_obj["title"])
-
+    else:
+        flash("something went wrong", "danger")
+        abort(404)
 
 
-
-
-def bar_chart(survey_id, column_info, chart_data, df, graph_id, title):
-    form = BarchartForm()
+# Function that renders the bar-chart page
+def pie_bar_chart(survey_id, column_info, chart_data, graph_id, title, chart_type):
+    form = BarPieForm()
+    # Populate the form options. A bar/pie chart can take any data type for x-axis but y-axis must be numerical
     for column in column_info:
         form.x_axis.choices.append((column["title"], column["title"]))
         if column["data_type"] == "numerical":
@@ -188,14 +177,8 @@ def bar_chart(survey_id, column_info, chart_data, df, graph_id, title):
             form.y_axis.choices.append((column["title"], column["title"]))
     # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
     if form.validate_on_submit():
-        imageData = request.form["image"]
-        response = urllib.request.urlopen(imageData)
-        # generate a random hex for the filename
-        random_hex = secrets.token_hex(8)
-        file_name = random_hex + ".png"
-        file = os.path.join(current_app.root_path, "static/graphimages", file_name)
-        with open(file, 'wb') as image_to_write:
-            image_to_write.write(response.file.read())
+        image_data = request.form["image"]
+        file_name = save_image(image_data, graph_id)
         if form.x_axis.data == "Amount":
             y_agg = ""
         else:
@@ -205,7 +188,7 @@ def bar_chart(survey_id, column_info, chart_data, df, graph_id, title):
         {"$set": {"title" : form.title.data,\
                 "surveyId": survey_id,\
                 "user" : current_user._id,\
-                "type" : "Bar chart",\
+                "type" : chart_type,\
                 "xAxis" : form.x_axis.data,\
                 "yAxis": form.y_axis.data,\
                 "yAggregation": y_agg,
@@ -224,7 +207,11 @@ def bar_chart(survey_id, column_info, chart_data, df, graph_id, title):
         form.title.data = "Bar chart - " + title
 
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
-    return render_template("barchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+    if chart_type == "Bar chart":
+        return render_template("barchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+    else:
+        return render_template("piechart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+
 
 
 
@@ -238,14 +225,8 @@ def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
             form.y_axis.choices.append((column["title"], column["title"]))
     # Now we have specified the 'select' options for the form, we can prevalidate for 'form.validate_on_submit'
     if form.validate_on_submit():
-        imageData = request.form["image"]
-        response = urllib.request.urlopen(imageData)
-        # generate a random hex for the filename
-        random_hex = secrets.token_hex(8)
-        file_name = random_hex + ".png"
-        file = os.path.join(current_app.root_path, "static/graphimages", file_name)
-        with open(file, 'wb') as image_to_write:
-            image_to_write.write(response.file.read())
+        image_data = request.form["image"]
+        file_name = save_image(image_data, graph_id)
         # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
         mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
         {"$set": {"title" : form.title.data,\
@@ -282,69 +263,7 @@ def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
 
 
 
-
-
-def pie_chart(survey_id, column_info, chart_data, df, graph_id, title):
-    # Pie charts are very similar to barcharts
-    form = BarchartForm()
-    for column in column_info:
-        form.x_axis.choices.append((column["title"], column["title"]))
-        if column["data_type"] == "numerical":
-            # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
-            form.y_axis.choices.append((column["title"], column["title"]))
-    # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
-    if form.validate_on_submit():
-        imageData = request.form["image"]
-        response = urllib.request.urlopen(imageData)
-        # generate a random hex for the filename
-        random_hex = secrets.token_hex(8)
-        file_name = random_hex + ".png"
-        file = os.path.join(current_app.root_path, "static/graphimages", file_name)
-        with open(file, 'wb') as image_to_write:
-            image_to_write.write(response.file.read())
-        if form.x_axis.data == "Amount":
-            y_agg = ""
-        else:
-            y_agg = form.y_axis_agg.data
-        # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
-        # At the moment i have kep the variable names xAxis (to represent the variable) and yAxis (to represent how the data is aggregated)
-        mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
-        {"$set": {"title" : form.title.data,\
-                "surveyId": survey_id,\
-                "user" : current_user._id,\
-                "type" : "Pie chart",\
-                "xAxis" : form.x_axis.data,\
-                "yAxis": form.y_axis.data,\
-                "yAggregation": y_agg,
-                "image": file_name}}, upsert=True)
-        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
-
-    # If we are editing the graph instead of creating new, we want to prepopulate the fields
-    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
-
-    if graph_obj:
-        form.x_axis.data = graph_obj["xAxis"]
-        form.y_axis.data = graph_obj["yAxis"]
-        form.y_axis_agg.data = graph_obj["yAggregation"]
-        form.title.data = graph_obj["title"]
-    else:
-        form.title.data = "Graph - " + title
-
-    data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
-    return render_template("piechart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
-
-
-
-
-
-
-
-
-
-
-
 # DELETE A SURVEY
-# NEED TO ADD FEATURE SO FILE IS REMOVED AND ALSO THAT ALL GRAPHS ARE REMOVED RELATING TO THE FILE
 @graphs.route("/survey/<survey_id>/delete", methods=['POST'])
 @login_required
 def delete_survey(survey_id):
@@ -353,9 +272,10 @@ def delete_survey(survey_id):
         flash("You do not have access to that page", "danger")
         abort(403)
     graphs = mongo.db.graphs.find({"surveyId":survey_id})
-    # print(graphs)
     for graph in graphs:
+        delete_image(graph["image"])
         mongo.db.graphs.delete_one(graph)
+    delete_file(file_obj["fileName"])
     mongo.db.surveys.delete_one(file_obj)
     return redirect(url_for('graphs.home'))
 
@@ -386,43 +306,9 @@ def delete_graph(graph_id, survey_id):
     if graph_obj["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
         abort(403)
+    delete_image(graph_obj["image"])
     mongo.db.graphs.delete_one(graph_obj)
     return redirect(url_for('graphs.dashboard', survey_id=survey_id))
-
-#
-# # Analyse data sets
-# @graphs.route("/analyse", methods=['GET', 'POST'])
-# @login_required
-# def analyse():
-#     form = StatisticalTestForm()
-#     # Get a list of all surveys associate with the current user
-#     surveys = list(mongo.db.surveys.find({"user": current_user._id}))
-#     for survey in surveys:
-#         # Loop through each survey, saving the title (and filename) as well as the variables in the select options
-#         form.survey.choices.append((survey["_id"], survey["title"]))
-#         df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
-#         for variable in list(df.columns.values):
-#             form.independent_variable.choices.append((variable, variable))
-#             form.dependent_variable.choices.append((variable, variable))
-#     if form.validate_on_submit():
-#         # Get the dataset, and save the variables in python variables
-#         survey = mongo.db.surveys.find_one({"_id": form.survey.data})
-#         df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
-#         independent_variable = form.independent_variable.data
-#         dependent_variable = form.dependent_variable.data
-#         test = form.test.data
-#         if test == "Kruskall Wallis Test":
-#             kruskal_result = kruskal(data=df, dv=dependent_variable, between=independent_variable)
-#             p_value = kruskal_result["p-unc"][0]
-#         return redirect(url_for('graphs.result',\
-#                                 survey=survey["_id"],\
-#                                 test=test,\
-#                                 p_value=p_value,\
-#                                 independent_variable=independent_variable,\
-#                                 dependent_variable=dependent_variable))
-#     return render_template("analysedata.html", form=form)
-
-
 
 
 # Analyse data sets
@@ -435,11 +321,7 @@ def analyse():
     if survey["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
         abort(403)
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
-
-
-    # group_by = df.groupby('Gender')
-    # print(df['Gender'].unique())
+    df = read_file(file_obj["fileName"])
     for variable in list(df.columns.values):
         form.independent_variable.choices.append((variable, variable))
         form.dependent_variable.choices.append((variable, variable))
@@ -524,7 +406,7 @@ def chi_goodness():
     variable = request.args.get("variable")
     # Get survey object and datafram
     survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
+    df = read_file(file_obj["fileName"])
     group_by = df.groupby(variable)
     keys = list(group_by.groups.keys())
     # Populate the form with unique groups in the given variable
@@ -573,19 +455,19 @@ def result():
     if not dependent_variable:
         dependent_variable = ""
     # Get the survey variable so the test result can be saved and reference the survey
-    survey=request.args.get("survey")
+    survey_id=request.args.get("survey")
     test_id=request.args.get("test_id")
     if form.validate_on_submit():
         # 'upsert' creates entry if it does not yet exist
         mongo.db.tests.update_one({"_id": ObjectId(test_id)},\
-        {"$set":{"surveyId" : survey,\
+        {"$set":{"surveyId" : survey_id,\
                 "user" : current_user._id,\
                 "title" : form.title.data,\
                 "test" : test,\
                 "independentVariable" : independent_variable,\
                 "dependentVariable" : dependent_variable,\
                 "p" : p_value}}, upsert=True)
-        return redirect(url_for('graphs.dashboard', title="Home", survey_id=survey))
+        return redirect(url_for('graphs.dashboard', title="Dashboard", survey_id=survey_id))
     title=request.args.get("title")
     if title:
         # i.e. if test already exists and user is clicking to view/edit it
@@ -594,20 +476,20 @@ def result():
         # Set the default title. Users can change this
         form.title.data = independent_variable + "/" + dependent_variable + ": " + test
     result = {"test":test, "p":p_value, "alpha":alpha, "iv":independent_variable, "dv":dependent_variable}
-    return render_template("result.html", result=result, form=form)
+    return render_template("result.html", result=result, form=form, survey_id=survey_id)
 
 
 
 # DELETE A statistical test
-@graphs.route("/analyse/<test_id>/delete", methods=['POST'])
+@graphs.route("/analyse/<survey_id>/<test_id>/delete", methods=['POST'])
 @login_required
-def delete_test(test_id):
+def delete_test(survey_id, test_id):
     test_obj = mongo.db.tests.find_one_or_404({"_id":ObjectId(test_id)})
     if test_obj["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
         abort(403)
     mongo.db.tests.delete_one(test_obj)
-    return redirect(url_for('graphs.home'))
+    return redirect(url_for('graphs.dashboard', survey_id=survey_id))
 
 
 
@@ -620,7 +502,7 @@ def quick_stats(survey_id):
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
         return redirect(url_for("main.index"))
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", file_obj["fileName"]))
+    df = read_file(file_obj["fileName"])
     rows = len(df.index)
     cols = len(df.columns)
     column_info = parse_data(df);
@@ -643,7 +525,7 @@ def get_survey(survey_id):
 @graphs.route("/analyse/<survey_id>")
 def get_variables(survey_id):
     survey = mongo.db.surveys.find_one({"_id": ObjectId(survey_id)})
-    df = pd.read_csv(os.path.join(current_app.root_path, "uploads", survey["fileName"]))
+    df = read_file(file_obj["fileName"])
     column_info = parse_data(df)
     independent_variables = []
     dependent_variables = []

@@ -150,15 +150,23 @@ Some comments from user feedback were with regards to the user interface. For a 
 
 Over today and likely the next few days, I will go back through all my old pages, improving the user interface and making the pages responsive. I will be able to remove many of my old CSS classes and replace them with Bootstrap only classes, reducing the amount of code needed whilst improving the design and responsiveness. Today I completely changed my landing page, adding screenshots and also a video tutorial to show users how to use the site. I have also changed the login, register and form upload pages. Tomorrow I will review my edit table/manual input page as this is my least favourite page on the site with regards to user interface!
 
-<a name="latestEntry"></a>
-### Continued working on UI. (7th July)
+### Continued working on UI. (8th July)
 
 Today I have made changes to the UI of the quick stats page and also to the input data page, integrating bootstrap classes and making them more responsive.
 
 On the input data page I have also added a button which, when pressed, will prompt the user to enter a column heading and then add the column. This will hopefully make for a better user experience when inputing data manually.
 
+<a name="latestEntry"></a>
+### Further UI improvements, remember me, password reset. (9th July)
+
+Today I worked at improving the CSS and UI for the home page and dashboard. I have also been reducing and refactoring my code, reducing any areas of repeatability.
+
+I have added a 'remember me' field to the login, as well as attempting to do an email password reset.
+
 ##### Ongoing objectives
 
+* Add date/time to scatter chart.
+* Allow grouping of numerical data on bar charts.
 * Review the UI, make pages responsive.
 * To carry out unit testing of the graph page, statistics page and dashboard pages.
 * Password reset.

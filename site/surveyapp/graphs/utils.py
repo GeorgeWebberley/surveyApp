@@ -6,6 +6,9 @@ from surveyapp import mongo
 from flask import Flask, current_app
 from flask_login import current_user
 from bson.objectid import ObjectId
+# For converting image base 64 data URI
+import urllib.parse
+
 
 # Saves file after import. All files are saved as CSV for easier handling
 def save_file(form_file):
@@ -22,6 +25,33 @@ def save_file(form_file):
     else:
         form_file.save(file_path)
     return file_name
+
+# Given a name, locates file and returns the dataframe.
+def read_file(name):
+    return pd.read_csv(os.path.join(current_app.root_path, "uploads", name))
+
+
+def save_image(data, graph_id):
+    graph = mongo.db.graphs.find_one({"_id": ObjectId(graph_id)})
+    if graph:
+        delete_image(graph["image"])
+    response = urllib.request.urlopen(data)
+    # generate a random hex for the filename
+    random_hex = secrets.token_hex(8)
+    file_name = random_hex + ".png"
+    file = os.path.join(current_app.root_path, "static/graphimages", file_name)
+    with open(file, 'wb') as image_to_write:
+        image_to_write.write(response.file.read())
+    return file_name
+
+def delete_image(name):
+    image = os.path.join(current_app.root_path, "static/graphimages", name)
+    os.remove(image)
+
+def delete_file(name):
+    file = os.path.join(current_app.root_path, "uploads", name)
+    os.remove(file)
+
 
 # A function that removes all leading empty rows/columns
 def remove_nan(df):

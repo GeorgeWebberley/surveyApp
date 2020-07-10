@@ -1,3 +1,5 @@
+"use strict";
+
 // The DOM elements representing the different sections
 const statisticalTests = document.querySelector(".statistical-tests")
 const independentVariables = document.querySelector(".independent-variables")
@@ -113,7 +115,7 @@ statisticalTestList.onchange = function (){
   // Add event listeners that re-sets the options whenever one is changed
   independentVariableList.onchange = function(){
     if(one_variable == true){
-      revealHtml(independentVariableList, continueButton)    
+      revealHtml(independentVariableList, continueButton)
     }
     setSelectOptions(independentVariableList, dependentVariableList);
   }

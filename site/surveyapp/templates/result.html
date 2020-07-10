@@ -44,7 +44,7 @@
          </tr>
         </table>
         <div class="d-flex justify-content-between m-3">
-          <a class="btn btn-secondary" href="{{ url_for('graphs.home') }}">Cancel</a>
+          <a class="btn btn-secondary" href="{{ url_for('graphs.dashboard', survey_id=survey_id) }}">Cancel</a>
           {{ form.submit(class="btn btn-primary") }}
         </div>
       </form>

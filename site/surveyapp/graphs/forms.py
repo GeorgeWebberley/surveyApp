@@ -17,7 +17,8 @@ class EditForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     submit = SubmitField("Save")
 
-class BarchartForm(FlaskForm):
+# Form used for pie charts and bar charts
+class BarPieForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
     # We will append variables to x/y axis choices based on the data
     x_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])

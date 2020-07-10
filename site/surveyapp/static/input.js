@@ -1,3 +1,5 @@
+"use strict";
+
 const button = document.querySelector(".save")
 const infoRow = document.querySelector(".info-row")
 const info = document.querySelector(".table-guide")
@@ -22,9 +24,9 @@ if(headers.length == 0){
   infoRow.classList.add("hidden")
 } else{
   // Edge case: handsontable needs a 2d array. If 'values' is empty it needs converting
-  if (values.length == 0){
-    values = [[]]
-  }
+  // if (values.length == 0){
+  //   values = [[]]
+  // }
   inputOverlay.classList.add("hidden")
   let columns = columnData(headers)
   renderTable(values, headers, columns)

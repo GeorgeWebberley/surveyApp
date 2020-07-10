@@ -1,4 +1,6 @@
 from surveyapp import mongo, login_manager
+from flask import current_app
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 # methods inside this class allow for login_manager assistance
 # when a user is logged in then it creates an instance of the session (called 'current_user')
@@ -36,3 +38,17 @@ class User:
         if not user:
             return None
         return User(email=user["email"], first_name=user["firstName"], last_name=user["lastName"], _id=user["_id"])
+
+
+    def get_reset_token(self, expires=1800):
+        serializer = Serializer(current_app.config['SECRET_KEY'], expires)
+        return serializer.dumps({'user_id': self.email}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        serializer = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            user_id = serializer.loads(token)['user_id']
+        except:
+            return None
+        return mongo.db.users.find_one({"email" : email})
