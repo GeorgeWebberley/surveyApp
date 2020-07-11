@@ -73,13 +73,7 @@ def parse_data(df):
         temp_dict = {
         "title": column_title
         }
-        print("Type: ")
-        print(column_data.dtypes)
-        if column_data.dtypes == 'object':
-            temp_dict["data_type"] = "categorical"
-            temp_dict["num_unique"] = df[column_title].nunique()
-            temp_dict["quantities"] = column_data.value_counts().to_dict()
-        elif column_data.dtypes == np.bool:
+        if column_data.dtypes == np.bool:
             temp_dict["data_type"] = "true/false"
             temp_dict["quantities"] = column_data.value_counts().to_dict()
         elif column_data.dtypes == np.int64:
@@ -89,6 +83,10 @@ def parse_data(df):
             temp_dict["max"] = column_data.agg("max");
             temp_dict["min"] = column_data.agg("min");
             temp_dict["sum"] = column_data.agg("sum");
+        else:
+            temp_dict["data_type"] = "categorical"
+            temp_dict["num_unique"] = df[column_title].nunique()
+            temp_dict["quantities"] = column_data.value_counts().to_dict()
         column_info.append(temp_dict)
     return column_info
 
