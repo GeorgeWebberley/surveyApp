@@ -38,6 +38,16 @@ addColumn.addEventListener('click', function () {
 
 
 function triggerModal(){
+  // Allow user to submit a column field simply by pressing enter
+  $(document).unbind("keyup").keyup(function(e){
+      // Get the key code
+      let code = e.which;
+      // If it is equal to 13 then click the confirm button
+      if(code==13){
+          $("#confirm").click();
+      }
+  });
+
   if(newVariable.value == ""){
     // If the user tries to enter in an empty string, modal remains open with warning class
     newVariable.classList.add("is-invalid")
@@ -140,6 +150,10 @@ function renderTable(values, headers){
 //   }
 // }
 
+// Prevent form auto submitting when a user presses Enter
+$(document).on("keydown", "form", function(event) {
+    return event.key != "Enter";
+});
 
 
 
@@ -179,7 +193,7 @@ function removeEmptyRows(){
       emptyRows.push([i, 1])
     }
   })
-  newHot = hot.alter("remove_row", emptyRows, 1)
+  let newHot = hot.alter("remove_row", emptyRows, 1)
   return newHot
 }
 

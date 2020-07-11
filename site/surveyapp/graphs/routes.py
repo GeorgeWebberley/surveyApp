@@ -10,7 +10,6 @@ import numpy as np
 # from scipy.stats import mannwhitneyu
 from scipy.stats import chi2_contingency, chisquare
 import pingouin as pg
-import pyexcel as p
 from pingouin import kruskal, mwu
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
