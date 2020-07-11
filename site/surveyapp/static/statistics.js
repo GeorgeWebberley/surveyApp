@@ -95,6 +95,10 @@ const tests = [
 
 
 if(statisticalTestList.value != ""){
+  // Using Jquery, initialise Popper.js tooltips
+  $(function () {
+      $("[data-toggle='tooltip']").tooltip();
+  });
   populateInfo();
   // Add event listeners that re-sets the options whenever one is changed
   independentVariableList.onchange = function(){

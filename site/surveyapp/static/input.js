@@ -160,7 +160,7 @@ $('form').submit(function (e) {
   // Remove the 'spare' row before saving
   hot.updateSettings({
     minSpareRows: 0,
-    // minRows:0
+    minRows:0
   })
   // Remove empty rows (if any)
   let newHot = removeEmptyRows();
@@ -178,7 +178,7 @@ $('form').submit(function (e) {
   // Change spare rows back to 1 if user wants to continue editing
   hot.updateSettings({
     minSpareRows: 1,
-    // minRows:23
+    minRows:23
   })
   // alert("Your changes have been saved")
   info.innerHTML = "Up to date"
