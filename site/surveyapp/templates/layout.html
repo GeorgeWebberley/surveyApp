@@ -29,16 +29,15 @@
     <script src="https://cdn.jsdelivr.net/npm/handsontable@7.4.2/dist/handsontable.full.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/handsontable@7.4.2/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
 
-
-
-    <!-- dropzone css -->
-    <!-- {{ dropzone.load_css() }} {{ dropzone.style(' height: 100%; width: 100%; border: none;
-     font-size: 4rem; font-family: "Ubuntu", sans-serif; color: var(--primary-colour);') }} -->
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-site-primary shadow sticky-top" role="navigation">
       <div class="container">
-      <a class="navbar-brand text-light" href="{{ url_for('main.index') }}">Survey Site</a>
+      <a href="{{ url_for('main.index') }}">
+        <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Datasaur Logo">
+
+      </a>
+      <!-- <a class="navbar-brand text-light" href="{{ url_for('main.index') }}">Survey Site</a> -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>

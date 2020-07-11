@@ -1,68 +1,65 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <div class="sub-container">
+  <div class="bg-white shadow-sm border mt-4 rounded p-4">
     <form action="" method="post">
     {{ form.hidden_tag() }}
 
-    <div class="feedback-section">
-      <div class="analyse-question">
+    <div class="p-3 border-bottom">
+      <div class="primary-colour">
         {{ form.user_interface.label() }}
       </div>
       {% if form.user_interface.errors %}
-          {{ form.user_interface(class="feedback-radio") }}
-          <div class="invalid">
+          {{ form.user_interface(class="list-unstyled d-flex justify-content-between mr-1") }}
+          <div class="text-danger">
               {% for error in form.user_interface.errors %}
-                  <span>{{ error }}</span>
+                  <small>{{ error }}</small>
               {% endfor %}
           </div>
       {% else %}
-      {{ form.user_interface(class="feedback-radio") }}
+      {{ form.user_interface(class="list-unstyled d-flex justify-content-between mr-1") }}
       {% endif %}
     </div>
-    <div class="full-bar"></div>
 
-    <div class="feedback-section">
-      <div class="analyse-question">
+    <div class="p-3 border-bottom">
+      <div class="primary-colour">
         {{ form.functionality.label() }}
       </div>
       {% if form.functionality.errors %}
-          {{ form.functionality(class="feedback-radio") }}
-          <div class="invalid">
+          {{ form.functionality(class="list-unstyled d-flex justify-content-between mr-1") }}
+          <div class="text-danger">
               {% for error in form.functionality.errors %}
-                  <span>{{ error }}</span>
+                  <small>{{ error }}</small>
               {% endfor %}
           </div>
       {% else %}
-      {{ form.functionality(class="feedback-radio") }}
+      {{ form.functionality(class="list-unstyled d-flex justify-content-between") }}
       {% endif %}
     </div>
-    <div class="full-bar"></div>
 
 
 
-    <div class="feedback-section">
-      <div class="analyse-question">
+    <div class="p-3 border-bottom">
+      <div class="primary-colour">
         {{ form.comments.label() }}
       </div>
       {% if form.comments.errors %}
-          {{ form.comments(class="feedback-text") }}
-          <div class="invalid">
+          {{ form.comments(class="form-control", rows=3) }}
+          <div class="text-danger">
               {% for error in form.comments.errors %}
-                  <span>{{ error }}</span>
+                  <small>{{ error }}</small>
               {% endfor %}
           </div>
       {% else %}
-      {{ form.comments(class="feedback-text") }}
+      {{ form.comments(class="form-control bg-light", rows=3) }}
       {% endif %}
     </div>
-    <div class="full-bar"></div>
 
 
 
 
     <div class="analyse-continue">
       <div class="full-bar"></div>
-      {{ form.submit(class="btn btn-secondary") }}
+      {{ form.submit(class="btn btn-primary") }}
     </div>
   </div>
 </div>

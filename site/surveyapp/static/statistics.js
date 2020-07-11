@@ -126,48 +126,9 @@ statisticalTestList.onchange = function (){
 }
 
 
-
-//
-//
-// // set page event listeners on each of the drop down menus
-// function setEventListeners() {
-//
-//   revealHtml(statisticalTestList, independentVariables)
-//   if(one_variable){
-//     revealHtml(independentVariableList, continueButton)
-//     dependentVariables.classList.add("hidden-axis")
-//   }else{
-//     revealHtml(independentVariableList, dependentVariables)
-//   }
-//   revealHtml(dependentVariableList, continueButton)
-//   populateInfo()
-//   statisticalTestList.onchange = function() {
-//     independentVariables.classList.remove("hidden-axis");
-//     dependentVariables.classList.add("hidden-axis");
-//     statisticalTestList.firstChild.hidden = true;
-//     // Loop through each test and check to see if it is the one selected
-//     populateInfo()
-//     // Using Jquery, initialise Popper.js tooltips
-//     $('[data-toggle="tooltip"]').tooltip()
-//   }
-//   // Add event listeners that re-sets the options whenever one is changed
-//   independentVariableList.onchange = function(){
-//     if(one_variable){
-//       setSelectOptions(independentVariableList, dependentVariableList, continueButton);
-//       dependentVariables.classList.add("hidden-axis")
-//     }else{
-//       setSelectOptions(independentVariableList, dependentVariableList, dependentVariables);
-//     }
-//   }
-//   dependentVariableList.onchange = function(){
-//     setSelectOptions(dependentVariableList, independentVariableList, continueButton);
-//   }
-// }
-
-
 // A function that hides some select options, preventing user from picking the same option for both variables
 function setSelectOptions(currentSelect, otherSelect){
-  variable = currentSelect.value
+  let variable = currentSelect.value
   for (var i=0; i < otherSelect.length; i++) {
       if (otherSelect.options[i].value == variable){
         otherSelect.options[i].hidden = true;

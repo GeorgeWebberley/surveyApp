@@ -25,9 +25,9 @@ def feedback():
     form = FeedbackForm()
     if form.validate_on_submit():
         mongo.db.feedback.insert_one({\
-        "UI" : form.user_interface.data,\
-        "functionality" : form.functionality.data,\
-        "comments" : form.comments.data,\
+        "UI_2" : form.user_interface.data,\
+        "functionality_2" : form.functionality.data,\
+        "comments_2" : form.comments.data,\
         "user" : current_user._id})
         flash("Thank you for your feedback.", "success")
         return redirect(url_for("main.index"))

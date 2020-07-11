@@ -73,7 +73,7 @@ function triggerModal(){
 
 
 function columnData(headers){
-  columns = []
+  let columns = []
   headers.forEach(header => {
     columns.push({data: header})
   })

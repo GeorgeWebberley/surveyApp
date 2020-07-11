@@ -42,13 +42,13 @@ class User:
 
     def get_reset_token(self, expires=1800):
         serializer = Serializer(current_app.config['SECRET_KEY'], expires)
-        return serializer.dumps({'user_id': self.email}).decode('utf-8')
+        return serializer.dumps({'user_email': self.email}).decode('utf-8')
 
     @staticmethod
     def verify_reset_token(token):
         serializer = Serializer(current_app.config['SECRET_KEY'])
         try:
-            user_id = serializer.loads(token)['user_id']
+            email = serializer.loads(token)['user_email']
         except:
             return None
         return mongo.db.users.find_one({"email" : email})

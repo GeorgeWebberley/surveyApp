@@ -321,7 +321,7 @@ def analyse():
     if survey["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
         abort(403)
-    df = read_file(file_obj["fileName"])
+    df = read_file(survey["fileName"])
     for variable in list(df.columns.values):
         form.independent_variable.choices.append((variable, variable))
         form.dependent_variable.choices.append((variable, variable))

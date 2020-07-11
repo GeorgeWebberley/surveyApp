@@ -9,7 +9,7 @@
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
       <a class="dropdown-item" href="{{ url_for('graphs.import_file') }}">Edit your data</a>
-      <a class="dropdown-item" href="{{ url_for('graphs.input') }}">Quick stats</a>
+      <a class="dropdown-item" href="{{ url_for('graphs.quick_stats', survey_id=survey['_id']) }}">Quick stats</a>
     </div>
   </div>
   <div class="row">
