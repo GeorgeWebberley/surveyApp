@@ -1,5 +1,3 @@
-"use strict";
-
 const button = document.querySelector(".save")
 const infoRow = document.querySelector(".info-row")
 const info = document.querySelector(".table-guide")
@@ -43,7 +41,8 @@ function triggerModal(){
       // Get the key code
       let code = e.which;
       // If it is equal to 13 then click the confirm button
-      if(code==13){
+      if(code==13)
+      {
           $("#confirm").click();
       }
   });
