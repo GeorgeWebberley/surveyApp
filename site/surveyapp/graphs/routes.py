@@ -340,6 +340,9 @@ def analyse():
         # Get the dataset, and save the variables in python variables
         independent_variable = form.independent_variable.data
         dependent_variable = form.dependent_variable.data
+        if independent_variable == dependent_variable:
+            flash("You can select the same variable for both.", "danger")
+            return render_template("analysedata.html", form=form)
         test = form.test.data
         if test == "Kruskall Wallis Test":
             if dependent_variable == "":

@@ -38,9 +38,10 @@
               <div class="card shadow-sm">
                 <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'] )}}">
                   <img class="card-img-top" src="{{ url_for('static', filename='graphimages/' + graph.image) }}" alt="Card image cap">
-                </a>
                 <div class="card-body rounded-bottom bg-dark text-light">
-                  <h5 class="card-title">{{ graph["title"] }}</h5>
+                  <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'] )}}">
+                    <h5 class="card-title text-light">{{ graph["title"] }}</h5>
+                  </a>
                   <h6 class="card-subtitle mb-2 text-muted">{{ graph["type"] }}</h6>
                   <div class="d-flex justify-content-between">
                     <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'])}}" class="btn btn-info">Edit</a>
