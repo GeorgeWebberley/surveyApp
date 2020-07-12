@@ -6,6 +6,7 @@ from flask_dropzone import Dropzone
 from flask_pymongo import PyMongo
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_jsglue import JSGlue
 
 # extensions created outside the create_app function (but initialised inside the function)
 dropzone = Dropzone()
@@ -22,6 +23,8 @@ login_manager.login_message_category = "error"
 
 mail = Mail()
 
+jsglue = JSGlue()
+
 # moving the app creation into a function allows for multiple instances of the app to made
 # furthermore it allows for testing (as different testing instances can be made)
 # this is following the flask factory pattern
@@ -35,6 +38,7 @@ def create_app(config_name):
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
+    jsglue.init_app(app)
 
     # Import the blueprints and register them with out app (so it knows where to look for the routes)
     from surveyapp.users.routes import users

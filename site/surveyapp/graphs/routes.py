@@ -23,6 +23,14 @@ from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan
 graphs = Blueprint("graphs", __name__)
 
 
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
+
+
 @graphs.route('/import', methods=['GET', 'POST'])
 # login required decorator prevents people accessing the page when not logged in
 @login_required
@@ -69,10 +77,14 @@ def input():
         with open(file, "w") as file_to_write:
             file_to_write.write(request.form["table"])
         # Update/insert into the database
-        mongo.db.surveys.update_one({"_id": ObjectId(survey_id)},\
+        survey = mongo.db.surveys.update_one({"_id": ObjectId(survey_id)},\
         {"$set": {"fileName" : file_name,\
                 "user" : current_user._id,\
                 "title" : form.title.data}}, upsert=True)
+        survey_id = survey.upserted_id
+        # Respond to the jquery POST with the survey_id. This is so that if the survey
+        # was new, it can now be incorporated into subsequent POST requests to avoid multiple surveys being saved
+        return str(survey_id)
     # If GET request and the survey already exists (i.e. editing an existing survey)
     elif request.method == "GET" and survey_id:
         file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})

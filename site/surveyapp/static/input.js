@@ -9,11 +9,14 @@ const addColumn = document.querySelector(".add-column")
 
 const newVariable = document.querySelector(".heading")
 
+const proceed = document.querySelector(".proceed")
+
 
 
 let values = data["values"]
 let headers = data["headers"]
 let hot;
+let savedChanges = True;
 
 
 // If the table has not yet been created then we want to hide the DOM elements
@@ -22,9 +25,9 @@ if(headers.length == 0){
   infoRow.classList.add("hidden")
 } else{
   // Edge case: handsontable needs a 2d array. If 'values' is empty it needs converting
-  // if (values.length == 0){
-  //   values = [[]]
-  // }
+  if (values.length == 0){
+    values = [[]]
+  }
   inputOverlay.classList.add("hidden")
   let columns = columnData(headers)
   renderTable(values, headers, columns)
@@ -130,29 +133,25 @@ function renderTable(values, headers){
       if (source !== 'loadData') {
         info.innerHTML = "You have unsaved changes"
         info.style.color = "red"
+        savedChanges = False;
       }
     }
   });
 }
 
+$('#proceed').click(function(event) {
+    if(!savedChanges){
+      event.preventDefault();
+      $('#save-changes-modal').modal('toggle');
+    }
+});
 
-
-// function triggerModal(){
-//   if(newVariable.value == ""){
-//     newVariable.classList.add("is-invalid")
-//   }else{
-//     headers.push(newVariable.value)
-//     newVariable.value = ""
-//     hot.alter('insert_col', headers.length, 1)
-//     headers.pop()
-//     $('#new-column-modal').modal('toggle');
-//   }
-// }
 
 // Prevent form auto submitting when a user presses Enter
 $(document).on("keydown", "form", function(event) {
     return event.key != "Enter";
 });
+
 
 
 
@@ -183,6 +182,7 @@ $('form').submit(function (e) {
   // alert("Your changes have been saved")
   info.innerHTML = "Up to date"
   info.style.color = "green"
+  savedChanges = True;
 });
 
 
@@ -215,8 +215,9 @@ function postData(dataString){
       type: "POST",
       url: url,
       data: postData,
-      success: function () {
-          console.log("Table posted to server")
+      success: function (data) {
+        // The server returns the id of the survey (if it is new) so we can update our URL
+        url = Flask.url_for("graphs.input", {"survey_id": data})
       }
   });
 }

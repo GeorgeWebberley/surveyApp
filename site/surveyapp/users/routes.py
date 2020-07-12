@@ -45,7 +45,7 @@ def login():
             flash("Logged in successfully.", "success")
             return redirect(next_page) if next_page else redirect(url_for("main.index"))
         else:
-            flash("Invalid username or password", "error")
+            flash("Invalid username or password", "danger")
     return render_template("login.html", title = "Login", form = form)
 
 

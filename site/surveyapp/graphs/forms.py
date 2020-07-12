@@ -25,7 +25,7 @@ class BarPieForm(FlaskForm):
     # Bar chart will default to "Amount" on y axis. Will also append all numerical variable types from the data set.
     y_axis = SelectField("Choose a variable:", choices=[("Amount", "Amount")])
     y_axis_agg = SelectField("Aggregation:", choices=[("Average", "Average"), ("Highest", "Highest"), ("Lowest", "Lowest"), ("Sum", "Sum")])
-    submit = SubmitField("Save")
+    submit = SubmitField("Save to dashboard")
 
 class ScatterchartForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
@@ -38,7 +38,7 @@ class ScatterchartForm(FlaskForm):
     y_axis_from = IntegerField("From")
     y_axis_to = IntegerField("To")
     line = BooleanField("Add connecting line: ")
-    submit = SubmitField("Save")
+    submit = SubmitField("Save to dashboard")
 
 class StatisticalTestForm(FlaskForm):
     # We will append choices to drop down depending on the data and what is selected by the upser

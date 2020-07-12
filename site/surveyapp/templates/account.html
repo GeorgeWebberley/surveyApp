@@ -1,58 +1,60 @@
 {% extends "layout.html" %} {% block content %}
-<div class="container">
-  <div class="sub-container">
-    <form action="" method="post">
-    {{ form.hidden_tag() }}
-    <div class="title-area">
-      <h2>Your account</h2>
-    </div>
-    <div class="full-bar"></div>
-    <div class="padding">
-      <h3>{{ form.first_name.label() }}</h3>
-      {% if form.first_name.errors %}
-          {{ form.first_name(class="result-form-input form-input-error") }}
-          <div class="invalid">
-              {% for error in form.first_name.errors %}
-                  <small>{{ error }}</small>
-              {% endfor %}
-          </div>
-      {% else %}
-          {{ form.first_name(class="result-form-input") }}
-      {% endif %}
-    </div>
-    <div class="padding">
-      <h3>{{ form.last_name.label() }}</h3>
-      {% if form.last_name.errors %}
-          {{ form.last_name(class="result-form-input form-input-error") }}
-          <div class="invalid">
-              {% for error in form.last_name.errors %}
-                  <small>{{ error }}</small>
-              {% endfor %}
-          </div>
-      {% else %}
-          {{ form.last_name(class="result-form-input") }}
-      {% endif %}
-    </div>
-    <div class="padding">
-      <h3>{{ form.email.label() }}</h3>
-      {% if form.email.errors %}
-          {{ form.email(class="result-form-input form-input-error") }}
-          <div class="invalid">
-              {% for error in form.email.errors %}
-                  <small class="white">{{ error }}</small>
-              {% endfor %}
-          </div>
-      {% else %}
-          {{ form.email(class="result-form-input") }}
-      {% endif %}
-    </div>
-    <div class="analyse-continue">
-      <div class="full-bar"></div>
-      {{ form.submit(class="btn btn-secondary") }}
-    </div>
-    </form>
-  </div>
-</div>
+  <section class="container mt-4">
+    <div class="row justify-content-center">
+      <!-- action is empty string so that we post back to our current route -->
+      <form class="col-md-6" action="" method="post">
+        <!-- hidden tag helps protect against CSRF (by using CSRF token) -->
+        {{ form.hidden_tag() }}
+        <fieldset class="bg-white rounded shadow border">
+          <div class="text-center h3 primary-colour m-2 pb-2 border-bottom">Your account</div>
+            <div class="p-3">
+              <div class="form-group">
+                {{ form.first_name.label(class="primary-colour") }}
+                {% if form.first_name.errors %}
+                  {{ form.first_name(class="form-control is-invalid") }}
+                  <div class="text-danger">
+                    {% for error in form.first_name.errors %}
+                      <small>{{ error }}</small>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                    {{ form.first_name(class="form-control", placeholder="Enter email") }}
+                {% endif %}
+              </div>
 
-
+              <div class="form-group">
+                {{ form.last_name.label(class="primary-colour") }}
+                {% if form.last_name.errors %}
+                  {{ form.last_name(class="form-control is-invalid") }}
+                  <div class="text-danger">
+                      {% for error in form.last_name.errors %}
+                          <small>{{ error }}</small>
+                      {% endfor %}
+                  </div>
+                {% else %}
+                    {{ form.last_name(class="form-control", placeholder="Enter password") }}
+                {% endif %}
+              </div>
+              <div class="form-group">
+                {{ form.email.label(class="primary-colour") }}
+                {% if form.email.errors %}
+                  {{ form.email(class="form-control is-invalid") }}
+                  <div class="text-danger">
+                      {% for error in form.email.errors %}
+                          <small>{{ error }}</small>
+                      {% endfor %}
+                  </div>
+                {% else %}
+                    {{ form.email(class="form-control", placeholder="Enter password") }}
+                {% endif %}
+              </div>
+              <div class="d-flex justify-content-between">
+                <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Cancel</a>
+                {{ form.submit(class="btn btn-primary") }}
+              </div>
+            </div>
+        </fieldset>
+      </form>
+    </div>
+  </section>
 {% endblock content %}

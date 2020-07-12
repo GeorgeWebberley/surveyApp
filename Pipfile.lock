@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ee6951d4f1af26f5af4edcbf0305b506175b4de1acda60c85cbb287543b1f37b"
+            "sha256": "1f84fd2ec7ddb5e89f8835a7e5c5e7ffad23b2a551bff0392936c6e1aa31955a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -143,6 +143,13 @@
             ],
             "index": "pypi",
             "version": "==1.5.4"
+        },
+        "flask-jsglue": {
+            "hashes": [
+                "sha256:915e010ee228c711d56530bb5fbbefd1ca8bbd7e0fabfed49c85301288b45df9"
+            ],
+            "index": "pypi",
+            "version": "==0.3.1"
         },
         "flask-login": {
             "hashes": [
@@ -593,10 +600,10 @@
         },
         "xarray": {
             "hashes": [
-                "sha256:64e3138d87b641e22fe7a003c94abc685896b247b63e434505c1e6b38c91a8fb",
-                "sha256:a65ab828c6e139b61b93f170f4c96982b764beb27e55bcd87ef4a34285f8a19d"
+                "sha256:665de4253fcf951e7a6954313b77164d7efca2bd820f0a518b7c25ea46ee43cb",
+                "sha256:e38452dbbb9f7b1938ae23b81ca7d66d1109818040048ec42e59c0c738cbe8f3"
             ],
-            "version": "==0.15.1"
+            "version": "==0.16.0"
         },
         "xlrd": {
             "hashes": [
