@@ -2,9 +2,9 @@ import pytest
 
 from surveyapp import create_app, mongo
 
-
-
 from flask_login import current_user
+from werkzeug.datastructures import FileStorage
+
 
 # ------APPLICATION INITIALISATION------
 @pytest.fixture
@@ -67,7 +67,7 @@ def test_register(client):
 
 
 # ------LOGIN------
-# setting follow_redirects=True allows the app to carry out
+# setting follow_redirects=True allows the app to carry out redirects following the post request
 def login(client, email, password):
     return client.post('/login', data=dict(
         email=email,
@@ -113,7 +113,32 @@ def test_home(client):
     # Check that the user was redirected
     assert(rv.status_code == 302)
 
-
     # Create an account to test the login page
     register(client, "test", "name", "test@email.com", "password", "password")
     login(client, "test@email.com", "password")
+
+    # Now try accessing home when logged in
+    rv = client.get('/home', content_type="html/text")
+    assert(rv.status_code == 200)
+    assert b'Your surveys' in rv.data
+    assert b'Welcome, test' in rv.data
+    # assert that the user has no surveys yet
+    assert b'No surveys yet! Click here to add your first survey.' in rv.data
+
+
+# Test upload file
+def test_upload_file(client):
+    test_file = "test.xlsx"
+
+    file = FileStorage(
+        stream=open(test_file, "rb"),
+        filename="test.xlsx",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ),
+
+    rv = client.post("/login", data=dict(
+        file = file,
+        title = "Test file"
+        ),
+        content_type="multipart/form-data",
+        follow_redirects=True)

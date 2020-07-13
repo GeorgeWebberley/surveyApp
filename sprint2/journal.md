@@ -7,13 +7,13 @@ A summary of the user feedback can be found [here](../sprint1/journal.md#userFee
 ###### Goals
 The overarching aim of sprint 2 is to review the minimum viable product with the user feedback from sprint 1 and the backlog of jobs needed to improve the application. More specifically, this will involve:
 
-- Review system diagrams and database design and make any changes if necessary.
-- Creating an export feature, allowing users to export their graph (and maybe also statistical test) as an image or pdf.
+- Review system diagrams and database design and make any changes if necessary. &#x2705;
+- Creating an export feature, allowing users to export their graph (and maybe also statistical test) as an image or pdf. &#x2705;
 - Fixing any existing bugs, such as issue with loading javascript on the 'analyse' page. &#x2705;
 - Minor changes, such as changing 'Dashboard' to 'Home', fixing case sensitivity on email login &#x2705;
-- Add more choice of graphs and more statistical tests.
-- Make site more responsive, so that it can be used on smaller screens such as iPad.
-- Allow users to input their survey data directly, as opposed to importing a CSV/XL file.
+- Add more choice of graphs and more statistical tests. &#x2705;
+- Make site more responsive, so that it can be used on smaller screens such as iPad. &#x2705;
+- Allow users to input their survey data directly, as opposed to importing a CSV/XL file. &#x2705;
 
 ### Review of sequence diagrams and database design (22nd June)
 The 'sequence' diagram from sprint 1 is still very much valid, with only some minor changes needed. Previously I carried out the data pre-processing on the server side and sent the reduced data set needed for creating graphs to the client. However, as described in [this](../sprint1/journal.md#dynamicGraph) section, giving the user the ability to choose their variables and axes on the graph page and get instant visualisation would likely reduce traffic of the user having to go back and forth with the server to get the result they want. Therefore I have updated the sequence diagram to show how the data processing for graphs occurs mostly on the client side in D3.js.

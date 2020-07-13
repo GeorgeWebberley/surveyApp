@@ -1,0 +1,15 @@
+{
+	"_id":{"$oid":"5f0c25ae0e0a0dff5d8613cc"},
+	"UI_2":"9",
+	"functionality_2":"9",
+	"comments_2":"The system couldn't handle a bigger file when I tried to give it that, but other than that it looks very good. One thing is that on the password reset the fields when entering a new password are both set to email. I suppose the next steps are adding more tests where you can ",
+	"user":{"$oid":"5ef09a36ee4f5d8b7df5cb56"}
+}
+
+{
+	"_id":{"$oid":"5f0c3862afd0c9bc2f6ad4dd"},
+	"UI_2":"9",
+	"functionality_2":"8",
+	"comments_2":"Histograms and box and whisker plots may be beneficial as they are graphs that can give a form of analysis based on their ‘appearance’. ",
+	"user":{"$oid":"5f09e1b476f1bc999917888e"}
+}

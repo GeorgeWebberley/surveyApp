@@ -1,0 +1,13 @@
+title Sequence Diagram for use of the application
+User->Client Side Application:<color:#406b00>Input survey data for creation of data visualisations or statistical tests</color>
+Client Side Application->Server Side Application:<color:#406b00>Survey data retrieved by server for processing</color>
+Server Side Application<->Database:<color:#406b00>save/retrieve user account and survey data</color>
+Server Side Application<->Database:<color:#007194>processed data/graphs can be saved/retrieved</color>
+Client Side Application<-Server Side Application:<color:#007194>Data sent to client side application</color>
+box over Client Side Application#d4f5ff:data processed by D3.js and used to create data visualisations
+User<-Client Side Application:<color:#007194>Data visualisations presented to the user</color>
+Client Side Application->Server Side Application:<color:#007194>Information from graphs returned to server for saving</color>
+box over Server Side Application#ffe7ba:Carry out calculations for statistical tests
+Server Side Application<->Database:<color:#cf8906>results of statistical tests saved/retrieved</color>
+Client Side Application<-Server Side Application:<color:#cf8906>Results of statistical tests send to client side application</color>
+User<-Client Side Application:<color:#cf8906>Statistical tests displayed to user</color>
