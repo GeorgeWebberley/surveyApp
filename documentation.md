@@ -192,3 +192,11 @@ Used for carrying out the statistical tests on the data.
 pip install scipy
 pip install pingouin
 ```
+
+##### Flask-JSGlue
+
+Allows for building flask-like URLs in javascript. Useful for Jquery POSTs (using flask synteax such as url_for).
+
+```
+pip install Flask-JSGlue
+```
