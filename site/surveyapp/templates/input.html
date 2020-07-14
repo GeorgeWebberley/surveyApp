@@ -110,7 +110,10 @@
   var True = true;
   var False = false;
   var data = {{ data | safe }}
-  var csrf = "{{ form.csrf_token._value() }}"
+  // Needed for testing. Pytest disables CSRF tokens
+  {% if 'csrf_token' in form %}
+    var csrf = "{{ form.csrf_token._value() }}"
+  {% endif %}
   var url = "{{ url_for('graphs.input', survey_id=survey_id) }}"
 </script>
 <script src="{{ url_for('static', filename='input.js') }}" defer></script>

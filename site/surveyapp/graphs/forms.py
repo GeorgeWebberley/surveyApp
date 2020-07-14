@@ -27,6 +27,7 @@ class BarPieForm(FlaskForm):
     y_axis_agg = SelectField("Aggregation:", choices=[("Average", "Average"), ("Highest", "Highest"), ("Lowest", "Lowest"), ("Sum", "Sum")])
     submit = SubmitField("Save to dashboard")
 
+# Scatter charts form needs x-axis and y-axis variables, as well as possible ranges
 class ScatterchartForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
     # We will append variables to x/y axis choices based on the data
@@ -39,6 +40,19 @@ class ScatterchartForm(FlaskForm):
     y_axis_to = IntegerField("To")
     line = BooleanField("Add connecting line: ")
     submit = SubmitField("Save to dashboard")
+
+
+# Histograms only need x-axis variable. However they also need a range and also group size
+class HistogramForm(FlaskForm):
+    title = StringField(validators=[DataRequired()])
+    # We will append variables to x/y axis choices based on the data
+    x_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
+    x_axis_from = IntegerField("From")
+    x_axis_to = IntegerField("To")
+    group_size = IntegerField("Number of groups")
+    # line = BooleanField("Add connecting line: ")
+    submit = SubmitField("Save to dashboard")
+
 
 class StatisticalTestForm(FlaskForm):
     # We will append choices to drop down depending on the data and what is selected by the upser

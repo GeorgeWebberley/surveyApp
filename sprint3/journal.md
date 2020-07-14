@@ -42,3 +42,22 @@ Likewise, the design for the database has changed very little since the previous
 <p align="center">
   <img src="../diagrams/databaseDesign2.png" />
 </p>
+
+
+
+<a name="latestEntry"></a>
+### Unit testing and adding histogram. (11th-12th July)
+
+For a while I have wanted to carry out some more substantial testing of my pages. Using Pytest, I spent the morning testing existing pages, including import/file upload and creating statistical tests and saving them.
+
+I am finding some difficulties with regards to testing the 'data input' page. This is because of the way that Handsontable saves the data being input into the cells which is difficult to replicate in simple post requests in pytest. Likewise, currently I am struggling to find a way to test saving graphs, as in the application an image is created of the graph SVG and converted to data URI to be transported to the server, a behaviour that is again difficult to test with pytest functions.
+
+I have spent the afternoon making a start on the Histogram page. One difficulty I am experiencing with this is what options to give the user. A histogram is generally made up of grouped numerical data, representing a spread/distribution of that data. Therefore it should only really take one variable - the x-axis that the user would like to see the distribution of. However, a user may also want to customise the histogram in other ways, such as deciding on their own bin sizes or number of bins ('bin' here means the groups of data. For example, bins of Ages may be 0-9 years, 10-19 years, 20-29 years etc.). Not all user choices are possible, for example if the scale on the x-axis is from 0-20, then having 11 bins would not be possible. This is something I will continue to work on over the next few days. Likewise, as with the scatter chart, a user may want to choose their ranges on their x-axis which I have now enabled.
+
+##### Ongoing objectives
+
+* Add date/time to scatter chart.
+* Finish creation of histogram.
+* To carry out unit testing graph saving and manual data input pages.
+* Continue waiting for user feedback from people who have not yet responded.
+* Refactoring code.

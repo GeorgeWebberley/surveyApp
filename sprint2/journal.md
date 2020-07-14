@@ -164,17 +164,8 @@ I have added a 'remember me' field to the login, as well as attempting to do an 
 
 I have changed the 'input data' page. I noticed a bug where users, when entering data fresh for the first time, would save multiple copies of their survey (if they clicked 'save' multiple times). I realised that this was because of the way the data is POSTed to the server (using jquery). When posting with javascript/jquery, the redirects on the server side do not occur, and therefore the page was not being reloaded with the id of the recently saved survey. Therefore, every time a user clicked save, the server thought that it was a new survey and subsequently saved multiple copies. I got round this problem by returning the last inserted id to the client side javascript, which then subsequently appended it to the URL for the next post request. Subsequent saves/post requests therefore send the ID and the server could check if it is a new survey or not, and insert/update accordingly. This was done with the help of the extension [Flask-JSGlue](https://stewartpark.github.io/Flask-JSGlue/) that makes it easy to create 'flask URLs' in javascript.
 
-<a name="latestEntry"></a>
 ### Email password reset, deployment, certificate and domain name. (11th-12th July)
 
 I initially had several problems getting the email password reset to work. This is because I am using Google smtp to send the emails (through flask-mail), and initially google flagged the emails as suspicious activitiy, blocking the application from sending anything. After some time, I was able to get google to accept it as trustworthy, allowing it to send out emails to users with a password reset link.
 
 Now that sprint 2 is coming to a close, I wanted to spend time deploying it to a public server and obtaining user feedback. I have obtained the domain name "datasaur.dev" through [namecheap](https://www.namecheap.com/) and configured the DNS on my Digital Ocean droplet to accept it. I added records for [www.datasuar.dev](https://datasaur.dev/) and datasaur.dev. I have also secured the site with TLS/SSL certificate so that users can access it through HTTPS. I have configured my server so that users are redirected to the secure version of the site. I also created a site logo using [logomakr](https://logomakr.com/).
-
-##### Ongoing objectives
-
-* Add date/time to scatter chart.
-* Allow grouping of numerical data on bar charts.
-* Review the UI, make pages responsive.
-* To carry out unit testing of the graph page, statistics page and dashboard pages.
-* Password reset.

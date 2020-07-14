@@ -14,7 +14,7 @@ from pingouin import kruskal, mwu
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import UploadForm, EditForm, BarPieForm, ScatterchartForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
+from surveyapp.graphs.forms import UploadForm, EditForm, BarPieForm, ScatterchartForm, HistogramForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
 from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file
@@ -39,12 +39,10 @@ def import_file():
     # Checks validation when form is submitted with submit button
     if form.validate_on_submit():
         file_name = save_file(form.file.data)
-        survey = mongo.db.surveys.insert_one({\
+        survey_id = mongo.db.surveys.insert_one({\
         "fileName" : file_name,\
         "user" : current_user._id,\
-        "title" : form.title.data})
-        # Get the id of the survey just inserted
-        survey_id = survey.inserted_id
+        "title" : form.title.data}).inserted_id  # Get the id of the survey just inserted
         flash("File uploaded successfully!", "success")
         return redirect(url_for("graphs.input", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
@@ -107,8 +105,8 @@ def home():
     surveys=mongo.db.surveys.find({"user":current_user._id})
     survey_list = []
     for survey in surveys:
-        graphs = mongo.db.graphs.count({"surveyId":survey["_id"]})
-        tests = mongo.db.graphs.count({"surveyId":survey["_id"]})
+        graphs = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
+        tests = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
         # Send information to home page regarding the surveys, number of graphs and tests
         survey_list.append({"title": survey["title"],\
                             "_id": survey["_id"],\
@@ -171,7 +169,10 @@ def graph(survey_id):
         return pie_bar_chart(survey_id, column_info, chart_data, graph_id, file_obj["title"], chart_type)
     # ----------SCATTER CHART----------
     elif chart_type == "Scatter chart":
-        return scatter_chart(survey_id, column_info, chart_data, df, graph_id, file_obj["title"])
+        return scatter_chart(survey_id, column_info, chart_data, graph_id, file_obj["title"])
+    # ----------SCATTER CHART----------
+    elif chart_type == "Histogram":
+        return histogram(survey_id, column_info, chart_data, graph_id, file_obj["title"])
     else:
         flash("something went wrong", "danger")
         abort(404)
@@ -190,7 +191,7 @@ def pie_bar_chart(survey_id, column_info, chart_data, graph_id, title, chart_typ
     if form.validate_on_submit():
         image_data = request.form["image"]
         file_name = save_image(image_data, graph_id)
-        if form.x_axis.data == "Amount":
+        if form.y_axis.data == "Amount":
             y_agg = ""
         else:
             y_agg = form.y_axis_agg.data
@@ -204,6 +205,7 @@ def pie_bar_chart(survey_id, column_info, chart_data, graph_id, title, chart_typ
                 "yAxis": form.y_axis.data,\
                 "yAggregation": y_agg,
                 "image": file_name}}, upsert=True)
+        flash("Graph saved to dashboard.", "success")
         return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
@@ -226,7 +228,7 @@ def pie_bar_chart(survey_id, column_info, chart_data, graph_id, title, chart_typ
 
 
 
-def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
+def scatter_chart(survey_id, column_info, chart_data, graph_id, title):
     form = ScatterchartForm()
     for column in column_info:
         # Scatter charts require both x and y axis to have some numerical value (i.e. ordinal/interval but not categorical)
@@ -252,6 +254,7 @@ def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
                 "yAxisTo": form.y_axis_to.data,\
                 "line": form.line.data,\
                 "image": file_name}}, upsert=True)
+        flash("Graph saved to dashboard.", "success")
         return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
@@ -271,6 +274,50 @@ def scatter_chart(survey_id, column_info, chart_data, df, graph_id, title):
 
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
     return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+
+
+
+
+def histogram(survey_id, column_info, chart_data, graph_id, title):
+    form = HistogramForm()
+    for column in column_info:
+        # Scatter charts require both x and y axis to have some numerical value (i.e. ordinal/interval but not categorical)
+        if column["data_type"] == "numerical":
+            # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
+            form.x_axis.choices.append((column["title"], column["title"]))
+    # Now we have specified the 'select' options for the form, we can prevalidate for 'form.validate_on_submit'
+    if form.validate_on_submit():
+        image_data = request.form["image"]
+        file_name = save_image(image_data, graph_id)
+        # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
+        mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
+        {"$set": {"title" : form.title.data,\
+                "surveyId": survey_id,\
+                "user" : current_user._id,\
+                "type" : "Histogram",\
+                "xAxis" : form.x_axis.data,\
+                "xAxisFrom" : form.x_axis_from.data,\
+                "xAxisTo" : form.x_axis_to.data,\
+                "groupSize" : form.group_size.data,\
+                # "line": form.line.data,\
+                "image": file_name}}, upsert=True)
+        flash("Graph saved to dashboard.", "success")
+        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
+
+    # If we are editing the graph instead of creating new, we want to prepopulate the fields
+    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
+
+    if graph_obj:
+        form.x_axis.data = graph_obj["xAxis"]
+        form.x_axis_from.data = graph_obj["xAxisFrom"]
+        form.x_axis_to.data = graph_obj["xAxisTo"]
+        # form.line.data = graph_obj["line"]
+        form.title.data = graph_obj["title"]
+    else:
+        form.title.data = "Graph - " + title
+
+    data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
+    return render_template("histogram.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
 
 
 
@@ -481,6 +528,7 @@ def result():
                 "independentVariable" : independent_variable,\
                 "dependentVariable" : dependent_variable,\
                 "p" : p_value}}, upsert=True)
+        flash("Statistical test saved.", "success")
         return redirect(url_for('graphs.dashboard', title="Dashboard", survey_id=survey_id))
     title=request.args.get("title")
     if title:
@@ -503,6 +551,7 @@ def delete_test(survey_id, test_id):
         flash("You do not have access to that page", "danger")
         abort(403)
     mongo.db.tests.delete_one(test_obj)
+    flash("Test deleted", "success")
     return redirect(url_for('graphs.dashboard', survey_id=survey_id))
 
 

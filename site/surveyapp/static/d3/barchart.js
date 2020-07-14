@@ -132,13 +132,13 @@ const render = (groupedData) => {
   groupedData.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
   // Set the scale for the x-axis
   const xScale = d3.scaleBand()
-    .domain(groupedData.map(xValues))
+    .domain(groupedData.map(xValues)).nice()
     .range([0, gWidth])
     .paddingInner(0.1)
 
   // Set the scale for the y-axis
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(groupedData, yValues)])
+    .domain([0, d3.max(groupedData, yValues)]).nice()
     .range([gHeight, 0])
 
 
@@ -228,7 +228,7 @@ const render = (groupedData) => {
     // Now give the tooltip the data it needs to show and the position it should be.
     tooltip.html(yValues(d))
         .style("left", (window.pageXOffset + position.e + tooltipOffset) + "px") // Center it horizontally over the bar
-        .style("top", (window.pageYOffset + position.f) + "px"); // Shift it 40 px above the bar
+        .style("top", (window.pageYOffset + position.f - 50) + "px"); // Shift it 50 px above the bar
 
 
 

@@ -82,7 +82,10 @@
   var True = true;
   var False = false;
   var graphData = {{ data | safe }}
-  var csrf = "{{ form.csrf_token._value() }}"
+  // Needed for testing
+  {% if 'csrf_token' in form %}
+    var csrf = "{{ form.csrf_token._value() }}"
+  {% endif %}
   var url = "{{ url_for('graphs.graph', survey_id=survey_id, graph_id=graph_id, chart_type='Bar chart') }}"
   var redirectUrl = "{{ url_for('graphs.dashboard', survey_id=survey_id) }}"
 </script>
