@@ -152,6 +152,10 @@ const render = (data) => {
   var yAxis = d3.selectAll(".yAxis")
   var xAxis = d3.selectAll(".xAxis")
 
+  // Get the position of the y-axis (as it will shift with negative x-axis data)
+  yPosition = (0 > xFromValue && 0 < xToValue) ? xScale(0) : 0
+
+
   // If they dont exist, we create them. If they do, we update them
   if (yAxis.empty() && xAxis.empty()){
     // For the x-axis we create an axisBottom and 'translate' it so it appears on the bottom of the graph
@@ -168,6 +172,7 @@ const render = (data) => {
     yAxis.transition()
       .duration(1000)
       .call(d3.axisLeft(yScale))
+      .attr("transform", `translate(${yPosition}, 0)`)
   }
 
 
@@ -249,6 +254,29 @@ const render = (data) => {
       .attr('x', d => xScale(d.x0))
       .attr('width', d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 1)) // band width is width of a single bar
 
+
+// CODE BELOW HERE FOR ATTEMPTING LINE OF BEST FIT
+  //
+  // var line = d3.line()
+  //     .x(function(d) { return xScale((d.x0 + d.x1)/2); })
+  //     .y(function(d) { return yScale(d.length); })
+  //     .curve(d3.curveCatmullRom.alpha(0.5));
+  //
+  // var path = graph.selectAll('.graph-line').data(data)
+  //
+  //
+  //  path
+  //   .enter()
+  //   .append("path")
+  //   .attr("class","graph-line")
+  //   .merge(path)
+  //   .transition()
+  //   .duration(1000)
+  //   .attr("d", line(bins))
+  //     .attr("fill", "none")
+  //     .attr("stroke", "steelblue")
+  //     .attr("stroke-width", 2.5)
+
 }
 
 
@@ -267,24 +295,19 @@ exportButton.addEventListener("click", () => {
 
 
 // Prevent form auto submitting when a user presses Enter
-$(document).on("keydown", "form", function(event) {
-    return event.key != "Enter";
-});
+// $(document).on("keydown", "form", function(event) {
+//     return event.key != "Enter";
+// });
 
 
+
+// Function that will confirm user input when they press enter, without submitting the form
 $('body').on('keydown', 'input, select', function(e) {
   if (e.key === "Enter") {
-    var self = $(this), form = self.parents('form:eq(0)'), focusable, next;
-    focusable = form.find('input,a,select,button,textarea').filter(':visible');
-    next = focusable.eq(focusable.index(this)+1);
-    if (next.length) {
-      next.focus();
-    } else {
-      form.submit();
-    }
-    return false;
+    $(this).blur()
   }
 });
+
 
 
 // When the form is submitted, we want to get a jpg image of the svg

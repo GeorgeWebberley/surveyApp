@@ -45,14 +45,20 @@ Likewise, the design for the database has changed very little since the previous
 
 
 
-<a name="latestEntry"></a>
-### Unit testing and adding histogram. (11th-12th July)
+### Unit testing and adding histogram. (14th July)
 
 For a while I have wanted to carry out some more substantial testing of my pages. Using Pytest, I spent the morning testing existing pages, including import/file upload and creating statistical tests and saving them.
 
 I am finding some difficulties with regards to testing the 'data input' page. This is because of the way that Handsontable saves the data being input into the cells which is difficult to replicate in simple post requests in pytest. Likewise, currently I am struggling to find a way to test saving graphs, as in the application an image is created of the graph SVG and converted to data URI to be transported to the server, a behaviour that is again difficult to test with pytest functions.
 
 I have spent the afternoon making a start on the Histogram page. One difficulty I am experiencing with this is what options to give the user. A histogram is generally made up of grouped numerical data, representing a spread/distribution of that data. Therefore it should only really take one variable - the x-axis that the user would like to see the distribution of. However, a user may also want to customise the histogram in other ways, such as deciding on their own bin sizes or number of bins ('bin' here means the groups of data. For example, bins of Ages may be 0-9 years, 10-19 years, 20-29 years etc.). Not all user choices are possible, for example if the scale on the x-axis is from 0-20, then having 11 bins would not be possible. This is something I will continue to work on over the next few days. Likewise, as with the scatter chart, a user may want to choose their ranges on their x-axis which I have now enabled.
+
+<a name="latestEntry"></a>
+### Finished Histogram and attempts at parsing date/time. (15th July)
+
+In the morning I managed to finish making a histogram. I tried to decide whether to add a line of best fit to the graph, so that it could give the user a good idea about the type of distribution (e.g. normal, positively skewed etc.). In the end I found that generally the histograms would display this distribution quite nicely even without adding the line, and in fact the line would quite often not represent well the apparent distribution anyway.
+
+I spent the afternoon attempting to parse date/time. Whilst I have managed to achieve this on the server end, converting multiple different formats into Timestamp objects, it is difficult to convert this data into data that javascript can read. For example, javascript does not recognise the 'Timestamp' keyword in the data and subsequently raises an error. I will continue with this tomorrow before moving on to other matters.
 
 ##### Ongoing objectives
 

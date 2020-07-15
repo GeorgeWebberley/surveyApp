@@ -1,6 +1,7 @@
 import os
 import secrets
 import pandas as pd
+
 import numpy as np
 from surveyapp import mongo
 from flask import Flask, current_app
@@ -73,6 +74,10 @@ def parse_data(df):
         temp_dict = {
         "title": column_title
         }
+        print("Title:")
+        print(column_title)
+        print("Type:")
+        print(column_data.dtypes)
         if column_data.dtypes == np.bool:
             temp_dict["data_type"] = "true/false"
             temp_dict["quantities"] = column_data.value_counts().to_dict()
@@ -84,11 +89,32 @@ def parse_data(df):
             temp_dict["min"] = column_data.agg("min");
             temp_dict["sum"] = column_data.agg("sum");
         else:
-            temp_dict["data_type"] = "categorical"
-            temp_dict["num_unique"] = df[column_title].nunique()
-            temp_dict["quantities"] = column_data.value_counts().to_dict()
+            # Try to parse it as a date/time. If it fails, it must be an object (categorical data)
+            try:
+                df[column_title] = pd.to_datetime(df[column_title], dayfirst=True, errors='coerce')
+                # df[column_title].dt.to_pydatetime()
+                if (df[column_title].dt.floor('d') == df[column_title]).all():
+                    temp_dict["data_type"] = "date"
+                elif (df[column_title].dt.date == pd.Timestamp('now').date()).all():
+                    df[column_title] = df[column_title].dt.time
+                    temp_dict["data_type"] = "time"
+                else:
+                    temp_dict["data_type"] = "date/time"
+
+                # print("BEFORE:")
+                # print(column_data)
+                # df[column_title] = pd.to_datetime(column_data, dayfirst=True)
+                # column_data = pd.to_datetime(column_data, dayfirst=True)
+                # print("AFTER:")
+                # print(column_data)
+                # temp_dict["data_type"] = "date/time"
+                temp_dict["num_unique"] = df[column_title].nunique()
+            except ValueError:
+                temp_dict["data_type"] = "categorical"
+                temp_dict["num_unique"] = df[column_title].nunique()
+                temp_dict["quantities"] = column_data.value_counts().to_dict()
         column_info.append(temp_dict)
-    return column_info
+    return column_info, df
 
 
 # Saves new graph, else if already exists it updates the existing one

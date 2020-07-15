@@ -3,8 +3,8 @@ import secrets
 import bson
 import json
 import pandas as pd
-from pandas.api.types import is_string_dtype
-from pandas.api.types import is_numeric_dtype
+from pandas.api.types import is_string_dtype, is_numeric_dtype
+# from pandas.api.types import is_numeric_dtype
 import numpy as np
 # from scipy.stats import kruskal
 # from scipy.stats import mannwhitneyu
@@ -160,10 +160,14 @@ def graph(survey_id):
         chart_type = request.args.get("chart_type")
     # Read the csv file in
     df = read_file(file_obj["fileName"])
+    # parse the columns to get information regarding type of data
+    # print(df)
+    column_info, new_df = parse_data(df)
+    # print(df)
     # Convert the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
-    # parse the columns to get information regarding type of data
-    column_info = parse_data(df)
+    # print("chart_data")
+    # print(chart_data)
     # ----------SAME ROUTE USED FOR BAR AND PIE CHART----------
     if chart_type == "Bar chart" or chart_type == "Pie chart":
         return pie_bar_chart(survey_id, column_info, chart_data, graph_id, file_obj["title"], chart_type)
@@ -236,6 +240,9 @@ def scatter_chart(survey_id, column_info, chart_data, graph_id, title):
             # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
             form.x_axis.choices.append((column["title"], column["title"]))
             form.y_axis.choices.append((column["title"], column["title"]))
+        if column["data_type"] == "date/time":
+            # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
+            form.x_axis.choices.append((column["title"], column["title"]))
     # Now we have specified the 'select' options for the form, we can prevalidate for 'form.validate_on_submit'
     if form.validate_on_submit():
         image_data = request.form["image"]
@@ -272,6 +279,8 @@ def scatter_chart(survey_id, column_info, chart_data, graph_id, title):
     else:
         form.title.data = "Graph - " + title
 
+    print("chart_data")
+    print(chart_data)
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
     return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
 
@@ -568,7 +577,7 @@ def quick_stats(survey_id):
     df = read_file(file_obj["fileName"])
     rows = len(df.index)
     cols = len(df.columns)
-    column_info = parse_data(df);
+    column_info, _ = parse_data(df);
     return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info, survey_id=survey_id, survey_title=file_obj["title"] )
 
 
@@ -589,7 +598,7 @@ def get_survey(survey_id):
 def get_variables(survey_id):
     survey = mongo.db.surveys.find_one({"_id": ObjectId(survey_id)})
     df = read_file(file_obj["fileName"])
-    column_info = parse_data(df)
+    column_info, _ = parse_data(df)
     independent_variables = []
     dependent_variables = []
     for column in column_info:

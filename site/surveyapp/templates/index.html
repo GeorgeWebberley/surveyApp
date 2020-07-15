@@ -4,10 +4,10 @@
     <div class="row h-100 align-items-center">
       <div class="col-12">
         <div class="text-center ml-4">
-          <img class="justify-self-center ml-5 logo-2" src="{{ url_for('static', filename='images/logo4.png') }}" alt="Datasaur Logo">
+          <img class="justify-self-center logo-2 img-fluid" src="{{ url_for('static', filename='images/logo4.png') }}" alt="Datasaur Logo">
         </div>
         <!-- <h1 class="landing-logo text-center mb-0">Datasaur</h1> -->
-        <h2 class="text-center primary-colour">Making survey <b>analysis</b> easy</h2>
+        <h1 class="h4 text-center primary-colour">Making survey <b>analysis</b> easy</h1>
         {% if current_user.is_authenticated %}
           <div class="d-flex justify-content-center mb-5 mt-4">
             <div class="dropdown">
