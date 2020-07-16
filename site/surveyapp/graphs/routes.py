@@ -17,7 +17,7 @@ from flask_login import login_required, current_user
 from surveyapp.graphs.forms import UploadForm, EditForm, BarPieForm, ScatterchartForm, HistogramForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
-from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file
+from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file, run_all_tests
 
 
 graphs = Blueprint("graphs", __name__)
@@ -39,11 +39,17 @@ def import_file():
     # Checks validation when form is submitted with submit button
     if form.validate_on_submit():
         file_name = save_file(form.file.data)
-        survey_id = mongo.db.surveys.insert_one({\
-        "fileName" : file_name,\
-        "user" : current_user._id,\
+        survey_id = mongo.db.surveys.insert_one({
+        "fileName" : file_name,
+        "user" : current_user._id,
         "title" : form.title.data}).inserted_id  # Get the id of the survey just inserted
         flash("File uploaded successfully!", "success")
+        significant_results = run_all_tests(survey_id)
+        for result in significant_results:
+            mongo.db.temp_results.insert_one({
+            "user": current_user._id,
+            "survey_id" : survey_id,
+            "result" : result}
         return redirect(url_for("graphs.input", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
@@ -104,6 +110,7 @@ def input():
 def home():
     surveys=mongo.db.surveys.find({"user":current_user._id})
     survey_list = []
+    notifications = mongo.db.temp_results.count_documents({"user": current_user._id})
     for survey in surveys:
         graphs = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
         tests = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
@@ -112,7 +119,34 @@ def home():
                             "_id": survey["_id"],\
                             "numGraphs": graphs,\
                             "numTests": tests})
-    return render_template("home.html", title="Home", surveys=survey_list)
+    return render_template("home.html", title="Home", surveys=survey_list, notifications=notifications)
+
+
+
+@graphs.route('/findings', methods=['GET', 'POST'])
+@login_required
+def findings():
+    form = SaveTestForm()
+    notifications = mongo.db.temp_results.find({"user": current_user._id})
+    if form.validate_on_submit():
+        survey_id = request.args.get("survey_id")
+        test = request.args.get("test")
+        independent_variable = request.args.get("independent_variable")
+        dependent_variable = request.args.get("dependent_variable")
+        p_value = request.args.get("p")
+        temp_id = request.args.get("temp_id")
+        mongo.db.tests.insert_one({"surveyId" : survey_id,
+                "user" : current_user._id,
+                "title" : form.title.data,
+                "test" : test,\
+                "independentVariable" : independent_variable,\
+                "dependentVariable" : dependent_variable,\
+                "p" : p_value})
+        mongo.db.temp_results.delete_one({'_id': ObjectId(temp_id)})
+    return render_template("findings.html", title="Findings", form=form, notifications=notifications)
+
+
+
 
 
 # Dasboard page for each survey
@@ -162,7 +196,7 @@ def graph(survey_id):
     df = read_file(file_obj["fileName"])
     # parse the columns to get information regarding type of data
     # print(df)
-    column_info, new_df = parse_data(df)
+    column_info = parse_data(df)
     # print(df)
     # Convert the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
@@ -279,8 +313,8 @@ def scatter_chart(survey_id, column_info, chart_data, graph_id, title):
     else:
         form.title.data = "Graph - " + title
 
-    print("chart_data")
-    print(chart_data)
+        print("chart_data")
+        print(chart_data)
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
     return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
 
@@ -476,7 +510,7 @@ def chi_goodness():
     variable = request.args.get("variable")
     # Get survey object and datafram
     survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
-    df = read_file(file_obj["fileName"])
+    df = read_file(survey["fileName"])
     group_by = df.groupby(variable)
     keys = list(group_by.groups.keys())
     # Populate the form with unique groups in the given variable
@@ -577,7 +611,7 @@ def quick_stats(survey_id):
     df = read_file(file_obj["fileName"])
     rows = len(df.index)
     cols = len(df.columns)
-    column_info, _ = parse_data(df);
+    column_info = parse_data(df);
     return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info, survey_id=survey_id, survey_title=file_obj["title"] )
 
 
@@ -598,7 +632,7 @@ def get_survey(survey_id):
 def get_variables(survey_id):
     survey = mongo.db.surveys.find_one({"_id": ObjectId(survey_id)})
     df = read_file(file_obj["fileName"])
-    column_info, _ = parse_data(df)
+    column_info = parse_data(df)
     independent_variables = []
     dependent_variables = []
     for column in column_info:

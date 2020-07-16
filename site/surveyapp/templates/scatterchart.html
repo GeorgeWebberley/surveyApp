@@ -100,6 +100,24 @@
   var nan = "N/A";
   var True = true;
   var False = false;
+  // // These 2 additional functions/methods are needed so that javascript can read the date/time
+  // // Convert python Timestamp object to javscript string
+  // function Timestamp(data){
+  //   return data;
+  // };
+  // // Custom class to convert python datetime objects to strings for javascript
+  // class datetime {
+  //   static time(x, y) {  // static method
+  //     if(x < 10) {
+  //       x = `0${x}`
+  //     }
+  //     if(y < 10){
+  //       y = `0${y}`
+  //     }
+  //     return `${x}:${y}:00`
+  //   }
+  // }
+  // // Now we do not get an error when attempting to read the data
   var graphData = {{ data | safe }}
   // Check needed for testing
   {% if 'csrf_token' in form %}

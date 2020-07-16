@@ -73,6 +73,9 @@ class ChiGoodnessForm(FlaskForm):
     field = FieldList(FormField(ChiGoodnessEntryForm))
     submit = SubmitField("Continue")
 
+class SaveTestForm(FlaskForm):
+    submit = SubmitField("Save to dashboard")
+
 
 
 

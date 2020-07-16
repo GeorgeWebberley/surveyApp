@@ -20,26 +20,31 @@ const axesSettings = document.querySelectorAll(".axis-setting")
 
 // Get the graph data
 const data = graphData["chart_data"]
-// Get the column info, which will be used to identify
-const columnInfo = graphData["column_info"]
+// // Get the column info, which will be used to identify
+// const columnInfo = graphData["column_info"]
 
-initialiseData(data, columnInfo);
+// const parseDate = d3.time.format("%Y-%m-%d %X");
 
-// This function is used to check and parse date/time columns (if any)
-function initialiseData(data, columnInfo){
-  columnInfo.forEach(column => {
-    console.log(data);
-    if(column["data_type"] == "date"){
-      console.log(column["title"]);
-    }
-    else if(column["data_type"] == "time"){
-      console.log(column["title"]);
-    }
-    else if(column["data_type"] == "date/time"){
-      console.log(column["title"]);
-    }
-  })
-}
+// initialiseData(data, columnInfo);
+
+// // This function is used to check and parse date/time columns (if any)
+// function initialiseData(data, columnInfo){
+//   columnInfo.forEach(column => {
+//     console.log(data);
+//     if(column["data_type"] == "date"){
+//       console.log(column["title"]);
+//     }
+//     else if(column["data_type"] == "time"){
+//       console.log(column["title"]);
+//     }
+//     else if(column["data_type"] == "date/time"){
+//       parseDate = d3.time.format("%Y-%m-%d %X");
+//     }
+//   })
+// }
+//
+
+
 
 // When the axes are altered, we need to re-group the data depending on the variables set
 axesSettings.forEach(setting => {
@@ -136,6 +141,7 @@ const render = (data) => {
 
   let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
   let yAxisValue = yAxisSelect.options[yAxisSelect.selectedIndex].value;
+
 
   // Specify the x-axis values and the y-axis values
   const xValues = d => d[xAxisValue];

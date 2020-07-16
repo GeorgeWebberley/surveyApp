@@ -58,6 +58,14 @@
             {% else %}
               0
             {% endif %}</li>
+            <li class="list-group-item list-group-item-light bg-light" data-toggle='tooltip'
+                title='We have found some signficant findings in a recently uploaded file!'>
+                Notifications:
+              {% if notifications > 0 %}
+                <a href="#">class="badge badge-danger">{{ notifications }}</a>
+              {% else %}
+                0
+              {% endif %}</li>
         </ul>
         <div class="form-group my-2">
           <label class="text-muted" for="search"> Search for a survey:</label>

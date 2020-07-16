@@ -26,16 +26,16 @@ let one_variable = false
 
 
 // Information boxes for different data types
-const nominal = `<span data-toggle='tooltip' class="badge badge-light ml-3"
+const nominal = `<span data-toggle='tooltip' class="badge badge-light ml-3 help"
 title='Nominal data has no numeric value (i.e. cannot be measured) and has no natural order to it. An example could be race, gender or yes/no questions.'>
 Nominal</span>`
-const ordinal = `<span data-toggle='tooltip' class="badge badge-light ml-3"
+const ordinal = `<span data-toggle='tooltip' class="badge badge-light ml-3 help"
 title='Ordinal data has no numeric value but it does have a natural order. An example could be positions in a race (first, second, third) or Likert type questions (answers ranging from strongly agree to strongly disagree).'>
 Ordinal</span>`
-const interval = `<span data-toggle='tooltip' class="badge badge-light ml-3"
+const interval = `<span data-toggle='tooltip' class="badge badge-light ml-3 help"
 title='Interval data has numeric value, with equal value between each point, but 0 does not mean absolute 0. An example could be temperature in Celcius (0°C does not mean absolute 0 since you can have negative degree Celcius)'>
 Interval</span>`
-const ratio = `<span data-toggle='tooltip' class="badge badge-light ml-3"
+const ratio = `<span data-toggle='tooltip' class="badge badge-light ml-3 help"
 title='Ratio data is similar to interval data in that it has numeric value, but it also has absolute 0 (i.e. no negative values). An example could be weight or height.'>
 Ratio</span>`
 
@@ -51,7 +51,10 @@ const tests = [
       "name": "dependent variable",
       "type": [ordinal, interval, ratio]
     },
-    "info": ""
+    "info": `Kruskal Wallis test is commonly used to test one categorical variable against a measurable variable.
+            The dependent variable must be ordinal, interval or ratio. Typically, this test is used to test when you have
+            3 or more different groups in your independent variable, but can also be used for just 2 groups (examples could be
+            3 groups: low/medium/high income, 2 groups: yes/no answers).`
   },
   {
     "name": "Mann-Whitney U Test",

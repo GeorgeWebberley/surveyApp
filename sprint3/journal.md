@@ -53,12 +53,28 @@ I am finding some difficulties with regards to testing the 'data input' page. Th
 
 I have spent the afternoon making a start on the Histogram page. One difficulty I am experiencing with this is what options to give the user. A histogram is generally made up of grouped numerical data, representing a spread/distribution of that data. Therefore it should only really take one variable - the x-axis that the user would like to see the distribution of. However, a user may also want to customise the histogram in other ways, such as deciding on their own bin sizes or number of bins ('bin' here means the groups of data. For example, bins of Ages may be 0-9 years, 10-19 years, 20-29 years etc.). Not all user choices are possible, for example if the scale on the x-axis is from 0-20, then having 11 bins would not be possible. This is something I will continue to work on over the next few days. Likewise, as with the scatter chart, a user may want to choose their ranges on their x-axis which I have now enabled.
 
-<a name="latestEntry"></a>
 ### Finished Histogram and attempts at parsing date/time. (15th July)
 
 In the morning I managed to finish making a histogram. I tried to decide whether to add a line of best fit to the graph, so that it could give the user a good idea about the type of distribution (e.g. normal, positively skewed etc.). In the end I found that generally the histograms would display this distribution quite nicely even without adding the line, and in fact the line would quite often not represent well the apparent distribution anyway.
 
 I spent the afternoon attempting to parse date/time. Whilst I have managed to achieve this on the server end, converting multiple different formats into Timestamp objects, it is difficult to convert this data into data that javascript can read. For example, javascript does not recognise the 'Timestamp' keyword in the data and subsequently raises an error. I will continue with this tomorrow before moving on to other matters.
+
+<a name="latestEntry"></a>
+### Tooltips and autostats. (16th July)
+
+Some more user feedback came back today. It was all very positive which is nice to see! Something that came up a couple of times was to give some information regarding the statistical test and what certain things mean (e.g. significance value, null hypothesis etc.)
+I have therefore added some descriptive text whenever a user selects a statistical test to run. When results are given, I have added tooltips that display the meaning of different technical terms, such as the ones mentioned above.
+
+Something that I have planned to do for a while (and was suggested in feedback from sprint 1) was to run some 'auto' tests. This feedback was from a user who did not understand statistical tests but said they would find it helpful if the application ran some tests for them automatically.
+I have started implementing some functions that will scan through the data when it is first uploaded and carry out statistical tests based on the type of data (numerical vs categorical). This obviously has some limitations and will not run all different tests on all the data (for example, non-parametric tests will only be run on definite categorical data - i.e. data that is string, object or boolean. Ordinal data with numeric values, such as likert scale, will not be tested as this data will be identified as numeric.) Furthermore, the results of tests will have to be checked by the user, to check the data passes the assumptions of the test. I plan to provide the user with the assumptions that the test makes so that they can check their data against them.
+
+I do not perform mann whitney U and kruskal wallis on the same variables, even though it is in fact possible to perform kruskal wallis on 2 variables. This is to avoid conflicting results and subsequent increasing risk of false positives.
+
+Any significant findings will be stored in the data base under a 'temp_results' collection. If any data is in the 'temp_results' then the user will be notified and they will have the opportunity to check it, save it (to go to their 'tests' collection) or delete it.
+
+I am in the process of creating an HTML page that will render these features.
+
+Depending on how long the scan takes, I may consider integrating 'threading' into my application, to handle this automatic scan in the background.
 
 ##### Ongoing objectives
 
