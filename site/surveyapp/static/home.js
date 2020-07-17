@@ -3,7 +3,7 @@
 const surveys = document.querySelectorAll(".survey");
 const search =  document.getElementById("search");
 
-
+// Search bar
 search.addEventListener('keyup', function(){
   filterSurveys(search.value.toLowerCase())
 });
@@ -18,3 +18,9 @@ function filterSurveys(searchValue){
     }
   })
 }
+
+
+// Using Jquery, initialise Popper.js tooltips
+$(function () {
+    $("[data-toggle='tooltip']").tooltip();
+});

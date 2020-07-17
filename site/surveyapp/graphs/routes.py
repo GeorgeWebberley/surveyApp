@@ -49,7 +49,7 @@ def import_file():
             mongo.db.temp_results.insert_one({
             "user": current_user._id,
             "survey_id" : survey_id,
-            "result" : result}
+            "result" : result})
         return redirect(url_for("graphs.input", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
@@ -126,7 +126,7 @@ def home():
 @graphs.route('/findings', methods=['GET', 'POST'])
 @login_required
 def findings():
-    form = SaveTestForm()
+    form = EditForm()
     notifications = mongo.db.temp_results.find({"user": current_user._id})
     if form.validate_on_submit():
         survey_id = request.args.get("survey_id")
@@ -134,7 +134,7 @@ def findings():
         independent_variable = request.args.get("independent_variable")
         dependent_variable = request.args.get("dependent_variable")
         p_value = request.args.get("p")
-        temp_id = request.args.get("temp_id")
+        result_id = request.args.get("result_id")
         mongo.db.tests.insert_one({"surveyId" : survey_id,
                 "user" : current_user._id,
                 "title" : form.title.data,
@@ -142,10 +142,22 @@ def findings():
                 "independentVariable" : independent_variable,\
                 "dependentVariable" : dependent_variable,\
                 "p" : p_value})
-        mongo.db.temp_results.delete_one({'_id': ObjectId(temp_id)})
-    return render_template("findings.html", title="Findings", form=form, notifications=notifications)
+        mongo.db.temp_results.delete_one({'_id': ObjectId(result_id)})
+        notifications = mongo.db.temp_results.find({"user": current_user._id})
+        return redirect(url_for("graphs.findings"))
+    return render_template("findings.html", title="Findings", form=form, notifications=notifications, count=notifications.count())
 
 
+# Delete a temporary result
+@graphs.route('/findings/<result_id>/delete', methods=['POST'])
+@login_required
+def delete_temp_result(result_id):
+    file_obj = mongo.db.temp_results.find_one_or_404({"_id":ObjectId(result_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that page", "danger")
+        abort(403)
+    mongo.db.temp_results.delete_one(file_obj)
+    return redirect(url_for('graphs.findings'))
 
 
 
@@ -195,13 +207,9 @@ def graph(survey_id):
     # Read the csv file in
     df = read_file(file_obj["fileName"])
     # parse the columns to get information regarding type of data
-    # print(df)
     column_info = parse_data(df)
-    # print(df)
     # Convert the dataframe to a dict of records to be handled by D3.js on the client side.
     chart_data = df.to_dict(orient='records')
-    # print("chart_data")
-    # print(chart_data)
     # ----------SAME ROUTE USED FOR BAR AND PIE CHART----------
     if chart_type == "Bar chart" or chart_type == "Pie chart":
         return pie_bar_chart(survey_id, column_info, chart_data, graph_id, file_obj["title"], chart_type)
@@ -312,9 +320,6 @@ def scatter_chart(survey_id, column_info, chart_data, graph_id, title):
         form.title.data = graph_obj["title"]
     else:
         form.title.data = "Graph - " + title
-
-        print("chart_data")
-        print(chart_data)
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
     return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
 

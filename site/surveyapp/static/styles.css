@@ -1171,3 +1171,43 @@ body {
 .help{
   cursor: help;
 }
+
+
+
+/* Wobble affect on notification */
+
+@-webkit-keyframes wobble
+{
+    0% {-webkit-transform: rotateZ(10deg);}
+    4% {-webkit-transform: rotateZ(-10deg);}
+    8% {-webkit-transform: rotateZ(10deg);}
+    12% {-webkit-transform: rotateZ(0deg);}
+}
+@-moz-keyframes wobble
+{
+    0% {-moz-transform: rotateZ(10deg);}
+    4% {-moz-transform: rotateZ(-10deg);}
+    8% {-moz-transform: rotateZ(10deg);}
+    12% {-moz-transform: rotateZ(0deg);}
+}
+@-o-keyframes wobble
+{
+    0% {-o-transform: rotateZ(10deg);}
+    4% {-o-transform: rotateZ(-10deg);}
+    8% {-o-transform: rotateZ(10deg);}
+    12% {-o-transform: rotateZ(0deg);}
+}
+@keyframes wobble
+{
+    0% {transform: rotateZ(10deg);}
+    4% {transform: rotateZ(-10deg);}
+    8% {transform: rotateZ(10deg);}
+    12% {transform: rotateZ(0deg);}
+}
+
+.wobble {
+    -webkit-animation: wobble 2.5s ease infinite;
+    -moz-animation: wobble 2.5s ease infinite;
+    -o-animation: wobble 2.5s ease infinite;
+    animation: wobble 2.5s ease infinite;
+}
