@@ -48,7 +48,7 @@ def import_file():
         for result in significant_results:
             mongo.db.temp_results.insert_one({
             "user": current_user._id,
-            "survey_id" : survey_id,
+            "survey_id" : str(survey_id),
             "result" : result})
         return redirect(url_for("graphs.input", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
@@ -377,10 +377,17 @@ def delete_survey(survey_id):
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
         abort(403)
+    # First loop through all graphs, tests and remp results associated with that survey and delete them
     graphs = mongo.db.graphs.find({"surveyId":survey_id})
     for graph in graphs:
         delete_image(graph["image"])
         mongo.db.graphs.delete_one(graph)
+    tests = mongo.db.tests.find({"surveyId":survey_id})
+    for test in tests:
+        mongo.db.tests.delete_one(test)
+    temp_results = mongo.db.temp_results.find({"survey_id":survey_id})
+    for result in temp_results:
+        mongo.db.temp_results.delete_one(result)
     delete_file(file_obj["fileName"])
     mongo.db.surveys.delete_one(file_obj)
     return redirect(url_for('graphs.home'))
@@ -400,7 +407,6 @@ def edit_survey(survey_id):
         return redirect(url_for('graphs.home'))
     elif request.method == "GET":
         form.title.data = file_obj["title"]
-        # form.process()
     return render_template("edit_survey.html", form=form)
 
 

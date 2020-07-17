@@ -15,15 +15,15 @@
         </div>
       {% else %}
         {% for notification in notifications %}
+        <form action="{{ url_for('graphs.findings', result_id=notification._id,
+                                                    p=notification.result.p_value,
+                                                    independent_variable=notification.result.variable_1,
+                                                    dependent_variable=notification.result.variable_2,
+                                                    survey_id=notification.survey_id,
+                                                    test=notification.result.test)}}" method="post">
+          {{ form.hidden_tag() }}
           <div class="card w-100 mb-4">
             <div class="card-body">
-              <form action="{{ url_for('graphs.findings', result_id=notification._id,
-                                                          p=notification.result.p_value,
-                                                          independent_variable=notification.result.variable_1,
-                                                          dependent_variable=notification.result.variable_2,
-                                                          survey_id=notification.survey_id,
-                                                          test=notification.result.test)}}" method="post">
-              {{ form.hidden_tag() }}
               {% if notification.result.variable_2 == "" %}
                 {% set f = form.title.process_data("" + notification.result.variable_1 + ": " + notification.result.test) %}
               {% else %}
@@ -69,14 +69,14 @@
               <h6 class="card-subtitle mb-2 text-muted"></h6> -->
               <p class="card-text">{{ notification.result.info }}</p>
               <div class="d-flex justify-content-end">
+                <form action="{{ url_for('graphs.delete_temp_result', result_id=notification['_id'] )}}" method="post">
+                  <button class="btn btn-danger mx-2" type="submit">Delete result</button>
+                </form>
                 {{ form.submit(class="btn btn-primary") }}
               </div>
-            </form>
-            <form class="float-right mt-1" action="{{ url_for('graphs.delete_temp_result', result_id=notification['_id'] )}}" method="post">
-              <button class="btn btn-danger" type="submit">Delete result</button>
-            </form>
             </div>
           </div>
+        </form>
         {% endfor %}
       {% endif %}
     </section>
