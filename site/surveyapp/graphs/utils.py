@@ -76,19 +76,18 @@ def parse_data(df):
         temp_dict = {
         "title": column_title
         }
+        temp_dict["num_unique"] = df[column_title].nunique()
         if column_data.dtypes == np.bool:
             temp_dict["data_type"] = "true/false"
             temp_dict["quantities"] = column_data.value_counts().to_dict()
         elif column_data.dtypes == np.int64:
             temp_dict["data_type"] = "numerical"
-            temp_dict["num_unique"] = df[column_title].nunique()
             temp_dict["average"] = column_data.agg("mean");
             temp_dict["max"] = column_data.agg("max");
             temp_dict["min"] = column_data.agg("min");
             temp_dict["sum"] = column_data.agg("sum");
         else:
             temp_dict["data_type"] = "categorical"
-            temp_dict["num_unique"] = df[column_title].nunique()
             temp_dict["quantities"] = column_data.value_counts().to_dict()
             # # Try to parse it as a date/time. If it fails, it must be an object (categorical data)
             # try:
