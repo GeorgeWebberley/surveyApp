@@ -132,7 +132,7 @@ const render = (groupedData) => {
   groupedData.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
   // Set the scale for the x-axis
   const xScale = d3.scaleBand()
-    .domain(groupedData.map(xValues)).nice()
+    .domain(groupedData.map(xValues))
     .range([0, gWidth])
     .paddingInner(0.1)
 
