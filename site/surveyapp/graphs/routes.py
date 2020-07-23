@@ -2,6 +2,7 @@ import os
 import secrets
 import bson
 import json
+import threading
 import pandas as pd
 from pandas.api.types import is_string_dtype, is_numeric_dtype
 # from pandas.api.types import is_numeric_dtype
@@ -44,12 +45,17 @@ def import_file():
         "user" : current_user._id,
         "title" : form.title.data}).inserted_id  # Get the id of the survey just inserted
         flash("File uploaded successfully!", "success")
-        significant_results = run_all_tests(survey_id)
-        for result in significant_results:
-            mongo.db.temp_results.insert_one({
-            "user": current_user._id,
-            "survey_id" : str(survey_id),
-            "result" : result})
+        # Running all the statistical tests on the data can take a lot of time. Therefore I
+        # carry it out using a python thread. It is important to pass the current application,
+        # so that the threaded function can be carried out from the current application context
+        thread = threading.Thread(target=run_all_tests, args=(str(survey_id), current_user._id, current_app._get_current_object()))
+        thread.start()
+        # significant_results = run_all_tests(survey_id)
+        # for result in significant_results:
+        #     mongo.db.temp_results.insert_one({
+        #     "user": current_user._id,
+        #     "survey_id" : str(survey_id),
+        #     "result" : result})
         return redirect(url_for("graphs.input", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
@@ -108,6 +114,7 @@ def input():
 @graphs.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
+    notifications = mongo.db.temp_results.find({"user": current_user._id})
     surveys=mongo.db.surveys.find({"user":current_user._id})
     survey_list = []
     notifications = mongo.db.temp_results.count_documents({"user": current_user._id})

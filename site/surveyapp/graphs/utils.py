@@ -130,7 +130,11 @@ def save_graph(title, survey_id, graph_id, x_variable, y_variable, y_aggregation
 # Likewise, I do not perform mann whitney U and kruskal wallis on the same variables, even though it is in fact
 # possible to perform kruskal wallis on 2 variables. This is to avoid conflicting results and subsequent increasing
 # risk of false positives
-def run_all_tests(survey_id):
+def run_all_tests(survey_id, user_id, app):
+    with app.app_context():
+        run_tests(survey_id, user_id)
+
+def run_tests(survey_id, user_id):
     file_obj = mongo.db.surveys.find_one({"_id":ObjectId(survey_id)})
     df = read_file(file_obj["fileName"])
     column_info = parse_data(df)
@@ -144,23 +148,38 @@ def run_all_tests(survey_id):
             for column_2 in column_info:
                 if column_2["title"] == column_1["title"]:
                     continue
-                if column_2["data_type"] == "categorical" or column_2["data_type"] == "true/false":
+                elif column_2["data_type"] == "categorical" or column_2["data_type"] == "true/false":
                     # Chi square needs 2 categorical variables
                     p_value, result = chi_square(df, column_1["title"], column_2["title"])
-                    if p_value < 0.05:
+                    if p_value < 0.05 and not test_done(test_results, result):
                         test_results.append(result)
 
-                if column_2["data_type"] == "numerical":
-                    if column_1["num_unique"] == 2:
+                elif column_2["data_type"] == "numerical":
+                    if column_1["num_unique"] == 2 and column_2["num_unique"] > 1:
                         # We perform mann-whitney U test
                         p_value, result = mann_whitney(df, column_1["title"], column_2["title"])
 
-                    elif column_1["num_unique"] > 2:
+                    elif column_1["num_unique"] > 2 and column_2["num_unique"] > 1:
                         # We perform kruskal wallis test
                         p_value, result = kruskal_wallis(df, column_1["title"], column_2["title"])
-                if p_value < 0.05:
-                    test_results.append(result)
-    return test_results
+                    if p_value < 0.05:
+                        test_results.append(result)
+    # Now we can loop through the statistical tests, adding significant ones to
+    # a temporary database. This will be presented to the user through a notficiation
+    # on the home page.
+    for result in test_results:
+        mongo.db.temp_results.insert_one({
+        "user": user_id,
+        "survey_id" : survey_id,
+        "result" : result})
+
+# When adding chisquare test of independence, we need to check the test hasn't
+# already been carried out (with the variables the opposite way round)
+def test_done(previous_results, current_result):
+    for result in previous_results:
+        if current_result["variable_1"] == result["variable_2"] and current_result["variable_2"] == result["variable_1"]:
+            return True
+    return False
 
 
 def kruskal_wallis(df, independent_variable, dependent_variable):
@@ -190,6 +209,10 @@ def mann_whitney(df, independent_variable, dependent_variable):
     # Get the values of groups 1 and 2 from the array
     x = group_array[0][dependent_variable].values
     y = group_array[1][dependent_variable].values
+    keys = list(group_by.groups.keys())
+    # Get the distinct keys (we have already checked there are only 2) and save them in variables
+    group_1 = keys[0]
+    group_2 = keys[1]
     # Perform test
     mwu_result = mwu(x, y)
     # Get the p_value from the result and format to 4 decimals
@@ -202,12 +225,16 @@ def mann_whitney(df, independent_variable, dependent_variable):
             "info": """Assumes that the dependent variable ('{0}') is ordinal or continuous,
                     that the independent variable ('{1}') consists of just 2 groups
                     ('{2}' and '{3}') and that these groups follow the same distribution (the shape
-                    on a histogram).""".format(dependent_variable, independent_variable, x, y)}
+                    on a histogram).""".format(dependent_variable, independent_variable, group_1, group_2)}
     return p_value, result
 
 
 
 def chi_square(df, variable_1, variable_2):
+    # 80% of groups must have a frequency of atleast 5.
+    if not five_or_more(df, variable_1) or not five_or_more(df, variable_2):
+         # If not, we can return 2, which is an impossible p-value and will be rejected.
+        return 2, {}
     contingency_table = pd.crosstab(df[variable_1], df[variable_2])
     _, p_value, _, _ = chi2_contingency(contingency_table, correction=False)
     p_value = float("%.4f" % p_value)
@@ -217,8 +244,29 @@ def chi_square(df, variable_1, variable_2):
             "variable_2": variable_2,
             "null": f"There is no relationship or association between '{variable_1}' and '{variable_2}'",
             "info": """Assumes that both variables are ordinal or nominal,
-                    with each variable consisting of 2 or more groups."""}
+                    with each variable consisting of 2 or more groups. You
+                    should check that your groups contain 5 or more counts
+                    in at least 80% of the groups before accepting this result."""}
     return p_value, result
+
+
+def five_or_more(df, variable):
+    group_by = df.groupby(variable)
+    # We get the list of unique categories
+    keys = list(group_by.groups.keys())
+    count_over_5 = 0
+    total_count = 0
+    for key in keys:
+        total_count += 1
+        # Get the length (or count) of that category
+        key_count = df[df[variable] == key].shape[0]
+        if key_count >= 5:
+            count_over_5 += 1
+    if count_over_5/total_count < 0.8:
+        return False
+    else:
+        return True
+
 
 
 def chi_goodness(df, variable):

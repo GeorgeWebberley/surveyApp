@@ -226,7 +226,7 @@ const render = (groupedData) => {
         .translate(+ this.getAttribute("x"), + this.getAttribute("y"));
 
     // Now give the tooltip the data it needs to show and the position it should be.
-    tooltip.html(yValues(d))
+    tooltip.html(xValues(d)+": " + yValues(d))
         .style("left", (window.pageXOffset + position.e + tooltipOffset) + "px") // Center it horizontally over the bar
         .style("top", (window.pageYOffset + position.f - 50) + "px"); // Shift it 50 px above the bar
 
