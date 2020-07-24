@@ -26,10 +26,42 @@ def save_file(form_file):
     # If not CSV file I will convert it to csv before saving (for easier handling later)
     if f_ext != ".csv":
         data_xls = pd.read_excel(form_file, index_col=None)
-        data_xls.to_csv(file_path, encoding='utf-8', index=False)
+        df = remove_nan(data_xls)
+        df = trim_strings(df)
+        df.to_csv(file_path, encoding='utf-8', index=False)
     else:
-        form_file.save(file_path)
+        data_csv = pd.read_csv(form_file, index_col=None)
+        df = remove_nan(data_csv)
+        df = trim_strings(df)
+        df.to_csv(file_path, encoding='utf-8', index=False)
+        # form_file.save(file_path)
     return file_name
+
+
+def trim_strings(df):
+    trimmed = lambda x: x.strip() if isinstance(x, str) else x
+    return df.applymap(trimmed)
+
+
+def find_typos(df):
+    for (column_title, column_data) in df.iteritems():
+        unique_values = df[column_title].unique()
+        for value in unique_values:
+            # Get the length (or count) of that category
+            value_count = df[df[column_title] == value].shape[0]
+            print(value)
+            print(value_count)
+            print("-----------------------------------------------------------")
+
+
+
+        # for value in unique_values:
+        #     group_by = column_data.groupby(value)
+        #     # Convert to an array of groups
+        #     group_array = [group_by.get_group(x) for x in group_by.groups]
+        #     print(group_by)
+
+
 
 # Given a name, locates file and returns the dataframe.
 def read_file(name):
@@ -60,9 +92,25 @@ def delete_file(name):
 
 # A function that removes all leading empty rows/columns
 def remove_nan(df):
+    # Set a flag that is true if the first row is empty (subsequenlty requiring
+    # the header be reset after empty rows are removed)
+    if df.iloc[0].isnull().all(axis = 0):
+        reset_header = True
+    else:
+        reset_header = False
+    # Drops columns
     data = df.dropna(how = 'all', axis = 1)
+    # Drops rows
     data = data.dropna(how = 'all', axis = 0)
     data = data.reset_index(drop = True)
+    # if the first row was empty, we reset the header to be the first row in the data
+    if reset_header:
+        # Get the first row to be set as the new header
+        new_header = data.iloc[0]
+        # Set the remaining data as the dataframe
+        data = data[1:]
+        # Set the new header on the dataframe
+        data.columns = new_header
     return data
 
 # This function loops through each column and collects information on the type of data (numerical vs categorical)
@@ -80,7 +128,7 @@ def parse_data(df):
         if column_data.dtypes == np.bool:
             temp_dict["data_type"] = "true/false"
             temp_dict["quantities"] = column_data.value_counts().to_dict()
-        elif column_data.dtypes == np.int64:
+        elif column_data.dtypes == np.int64 or column_data.dtypes == np.float64:
             temp_dict["data_type"] = "numerical"
             temp_dict["average"] = column_data.agg("mean");
             temp_dict["max"] = column_data.agg("max");
@@ -244,12 +292,14 @@ def chi_square(df, variable_1, variable_2):
             "variable_2": variable_2,
             "null": f"There is no relationship or association between '{variable_1}' and '{variable_2}'",
             "info": """Assumes that both variables are ordinal or nominal,
-                    with each variable consisting of 2 or more groups. You
-                    should check that your groups contain 5 or more counts
-                    in at least 80% of the groups before accepting this result."""}
+                    with each variable consisting of 2 or more groups. Also
+                    assumes that 80% of the groups contain 5 or more counts."""}
     return p_value, result
 
-
+# This checks if each category contains groups with at least a frequency of 5 in each group
+# (e.g. If 'apple' is a result for 'favourite food' then this function checks if there are at at
+# 5 responses with 'apple'). The chi-square independence test requires that 80% of groups contain
+# a frequency of 5 or more.
 def five_or_more(df, variable):
     group_by = df.groupby(variable)
     # We get the list of unique categories
@@ -274,8 +324,6 @@ def chi_goodness(df, variable):
     group_by = df.groupby(variable)
     # We get the list of unique categories
     keys = list(group_by.groups.keys())
-    # We get the total count of rows/subjects
-    total_count = len(df.index)
     actual_distribution = []
     # Loop through each unique category
     for key in keys:
@@ -286,7 +334,7 @@ def chi_goodness(df, variable):
             # which is an impossible p-value and will be rejected.
             return 2, {}
         # And add it to our list
-        actual_distribution.append((key_count*100)/total_count)
+        actual_distribution.append(key_count)
     # we will assume expected even distribution and only pass the actual distribution
     _, p_value = chisquare(actual_distribution)
     # Convert to 4 decimal places

@@ -18,7 +18,7 @@ from flask_login import login_required, current_user
 from surveyapp.graphs.forms import UploadForm, EditForm, BarPieForm, ScatterchartForm, HistogramForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
-from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file, run_all_tests
+from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file, run_all_tests, find_typos
 
 
 graphs = Blueprint("graphs", __name__)
@@ -48,14 +48,8 @@ def import_file():
         # Running all the statistical tests on the data can take a lot of time. Therefore I
         # carry it out using a python thread. It is important to pass the current application,
         # so that the threaded function can be carried out from the current application context
-        thread = threading.Thread(target=run_all_tests, args=(str(survey_id), current_user._id, current_app._get_current_object()))
+        thread = threading.Thread(target=run_all_tests, args=(str(survey_id), current_user._id, current_app._get_current_object()), daemon=True)
         thread.start()
-        # significant_results = run_all_tests(survey_id)
-        # for result in significant_results:
-        #     mongo.db.temp_results.insert_one({
-        #     "user": current_user._id,
-        #     "survey_id" : str(survey_id),
-        #     "result" : result})
         return redirect(url_for("graphs.input", survey_id=survey_id))
     return render_template("import.html", title = "Import", form=form)
 
@@ -118,6 +112,9 @@ def home():
     surveys=mongo.db.surveys.find({"user":current_user._id})
     survey_list = []
     notifications = mongo.db.temp_results.count_documents({"user": current_user._id})
+    # # Get the total number of threads running (i.e. files being scanned)
+    # scans = threading.active_count()
+    # print(scans)
     for survey in surveys:
         graphs = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
         tests = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
@@ -151,6 +148,7 @@ def findings():
                 "p" : p_value})
         mongo.db.temp_results.delete_one({'_id': ObjectId(result_id)})
         notifications = mongo.db.temp_results.find({"user": current_user._id})
+        flash("Statistical test saved to your survey dashboard", "success")
         return redirect(url_for("graphs.findings"))
     return render_template("findings.html", title="Findings", form=form, notifications=notifications, count=notifications.count())
 
@@ -164,6 +162,15 @@ def delete_temp_result(result_id):
         flash("You do not have access to that page", "danger")
         abort(403)
     mongo.db.temp_results.delete_one(file_obj)
+    return redirect(url_for('graphs.findings'))
+
+
+
+# Delete all temporary results
+@graphs.route('/findings/delete', methods=['POST'])
+@login_required
+def delete_findings():
+    mongo.db.temp_results.delete_many({"user":current_user._id})
     return redirect(url_for('graphs.findings'))
 
 
@@ -533,16 +540,17 @@ def chi_goodness():
     keys = list(group_by.groups.keys())
     # Populate the form with unique groups in the given variable
     key_list = []
+    # Get the total count, so that we can check the expected distribution matches
+    total_count = len(df.index)
     for key in keys:
         key_list.append({"expected": 0, "key": key})
     form = ChiGoodnessForm(field=key_list)
     if form.validate_on_submit():
-        total_count = len(df.index)
         actual_distribution = []
         expected_distribution = []
         for key in keys:
             key_count = df[df[variable] == key].shape[0]
-            actual_distribution.append((key_count*100)/total_count)
+            actual_distribution.append(key_count)
             for input in form.field.data:
                 if key == input['key']:
                     expected_distribution.append(input['expected'])
@@ -556,7 +564,7 @@ def chi_goodness():
             p_value=p_value,\
             independent_variable=variable,))
 
-    return render_template("chisquare.html", form=form, keys=keys)
+    return render_template("chisquare.html", form=form, keys=keys, total=total_count)
 
 
 
@@ -627,11 +635,11 @@ def quick_stats(survey_id):
         flash("You do not have access to that page", "danger")
         return redirect(url_for("main.index"))
     df = read_file(file_obj["fileName"])
+    find_typos(df)
     rows = len(df.index)
     cols = len(df.columns)
     column_info = parse_data(df);
     return render_template("quickstats.html", rows=rows, cols=cols, column_info=column_info, survey_id=survey_id, survey_title=file_obj["title"] )
-
 
 
 

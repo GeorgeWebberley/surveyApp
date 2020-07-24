@@ -3,9 +3,14 @@
 
   <div class="row mt-3">
     <section class="col-12">
-      <h1 class="h3 primary-colour mt-2 mb-4 text-center">
-        <u>Here are a list of significant findings we have found in your data</u>
-      </h1>
+      <div class="d-flex flex-column">
+        <u class="h3 primary-colour align-self-center">Here are a list of significant findings we have found in your data</u>
+        {% if count != 0 %}
+        <form class="align-self-end" action="{{ url_for('graphs.delete_findings')}}" method="post" onsubmit="return confirm('Are you sure you want to delete all notifications?');">
+          <button class="btn btn-danger" type="submit">Delete all</button>
+        </form>
+        {% endif %}
+      </div>
       <p class="lead">Note: please check the assumptions are correct with your data before accepting the result.
       Just because a result does not appear here, it does not mean that it is not significant. If a particular test
       you are looking for does not appear on this list, you can add it on your survey dashboard page.</p>

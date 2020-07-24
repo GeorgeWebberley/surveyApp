@@ -5,6 +5,7 @@ const total = document.querySelector(".chi-total")
 const inputs = document.querySelectorAll("input[type=text]")
 const submit = document.querySelector(".analyse-continue")
 
+
 inputs.forEach(input => {
   input.addEventListener('keyup', function(){
     checkTotal()
@@ -15,11 +16,11 @@ inputs.forEach(input => {
 function getSumOfInputs(){
   let total = 0;
   inputs.forEach(input => {
-    let percent = parseInt(input.value)
-    if (Number.isNaN(percent)){
-      percent=0
+    let expected = parseInt(input.value)
+    if (Number.isNaN(expected)){
+      expected=0
     }
-    total += percent
+    total += expected
   })
   return total
 }
@@ -27,7 +28,7 @@ function getSumOfInputs(){
 function checkTotal(){
   let sum = getSumOfInputs()
   total.innerHTML = sum;
-  if(sum == 100 || sum == 0){
+  if(sum == totalChi || sum == 0){
     total.style.color = "LightGreen"
     submit.classList.remove("hidden-axis")
   }else{

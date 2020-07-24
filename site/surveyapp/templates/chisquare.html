@@ -15,7 +15,7 @@
       <div class="row">
         {% for i in range(form.field|length)  %}
           <div class="col-sm-3 mx-4 mt-2 d-flex flex-column mb-4">
-            <span>% {{ keys[i] }}</span>
+            <span>{{ keys[i] }}</span>
             {{ form.field[i].expected() }}
             {% if form.field[i].errors %}
               {% for error in form.field.errors %}
@@ -29,7 +29,7 @@
       </div>
       <div class="row">
         <div class="col-sm-4 ml-4">
-          <h4>Total must equal to 0 or 100%</h4>
+          <h4>Total must equal to 0 or {{ total }}</h4>
         </div>
         <div class="col-sm-4 ml-4">
           <h4>Current total: <span class="chi-total"></span></h4>
@@ -43,5 +43,8 @@
     </form>
   </div>
 </div>
+<script>
+  var totalChi = {{ total }};
+</script>
 <script src="{{ url_for('static', filename='chi.js') }}" defer></script>
 {% endblock content %}

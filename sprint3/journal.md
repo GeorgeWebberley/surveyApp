@@ -90,8 +90,6 @@ Some of their data sets contained anomalies, and therefore if time allows I woul
 
 One final point was that uploading the large files often took some time, as my application scans them and automatically runs statistical tests on their data. This was not a problem with my test files, however with larger files it could take longer than 30 seconds. I will therefore introduce threading into my application, allowing this scan to be carried out in the background and then to alert the user when the scan is complete.
 
-
-<a name="latestEntry"></a>
 ### Threading and statistical tests. (23rd July)
 
 Today I introduced threading into the application to allow the scanning of data for auto-tests to be carried out in the background. Initially this raised a few problems. The main one being that the thread would not have the same application context of the main application. This means that all of the initialisation of the application (the configurations) as well as certain variables (current_user, current_app) could not be used. To get round this problem, it is possible to specify the app_context from within the thread. I passed the application 'object' to the threading function and then run a command:
@@ -104,6 +102,18 @@ with app.app_context():
 This then allows me to access current_user and also the database from inside the thread.
 
 I also spent some time reviewing the statistical tests, trying to make them more specific to the data. For example, some tests require a certain sample size (chi square independence requires that 80% of the 'groups' inside the chosen variable contain more than a count of 5). Adding in these extra checks has increased my code, but has reduced the number of statistical tests carried out unnecessarily.
+
+
+<a name="latestEntry"></a>
+### Correcting statistical tests and starting data cleaning. (23rd July)
+
+I realised this morning that some of the results obtained from the Chi-square goodness of fit test were incorrect. The way my function was currently setup was to calculate the percentage frequency of each group in the column and compare this with the expected percentage (i.e. if 5 Males and 15 Females, my program converted this to 25% males and 75% females). This is clearly incorrect, because even though the ratios are the same, the size of the group will also have an impact on the result (e.g. 250 Males and 750 Females is quite clearly more significant, despite the same ratio). I have therefore corrected this in my code.
+
+I have also added a 'delete all' button on the notifications page. This is because, when surveys are very large (with 50+ columns) then there is potential for there to be a very large amount of significant findings. It is very manual for the user to have to delete these one at a time and therefore adding a delete all button will hopefully make this easier.
+
+I have began working on some basic data cleaning. I have added functions that will remove empty rows or empty columns from the beginning of a dataset (some users do not start their tables on the first column/row on an excel spreadsheet and therefore the program should account for that). I have also added in a function that will automatically trim leading and trailing white spaces in any "string" data. I considered also automatically converting the cells to upper or lower case, however this may be something that the user wants to keep separate (for example, they may want to use 'a' and 'A' as different results and therefore would not want automatic conversion). I may decide to add a button that will convert the case for the user if they wish. These entries (as with the leading and trailing white spaces mentioned previously) are read as separate values and therefore can create some confusion for the user when they attempt to make graphs and see that multiple variables are displayed instead of just one.
+
+Lastly, adding some sort of spell checker may be useful for the user, although again I think this should be a manual function instead of being carried out automatically (as a user may wish to have 2 variables, both with similar names, but to be treated differently.) I will continue to work on this over the weekend.
 
 ##### Ongoing objectives
 
