@@ -14,7 +14,6 @@ from scipy.stats import chi2_contingency, chisquare
 import pingouin as pg
 from pingouin import kruskal, mwu
 
-
 # Saves file after import. All files are saved as CSV for easier handling
 def save_file(form_file):
     # Generate a random hex for the filename
@@ -34,33 +33,12 @@ def save_file(form_file):
         df = remove_nan(data_csv)
         df = trim_strings(df)
         df.to_csv(file_path, encoding='utf-8', index=False)
-        # form_file.save(file_path)
     return file_name
 
 
 def trim_strings(df):
     trimmed = lambda x: x.strip() if isinstance(x, str) else x
     return df.applymap(trimmed)
-
-
-def find_typos(df):
-    for (column_title, column_data) in df.iteritems():
-        unique_values = df[column_title].unique()
-        for value in unique_values:
-            # Get the length (or count) of that category
-            value_count = df[df[column_title] == value].shape[0]
-            print(value)
-            print(value_count)
-            print("-----------------------------------------------------------")
-
-
-
-        # for value in unique_values:
-        #     group_by = column_data.groupby(value)
-        #     # Convert to an array of groups
-        #     group_array = [group_by.get_group(x) for x in group_by.groups]
-        #     print(group_by)
-
 
 
 # Given a name, locates file and returns the dataframe.
@@ -118,40 +96,41 @@ def remove_nan(df):
 # Will also be useful for suggesting to the user about grouping if there are lots of unique entries.
 # e.g. if there are 100 different 'ages', can suggest grouping in 10 year batches.
 def parse_data(df):
+    numerics = [np.int64, np.int32, np.int16, np.int8, np.float64, np.float32, np.float16, np.uint64, np.uint32, np.uint16, np.uint8]
     column_info = []
+
     for (column_title, column_data) in df.iteritems():
         uniques = df[column_title].nunique()
         temp_dict = {
         "title": column_title
         }
         temp_dict["num_unique"] = df[column_title].nunique()
-        if column_data.dtypes == np.bool:
+        if column_data.dtype == np.bool:
             temp_dict["data_type"] = "true/false"
             temp_dict["quantities"] = column_data.value_counts().to_dict()
-        elif column_data.dtypes == np.int64 or column_data.dtypes == np.float64:
+        elif column_data.dtype in numerics:
             temp_dict["data_type"] = "numerical"
-            temp_dict["average"] = column_data.agg("mean");
+            # Rounded to 4 significant figures so that it can fit on the page
+            temp_dict["standard_deviation"] = float('%.4g' % column_data.std())
+            temp_dict["average"] = float('%.4g' % column_data.agg("mean"))
             temp_dict["max"] = column_data.agg("max");
             temp_dict["min"] = column_data.agg("min");
             temp_dict["sum"] = column_data.agg("sum");
         else:
-            temp_dict["data_type"] = "categorical"
-            temp_dict["quantities"] = column_data.value_counts().to_dict()
-            # # Try to parse it as a date/time. If it fails, it must be an object (categorical data)
-            # try:
-            #     column_data = pd.to_datetime(column_data, dayfirst=True, errors='coerce')
-            #     if (column_data.dt.floor('d') == column_data).all():
-            #         temp_dict["data_type"] = "date"
-            #     elif (column_data.dt.date == pd.Timestamp('now').date()).all():
-            #         column_data = column_data.dt.time
-            #         temp_dict["data_type"] = "time"
-            #     else:
-            #         temp_dict["data_type"] = "date/time"
-            #     temp_dict["num_unique"] = df[column_title].nunique()
-            # except ValueError:
-            #     temp_dict["data_type"] = "categorical"
-            #     temp_dict["num_unique"] = df[column_title].nunique()
-            #     temp_dict["quantities"] = column_data.value_counts().to_dict()
+            # Try to parse it as a date/time. If it fails, it must be an object (categorical data)
+            try:
+                column_data = pd.to_datetime(column_data, dayfirst=True)
+                if (column_data.dt.floor('d') == column_data).all():
+                    temp_dict["data_type"] = "date"
+                elif (column_data.dt.date == pd.Timestamp('now').date()).all():
+                    column_data = column_data.dt.time
+                    temp_dict["data_type"] = "time"
+                else:
+                    temp_dict["data_type"] = "date/time"
+                temp_dict["num_unique"] = df[column_title].nunique()
+            except ValueError:
+                temp_dict["data_type"] = "categorical"
+                temp_dict["quantities"] = column_data.value_counts().to_dict()
         column_info.append(temp_dict)
     return column_info
 

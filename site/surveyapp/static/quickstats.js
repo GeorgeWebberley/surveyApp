@@ -6,5 +6,6 @@ var msnry = new Masonry( container, {
 
   columnWidth: '.grid-element',
   itemSelector: '.grid-element',
-  gutter: 10
+  gutter: 10,
+  percentPosition: true
 });

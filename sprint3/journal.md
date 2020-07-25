@@ -104,7 +104,6 @@ This then allows me to access current_user and also the database from inside the
 I also spent some time reviewing the statistical tests, trying to make them more specific to the data. For example, some tests require a certain sample size (chi square independence requires that 80% of the 'groups' inside the chosen variable contain more than a count of 5). Adding in these extra checks has increased my code, but has reduced the number of statistical tests carried out unnecessarily.
 
 
-<a name="latestEntry"></a>
 ### Correcting statistical tests and starting data cleaning. (23rd July)
 
 I realised this morning that some of the results obtained from the Chi-square goodness of fit test were incorrect. The way my function was currently setup was to calculate the percentage frequency of each group in the column and compare this with the expected percentage (i.e. if 5 Males and 15 Females, my program converted this to 25% males and 75% females). This is clearly incorrect, because even though the ratios are the same, the size of the group will also have an impact on the result (e.g. 250 Males and 750 Females is quite clearly more significant, despite the same ratio). I have therefore corrected this in my code.
@@ -114,6 +113,20 @@ I have also added a 'delete all' button on the notifications page. This is becau
 I have began working on some basic data cleaning. I have added functions that will remove empty rows or empty columns from the beginning of a dataset (some users do not start their tables on the first column/row on an excel spreadsheet and therefore the program should account for that). I have also added in a function that will automatically trim leading and trailing white spaces in any "string" data. I considered also automatically converting the cells to upper or lower case, however this may be something that the user wants to keep separate (for example, they may want to use 'a' and 'A' as different results and therefore would not want automatic conversion). I may decide to add a button that will convert the case for the user if they wish. These entries (as with the leading and trailing white spaces mentioned previously) are read as separate values and therefore can create some confusion for the user when they attempt to make graphs and see that multiple variables are displayed instead of just one.
 
 Lastly, adding some sort of spell checker may be useful for the user, although again I think this should be a manual function instead of being carried out automatically (as a user may wish to have 2 variables, both with similar names, but to be treated differently.) I will continue to work on this over the weekend.
+
+
+<a name="latestEntry"></a>
+### Fixing CSS and attempting more data cleaning. (23rd July)
+
+One of the pages that has not been responsive for a while was the quickstats page. This page was a grid made up of 4 columns, which worked well on a large page but on a smaller screen size the columns would squash up width ways.
+I have corrected this by adding @media screen size functions to the CSS, adjusting the width based on screen size. I initially attempted with bootstrap grids, and although Masonry (Javascript library being used for dynamic grid) says it supports bootstrap, I could not get it to work.
+
+I have also added standard deviation as a stat as this is likely useful for users.
+
+I have attempted to add further data cleaning functions. I want to be able to identify if there are columns with potential typos (e.g. a letter in a column which is otherwise filled with numbers, or an obvious typo in a string column.) This has proved to be much more difficult than anticipated. None of the in built pandas functions seem to be able to identify columns of "mixed" data types. I tried using the [infer_dtype() function](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.api.types.infer_dtype.html) but when testing on data with mixed number/string types it consistently just gave the answer "string", making it impossible to identify it compared to actual string type columns.
+With regards to typos, it seems that it will be a large task in itself to recognise unintentional spelling mistakes in data and I would likely use up the last of my remaining time working on the project to solve it. Instead I might put it further down in my list of jobs and only return to it if I find I have excess time at the end of my project.
+
+
 
 ##### Ongoing objectives
 

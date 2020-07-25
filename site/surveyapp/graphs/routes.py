@@ -18,7 +18,7 @@ from flask_login import login_required, current_user
 from surveyapp.graphs.forms import UploadForm, EditForm, BarPieForm, ScatterchartForm, HistogramForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
-from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file, run_all_tests, find_typos
+from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file, run_all_tests
 
 
 graphs = Blueprint("graphs", __name__)
@@ -635,7 +635,6 @@ def quick_stats(survey_id):
         flash("You do not have access to that page", "danger")
         return redirect(url_for("main.index"))
     df = read_file(file_obj["fileName"])
-    find_typos(df)
     rows = len(df.index)
     cols = len(df.columns)
     column_info = parse_data(df);

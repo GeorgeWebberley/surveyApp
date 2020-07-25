@@ -8,6 +8,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_jsglue import JSGlue
 
+
 # extensions created outside the create_app function (but initialised inside the function)
 dropzone = Dropzone()
 # for database handling
@@ -39,6 +40,7 @@ def create_app(config_name):
     login_manager.init_app(app)
     mail.init_app(app)
     jsglue.init_app(app)
+
 
     # Import the blueprints and register them with out app (so it knows where to look for the routes)
     from surveyapp.users.routes import users

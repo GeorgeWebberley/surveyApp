@@ -21,7 +21,6 @@ scipy = "*"
 pingouin = "*"
 flask-mail = "*"
 flask-jsglue = "*"
-flask-threads = "*"
 
 [requires]
 python_version = "3.7"

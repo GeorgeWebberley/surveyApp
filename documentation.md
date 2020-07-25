@@ -200,3 +200,11 @@ Allows for building flask-like URLs in javascript. Useful for Jquery POSTs (usin
 ```
 pip install Flask-JSGlue
 ```
+
+##### pyspellchecker
+
+For testing possible typos in the data.
+
+```
+pip install pyspellchecker
+```

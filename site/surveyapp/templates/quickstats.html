@@ -13,7 +13,7 @@
     <p class="h4 mx-4 my-0 font-weight-light">Number of columns: {{ cols }}</p>
   </div>
   <div class="stats-grid">
-  {% for column in column_info %}
+    {% for column in column_info %}
     <div class="bg-light shadow rounded grid-element">
       <div class="text-center">
         <h1 class="h5 primary-colour-bg p-2 text-light rounded-top">{{ column["title"] }}</h1>
@@ -42,7 +42,11 @@
             <ul class="list-group">
               <li class="list-group-item d-flex justify-content-between">
                 <p class="m-0">Average</p>
-                <p class="m-0 overflow-hidden">{{ column["average"] }}</p>
+                <p class="m-0">{{ column["average"] }}</p>
+              </li>
+              <li class="list-group-item d-flex justify-content-between">
+                <p class="m-0">Standard deviation</p>
+                <p class="m-0">{{ column["standard_deviation"] }}</p>
               </li>
               <li class="list-group-item d-flex justify-content-between">
                 <p class="m-0">Highest value</p>

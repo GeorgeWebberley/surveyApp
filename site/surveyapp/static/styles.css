@@ -952,12 +952,27 @@ body {
 /* ------QUICK STATS------ */
 
 
-
 .grid-element {
   margin-bottom: 10px;
   width: calc(25% - 10px);
-  align-self: start;
+  min-width: 220px;
 }
+@media only screen and (max-width: 800px){
+  .grid-element {
+    margin-bottom: 10px;
+    width: calc(50% - 10px);
+    min-width: 220px;
+  }
+}
+@media only screen and (max-width: 500px){
+  .grid-element {
+    margin-bottom: 10px;
+    width: calc(100%);
+    min-width: 220px;
+  }
+}
+
+
 
 
 /*
