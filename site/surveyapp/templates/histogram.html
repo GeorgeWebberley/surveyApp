@@ -96,6 +96,7 @@
   var url = "{{ url_for('graphs.graph', survey_id=survey_id, graph_id=graph_id, chart_type='Histogram') }}"
   var redirectUrl = "{{ url_for('graphs.dashboard', survey_id=survey_id) }}"
 </script>
+<script src="https://d3js.org/d3.v5.min.js" defer></script>
 <script src="{{ url_for('static', filename='d3/histogram.js') }}" defer></script>
 <script src="{{ url_for('static', filename='d3/saveSvgAsPng.js') }}" defer></script>
 {% endblock content %}

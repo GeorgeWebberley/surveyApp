@@ -15,7 +15,7 @@ from pingouin import kruskal, mwu
 from surveyapp import dropzone, mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, current_app, abort, jsonify
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import UploadForm, EditForm, BarPieForm, ScatterchartForm, HistogramForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
+from surveyapp.graphs.forms import UploadForm, EditForm, BarPieForm, ScatterchartForm, HistogramForm, StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm, MapForm
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
 from surveyapp.graphs.utils import parse_data, save_graph, save_file, remove_nan, read_file, save_image, delete_image, delete_file, run_all_tests
@@ -233,9 +233,61 @@ def graph(survey_id):
     # ----------SCATTER CHART----------
     elif chart_type == "Histogram":
         return histogram(survey_id, column_info, chart_data, graph_id, file_obj["title"])
+    # ----------SCATTER CHART----------
+    elif chart_type == "Map":
+        return map_chart(survey_id, column_info, chart_data, graph_id, file_obj["title"])
     else:
         flash("something went wrong", "danger")
         abort(404)
+
+
+
+
+# Function that renders the bar-chart page
+def map_chart(survey_id, column_info, chart_data, graph_id, title):
+    form = MapForm()
+    # Populate the form options.
+    for column in column_info:
+        form.variable.choices.append((column["title"], column["title"]))
+    print("Damn")
+    # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
+    if form.validate_on_submit():
+        print("yay")
+        image_data = request.form["image"]
+        file_name = save_image(image_data, graph_id)
+        # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
+        mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
+        {"$set": {"title" : form.title.data,\
+                "surveyId": survey_id,\
+                "user" : current_user._id,\
+                "type" : "Map",\
+                "variable" : form.variable.data,\
+                "scope" : form.scope.data,\
+                "image": file_name}}, upsert=True)
+        flash("Graph saved to dashboard.", "success")
+        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
+
+    # If we are editing the graph instead of creating new, we want to prepopulate the fields
+    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
+
+    if graph_obj:
+        form.variable.data = graph_obj["variable"]
+        form.scope.data = graph_obj["scope"]
+        form.title.data = graph_obj["title"]
+    else:
+        form.title.data = "Bar chart - " + title
+
+    data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
+    return render_template("map.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+
+
+
+
+
+
+
+
+
 
 
 # Function that renders the bar-chart page

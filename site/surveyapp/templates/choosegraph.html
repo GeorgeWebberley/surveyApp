@@ -18,6 +18,10 @@
       <img class="graph-img" src="{{ url_for('static', filename='images/histogram.png') }}" class="graph-img"/>
       <p class="select-graph-type">Histogram</p>
     </a>
+    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Map') }}">
+      <img class="graph-img" src="{{ url_for('static', filename='images/histogram.png') }}" class="graph-img"/>
+      <p class="select-graph-type">Map</p>
+    </a>
   </div>
 </div>
 {% endblock content %}

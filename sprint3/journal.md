@@ -104,7 +104,7 @@ This then allows me to access current_user and also the database from inside the
 I also spent some time reviewing the statistical tests, trying to make them more specific to the data. For example, some tests require a certain sample size (chi square independence requires that 80% of the 'groups' inside the chosen variable contain more than a count of 5). Adding in these extra checks has increased my code, but has reduced the number of statistical tests carried out unnecessarily.
 
 
-### Correcting statistical tests and starting data cleaning. (23rd July)
+### Correcting statistical tests and starting data cleaning. (24th July)
 
 I realised this morning that some of the results obtained from the Chi-square goodness of fit test were incorrect. The way my function was currently setup was to calculate the percentage frequency of each group in the column and compare this with the expected percentage (i.e. if 5 Males and 15 Females, my program converted this to 25% males and 75% females). This is clearly incorrect, because even though the ratios are the same, the size of the group will also have an impact on the result (e.g. 250 Males and 750 Females is quite clearly more significant, despite the same ratio). I have therefore corrected this in my code.
 
@@ -115,8 +115,7 @@ I have began working on some basic data cleaning. I have added functions that wi
 Lastly, adding some sort of spell checker may be useful for the user, although again I think this should be a manual function instead of being carried out automatically (as a user may wish to have 2 variables, both with similar names, but to be treated differently.) I will continue to work on this over the weekend.
 
 
-<a name="latestEntry"></a>
-### Fixing CSS and attempting more data cleaning. (23rd July)
+### Fixing CSS and attempting more data cleaning. (25th July)
 
 One of the pages that has not been responsive for a while was the quickstats page. This page was a grid made up of 4 columns, which worked well on a large page but on a smaller screen size the columns would squash up width ways.
 I have corrected this by adding @media screen size functions to the CSS, adjusting the width based on screen size. I initially attempted with bootstrap grids, and although Masonry (Javascript library being used for dynamic grid) says it supports bootstrap, I could not get it to work.
@@ -127,9 +126,23 @@ I have attempted to add further data cleaning functions. I want to be able to id
 With regards to typos, it seems that it will be a large task in itself to recognise unintentional spelling mistakes in data and I would likely use up the last of my remaining time working on the project to solve it. Instead I might put it further down in my list of jobs and only return to it if I find I have excess time at the end of my project.
 
 
+<a name="latestEntry"></a>
+### Map data. (26th July)
+
+One comment from a user was whether it would be possible to create a data map, representing countries that respondents are from. This was something I have wanted to try doing for a while but wasn't sure how to start.
+
+From researching online, I found the package [Datamap](https://datamaps.github.io/) which is an extension of D3 and helps in the creation of such maps. However most of the information regarding it online is with regards to maps where you know the data in advance and therefore it took quite some time to fully understand how I could use it.
+
+Datamap requires D3 version 3 unfortunately, whilst the rest of my application is built around version 5. I initially included just the version 3 script on the HTML page in which I will be making the map, however many of the functions between version 3  and version 5 have the same name but operate differently, causing conflicts with the file linked in my 'layouts' html (version 5). I therefore had to move the script for version 5 onto each of the HTML pages individually for the other graph types, so that I could include version 3 only on the map HTML. I will look to see if I can improve this code as having to repeat it accross multiple files does not seem like good practice to me.
+
+Another difficulty I encountered was converting the Country names to ISO. Datamap requires that country data is supplied in ISO 3 character format ("GBR" for "Great Britain"). Initially there did not seem to be an online converted tool and I thought I would have to create my own manually. Finally I managed to create a function using some of the in built functions in datamap that solved this problem.
+
+One final problem I am encountering is how to save the image. My save function currently is aimed at D3 svg nodes and does not seem to work on the map SVG. I will continue to try and figure this out tomorrow. I also want to add further functionality so that users can select to zoom in on certain parts of the map (such as Europe if all your data is in Europe). This functionality is almost working but will need to be extended to work for all continents.
+
 
 ##### Ongoing objectives
 
+* Make "saving image" on map page work.
 * Relook at home page to make it more intuitive.
 * Increase file size allowance.
 * Finish looking at statistical tests assumptions.

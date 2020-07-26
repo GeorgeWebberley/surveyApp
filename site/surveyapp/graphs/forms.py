@@ -54,6 +54,13 @@ class HistogramForm(FlaskForm):
     submit = SubmitField("Save to dashboard")
 
 
+class MapForm(FlaskForm):
+    title = StringField(validators=[DataRequired()])
+    variable = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
+    scope = SelectField("Choose a scope:", choices=[("World", "World"), ("Europe", "Europe"), ("Africa", "Africa")])
+    submit = SubmitField("Save to dashboard")
+
+
 class StatisticalTestForm(FlaskForm):
     # We will append choices to drop down depending on the data and what is selected by the upser
     # as survey takes an objectId as the value, we need to initialise it and also tell it to coerce ObjectIds

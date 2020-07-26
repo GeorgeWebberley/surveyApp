@@ -166,6 +166,17 @@ Handles user session for flask applications, including logging in, logging out a
 pip install flask-login
 ```
 
+
+##### Flask-JSGlue
+
+Allows for building flask-like URLs in javascript. Useful for Jquery POSTs (using flask synteax such as url_for).
+
+```
+pip install Flask-JSGlue
+```
+
+### Other
+
 ##### pytest
 
 For carrying out unit testing of my code.
@@ -193,18 +204,10 @@ pip install scipy
 pip install pingouin
 ```
 
-##### Flask-JSGlue
+##### Datamap
 
-Allows for building flask-like URLs in javascript. Useful for Jquery POSTs (using flask synteax such as url_for).
-
-```
-pip install Flask-JSGlue
-```
-
-##### pyspellchecker
-
-For testing possible typos in the data.
+For the creation of geographical maps.
 
 ```
-pip install pyspellchecker
+npm install datamap
 ```

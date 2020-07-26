@@ -270,6 +270,7 @@ exportButton.addEventListener("click", () => {
 
 // When the form is submitted, we want to get a jpg image of the svg
 $('form').submit(function (e) {
+  console.log(svg);
   // prevent default form submission
   e.preventDefault();
   var doctype = '<?xml version="1.0" standalone="no"?>'

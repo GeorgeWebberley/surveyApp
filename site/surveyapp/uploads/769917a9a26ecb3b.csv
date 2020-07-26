@@ -1,0 +1,662 @@
+Country,Gender
+Albania,M
+Albania,F
+Albania,F
+Albania,M
+Andorra,F
+Armenia,M
+Austria,M
+Azerbaijan,F
+Azerbaijan,F
+Belarus,F
+Belgium,M
+Belgium,F
+Belgium,F
+Belgium,M
+Belgium,F
+Belgium,M
+Belgium,M
+Belgium,F
+Bosnia and Herzegovina,F
+Bulgaria,F
+Bulgaria,NB
+Bulgaria,M
+Bulgaria,F
+Bulgaria,F
+Bulgaria,M
+Bulgaria,F
+Bulgaria,M
+Bulgaria,M
+Bulgaria,F
+Bulgaria,F
+Bulgaria,F
+Bulgaria,M
+Bulgaria,F
+Bulgaria,F
+Bulgaria,M
+Bulgaria,F
+Bulgaria,M
+Bulgaria,M
+Bulgaria,F
+Bulgaria,F
+Bulgaria,F
+Bulgaria,NB
+Bulgaria,M
+Croatia,F
+Croatia,F
+Croatia,M
+Croatia,F
+Croatia,M
+Croatia,M
+Croatia,F
+Croatia,F
+Croatia,F
+Croatia,M
+Croatia,F
+Croatia,F
+Croatia,M
+Croatia,F
+Croatia,M
+Croatia,M
+Croatia,F
+Croatia,F
+Croatia,F
+Croatia,NB
+Croatia,M
+Croatia,F
+Croatia,F
+Croatia,M
+Croatia,F
+Croatia,M
+Croatia,M
+Croatia,F
+Croatia,F
+Croatia,F
+Croatia,M
+Croatia,F
+Croatia,F
+Croatia,M
+Croatia,F
+Croatia,M
+Croatia,M
+Croatia,F
+Croatia,F
+Croatia,F
+Croatia,NB
+Croatia,M
+Croatia,F
+Croatia,F
+Croatia,M
+Croatia,F
+Croatia,M
+Croatia,M
+Croatia,F
+Cyprus,F
+Cyprus,F
+Cyprus,M
+Czech Republic,F
+Czech Republic,F
+Czech Republic,M
+Czech Republic,F
+Czech Republic,M
+Czech Republic,M
+Czech Republic,F
+Czech Republic,F
+Czech Republic,F
+Czech Republic,NB
+Czech Republic,M
+Czech Republic,F
+Czech Republic,F
+Czech Republic,M
+Czech Republic,F
+Czech Republic,M
+Czech Republic,M
+Denmark,F
+Denmark,F
+Denmark,F
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,M
+Denmark,F
+Denmark,M
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,F
+Denmark,NB
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,M
+Denmark,F
+Denmark,M
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,F
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,M
+Denmark,F
+Denmark,M
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,F
+Denmark,NB
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,M
+Denmark,F
+Denmark,M
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,F
+Denmark,M
+Denmark,F
+Denmark,F
+Denmark,M
+Denmark,F
+Denmark,M
+Estonia,M
+Estonia,F
+Estonia,F
+Estonia,F
+Estonia,NB
+Estonia,M
+Estonia,F
+Finland,F
+Finland,M
+Finland,F
+Finland,M
+France,M
+France,F
+France,F
+France,F
+France,M
+France,F
+France,F
+France,M
+France,F
+France,M
+France,M
+France,F
+France,F
+France,F
+France,NB
+France,M
+France,F
+France,F
+France,M
+France,F
+France,M
+France,M
+France,F
+France,F
+France,F
+France,M
+France,F
+France,F
+France,M
+Georgia,F
+Georgia,M
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,F
+Georgia,NB
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,M
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,M
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,F
+Georgia,NB
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,M
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,M
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,F
+Georgia,NB
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,M
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,M
+Georgia,F
+Georgia,M
+Georgia,M
+Georgia,F
+Georgia,F
+Georgia,F
+Germany,NB
+Germany,M
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,M
+Germany,M
+Germany,F
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,M
+Germany,M
+Germany,F
+Germany,F
+Germany,F
+Germany,NB
+Germany,M
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,M
+Germany,M
+Germany,F
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,M
+Germany,M
+Germany,F
+Germany,F
+Germany,F
+Germany,NB
+Germany,M
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,M
+Germany,M
+Germany,F
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,F
+Germany,M
+Germany,F
+Germany,M
+Germany,M
+Greece,F
+Greece,F
+Greece,F
+Greece,NB
+Greece,M
+Greece,F
+Greece,F
+Greece,M
+Greece,F
+Greece,M
+Greece,M
+Hungary,F
+Hungary,F
+Hungary,F
+Hungary,M
+Iceland,F
+Iceland,F
+Ireland,M
+Ireland,F
+Ireland,M
+Ireland,M
+Ireland,F
+Ireland,F
+Ireland,F
+Ireland,NB
+Ireland,M
+Ireland,F
+Ireland,F
+Ireland,M
+Ireland,F
+Italy,M
+Italy,M
+Italy,F
+Italy,F
+Italy,F
+Italy,M
+Italy,F
+Italy,F
+Italy,M
+Italy,F
+Italy,M
+Italy,M
+Italy,F
+Italy,F
+Italy,F
+Italy,NB
+Italy,M
+Italy,F
+Italy,F
+Italy,M
+Italy,F
+Italy,M
+Italy,M
+Italy,F
+Italy,F
+Italy,F
+Italy,M
+Italy,F
+Italy,F
+Italy,M
+Italy,F
+Italy,M
+Italy,M
+Italy,F
+Italy,F
+Italy,F
+Italy,NB
+Italy,M
+Italy,F
+Italy,F
+Italy,M
+Kazakhstan,F
+Moldova,M
+Norway,M
+Norway,F
+Norway,F
+Norway,F
+Norway,M
+Norway,F
+Norway,F
+Norway,M
+Norway,F
+Norway,M
+Norway,M
+Norway,F
+Norway,F
+Norway,F
+Norway,NB
+Norway,M
+Poland,F
+Poland,F
+Poland,M
+Poland,F
+Poland,M
+Poland,M
+Poland,F
+Poland,F
+Portugal,F
+Portugal,M
+Portugal,F
+Portugal,F
+Portugal,M
+Portugal,F
+Portugal,M
+Portugal,M
+Portugal,F
+Spain,F
+Spain,F
+Spain,NB
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,NB
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,NB
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,NB
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,NB
+Spain,M
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Spain,M
+Spain,M
+Spain,F
+Spain,F
+Spain,F
+Spain,M
+Spain,F
+Sweden,F
+Sweden,M
+Sweden,F
+Sweden,M
+Sweden,M
+Sweden,F
+Sweden,F
+Sweden,F
+Sweden,NB
+Sweden,M
+Switzerland,F
+Switzerland,F
+Switzerland,M
+Switzerland,F
+Switzerland,M
+Switzerland,M
+Turkey,F
+Turkey,F
+Turkey,F
+Turkey,M
+Turkey,F
+Turkey,F
+Turkey,M
+Turkey,F
+Turkey,M
+Turkey,M
+Turkey,F
+Turkey,F
+Ukraine,F
+Ukraine,NB
+Ukraine,M
+Ukraine,F
+Ukraine,F
+Ukraine,M
+Ukraine,F
+Ukraine,M
+Ukraine,M
+Ukraine,F
+Ukraine,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,M
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,F
+United Kingdom,NB
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,M
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,M
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,F
+United Kingdom,NB
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,M
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,M
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,F
+United Kingdom,NB
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,M
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,M
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,F
+United Kingdom,NB
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,M
+United Kingdom,F
+United Kingdom,M
+United Kingdom,M
+United Kingdom,F
+United Kingdom,F
+United Kingdom,F
