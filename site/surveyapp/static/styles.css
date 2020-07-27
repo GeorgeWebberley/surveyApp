@@ -711,15 +711,16 @@ body {
 
 /* ------BARCHART PAGE------ */
 
-.save-graph-form{
+/* .save-graph-form{
   width: 50%;
 
   display: flex;
   position: relative;
   justify-content: center;
   margin: 2rem auto 2rem auto;
-}
+} */
 
+/* ---------------------------KEEP------------------------- */
 .edit-graph-title{
   color: var(--primary-colour-dark);
   max-width: 30rem;
@@ -728,18 +729,18 @@ body {
   text-align: center;
 }
 
-.save-graph{
+/* .save-graph{
   position: absolute;
   right: 0;
   font-size: 0.8rem;
-}
+} */
 
 
 /* --------BARCHART 2 PAGE-------- */
-
+/* 
 .chart-form{
   min-height: 75vh;
-}
+} */
 
 .vh-75 {
   height: 75vh;

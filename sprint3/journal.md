@@ -126,7 +126,6 @@ I have attempted to add further data cleaning functions. I want to be able to id
 With regards to typos, it seems that it will be a large task in itself to recognise unintentional spelling mistakes in data and I would likely use up the last of my remaining time working on the project to solve it. Instead I might put it further down in my list of jobs and only return to it if I find I have excess time at the end of my project.
 
 
-<a name="latestEntry"></a>
 ### Map data. (26th July)
 
 One comment from a user was whether it would be possible to create a data map, representing countries that respondents are from. This was something I have wanted to try doing for a while but wasn't sure how to start.
@@ -139,10 +138,25 @@ Another difficulty I encountered was converting the Country names to ISO. Datama
 
 One final problem I am encountering is how to save the image. My save function currently is aimed at D3 svg nodes and does not seem to work on the map SVG. I will continue to try and figure this out tomorrow. I also want to add further functionality so that users can select to zoom in on certain parts of the map (such as Europe if all your data is in Europe). This functionality is almost working but will need to be extended to work for all continents.
 
+<a name="latestEntry"></a>
+### Finishing data map, sorting of tabular data and simplifying code. (27th July)
+
+This morning I finished up on getting the data map page to work and exporting the SVG. The difficulty was with getting the svg.node() element so that it could be drawn on a canvas and making this reproducible so the same code could be used across all of my graph types.
+
+I have added the other continents to the datamap, as well as adding a map displaying the different states of USA, so that a user can instead use this instead of countries if they wish. I have also altered the colour scheme and made a tooltip that displays the country as well as the values associated with that country.
+
+One comment from a family member when I went home was that it would be nice to be able to sort the data in the data table (on the input page). This is so they could sort numbers ascending or descending order, so that they can see the highest and lowest values, as well as being able to sort words alphabetically. I have now added this feature to the handsontable, meaning that users can simply click on a column heading, causing it to sort without changing the underlying data.
+
+Lastly, I have wanted to clean my HTML code for my graphs for a while. This is because many of the HTML elements were repeated between the files (such as the title, the export button), the graph section itself etc.) The main difference between the files is the axis/variable settings.
+I have therefore created a 'graphs.html' template which the other HTML files inherit from. The individual graph type HTML files now only contain the code for the axis/variable input section, as well as the javascript files specific to that graph type. All of the other code has been moved to the shared graph.html file.
+
+Additionally to this, I have also separated out the function which converts the SVG to an image and posts this with the other form data to the server when the user clicks the 'save' button. I have put this in it's own javascript file which I have included in the template 'graph.html' file so as to reduce reptitive code.
+
+As I am nearing the end of sprint 3 (the final sprint) and most of the features that I intended to add have been done, I will likely spend the next few days reviewing my code in a similar way and refactoring it. There are also some small changes to make, such as increasing the file size allowance and making the home page more intuitive.
+
 
 ##### Ongoing objectives
 
-* Make "saving image" on map page work.
 * Relook at home page to make it more intuitive.
 * Increase file size allowance.
 * Finish looking at statistical tests assumptions.

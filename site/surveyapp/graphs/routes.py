@@ -249,10 +249,8 @@ def map_chart(survey_id, column_info, chart_data, graph_id, title):
     # Populate the form options.
     for column in column_info:
         form.variable.choices.append((column["title"], column["title"]))
-    print("Damn")
     # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
     if form.validate_on_submit():
-        print("yay")
         image_data = request.form["image"]
         file_name = save_image(image_data, graph_id)
         # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
@@ -264,8 +262,6 @@ def map_chart(survey_id, column_info, chart_data, graph_id, title):
                 "variable" : form.variable.data,\
                 "scope" : form.scope.data,\
                 "image": file_name}}, upsert=True)
-        flash("Graph saved to dashboard.", "success")
-        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
     graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
@@ -275,10 +271,10 @@ def map_chart(survey_id, column_info, chart_data, graph_id, title):
         form.scope.data = graph_obj["scope"]
         form.title.data = graph_obj["title"]
     else:
-        form.title.data = "Bar chart - " + title
+        form.title.data = "Map chart - " + title
 
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
-    return render_template("map.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+    return render_template("map.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id, chart_type="Map")
 
 
 
@@ -317,8 +313,6 @@ def pie_bar_chart(survey_id, column_info, chart_data, graph_id, title, chart_typ
                 "yAxis": form.y_axis.data,\
                 "yAggregation": y_agg,
                 "image": file_name}}, upsert=True)
-        flash("Graph saved to dashboard.", "success")
-        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
     graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
@@ -333,9 +327,9 @@ def pie_bar_chart(survey_id, column_info, chart_data, graph_id, title, chart_typ
 
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
     if chart_type == "Bar chart":
-        return render_template("barchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+        return render_template("barchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id, chart_type="Bar chart")
     else:
-        return render_template("piechart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+        return render_template("piechart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id, chart_type="Pie chart")
 
 
 
@@ -369,8 +363,6 @@ def scatter_chart(survey_id, column_info, chart_data, graph_id, title):
                 "yAxisTo": form.y_axis_to.data,\
                 "line": form.line.data,\
                 "image": file_name}}, upsert=True)
-        flash("Graph saved to dashboard.", "success")
-        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
     graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
@@ -387,7 +379,7 @@ def scatter_chart(survey_id, column_info, chart_data, graph_id, title):
     else:
         form.title.data = "Graph - " + title
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
-    return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+    return render_template("scatterchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id, chart_type="Scatter chart")
 
 
 
@@ -413,10 +405,7 @@ def histogram(survey_id, column_info, chart_data, graph_id, title):
                 "xAxisFrom" : form.x_axis_from.data,\
                 "xAxisTo" : form.x_axis_to.data,\
                 "groupSize" : form.group_size.data,\
-                # "line": form.line.data,\
                 "image": file_name}}, upsert=True)
-        flash("Graph saved to dashboard.", "success")
-        return redirect(url_for("graphs.dashboard", title="Dashboard", survey_id=survey_id))
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
     graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
@@ -431,7 +420,7 @@ def histogram(survey_id, column_info, chart_data, graph_id, title):
         form.title.data = "Graph - " + title
 
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
-    return render_template("histogram.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id)
+    return render_template("histogram.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id, chart_type="Histogram")
 
 
 

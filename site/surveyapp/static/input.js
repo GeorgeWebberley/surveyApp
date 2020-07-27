@@ -107,6 +107,7 @@ function renderTable(values, headers){
     filters: true,
     colHeaders: headers,
     licenseKey: 'non-commercial-and-evaluation',
+    columnSorting: true,
     dropdownMenu: {
       items: [
         {

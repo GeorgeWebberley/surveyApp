@@ -50,14 +50,13 @@ class HistogramForm(FlaskForm):
     x_axis_from = IntegerField("From")
     x_axis_to = IntegerField("To")
     group_size = IntegerField("Number of groups")
-    # line = BooleanField("Add connecting line: ")
     submit = SubmitField("Save to dashboard")
 
 
 class MapForm(FlaskForm):
     title = StringField(validators=[DataRequired()])
     variable = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
-    scope = SelectField("Choose a scope:", choices=[("World", "World"), ("Europe", "Europe"), ("Africa", "Africa")])
+    scope = SelectField("Choose a scope:", choices=[("World", "World"), ("Europe", "Europe"), ("Africa", "Africa"), ("South America", "South America"), ("Asia", "Asia"), ("Australia/Oceania", "Australia/Oceania"), ("North America", "North America"), ("United States of America", "United States of America")])
     submit = SubmitField("Save to dashboard")
 
 
