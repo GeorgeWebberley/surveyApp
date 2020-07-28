@@ -45,11 +45,15 @@ def create_app(config_name):
     # Import the blueprints and register them with out app (so it knows where to look for the routes)
     from surveyapp.users.routes import users
     from surveyapp.graphs.routes import graphs
+    from surveyapp.surveys.routes import surveys
+    from surveyapp.analysis.routes import analysis
     from surveyapp.main.routes import main
     from surveyapp.errors.handlers import errors
     # Register the blueprint routes
     app.register_blueprint(users)
     app.register_blueprint(graphs)
+    app.register_blueprint(surveys)
+    app.register_blueprint(analysis)
     app.register_blueprint(main)
     app.register_blueprint(errors)
 

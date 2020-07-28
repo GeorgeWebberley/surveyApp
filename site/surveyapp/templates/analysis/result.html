@@ -1,0 +1,75 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="grid-section mt-3">
+    <div class="title-area">
+      <h3 class="ml-3 mt-2">Test results</h3>
+    </div>
+    <div class="full-bar"></div>
+    <div class="mt-4">
+      <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.title.label(class="result-form-title") }}
+        {% if form.title.errors %}
+            {{ form.title(class="result-form-input form-input-error") }}
+            <div class="invalid">
+                {% for error in form.title.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ form.title(class="result-form-input") }}
+        {% endif %}
+        <table class="result-table">
+         <tr>
+           <th class="help" data-toggle="tooltip"
+           title="This is the hypothesis that there are NO significant differences of characteristics between specifed populations.">
+           Null Hypothesis</th>
+           <th class="help" data-toggle="tooltip"
+           title="This is the type of statistical test used to test the null hypothesis.">
+           Statistical Test</th>
+           <th class="help" data-toggle="tooltip" data-placement="left"
+           title="Sometimes called 'Alpha', the significance value is the probability of rejecting the null hypothesis when it is true.
+           It can be though of as a 'cut-off' point; when the p-value is lower you can reject the null hypothesis. We have set this to a default
+           of 0.05 (indicating a 5% risk of no actual difference when concluding that a difference exists).">
+           Significance value</th>
+           <th class="help" data-toggle="tooltip" data-placement="left"
+           title="If we assume that the null hypothesis is true, the p-value gives the probability of obtaining the results as extreme as the
+             observed results of the statistical test. This value is compared against the significance value, with a lower p-value meaning we
+             can reject the null hypothesis.">
+           P-Value</th>
+           <th class="help" data-toggle='tooltip'
+           title='Whether we should reject or accept the null hypothesis.'>
+           Conclusion</th>
+         </tr>
+         <tr>
+           {% if result["test"] == "Chi-Square goodness of fit" %}
+            <td>There is no significant difference between the observed and the expected values.</td>
+           {% else %}
+            <td>The distribution of <strong>{{ result["dv"] }}</strong> is the same across groups of <strong>{{ result["iv"] }}</strong></td>
+           {% endif %}
+           <td>{{ result["test"] }}</td>
+           <td>{{ result["alpha"] }}</td>
+           <td>{{ result["p"] }}</td>
+           {% if result["p"] <= result["alpha"] %}
+            <td>Reject the null hypothesis</td>
+           {% else %}
+            <td>Accept the null hypothesis</td>
+           {% endif %}
+         </tr>
+        </table>
+        <div class="d-flex justify-content-between m-3">
+          <a class="btn btn-secondary" href="{{ url_for('surveys.dashboard', survey_id=survey_id) }}">Cancel</a>
+          {{ form.submit(class="btn btn-primary") }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  $(function () {
+      $("[data-toggle='tooltip']").tooltip();
+  });
+</script>
+{% endblock content %}

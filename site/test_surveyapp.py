@@ -190,7 +190,7 @@ def test_quick_stats(client):
     # For testing, we can get the id of the survey safely by searching for the title,
     # as we know there is only one survey with that name.
     survey = mongo.db.surveys.find_one({"title": "Test file"})
-    rv = client.get(url_for("graphs.quick_stats", survey_id=survey['_id']))
+    rv = client.get(url_for("analysis.quick_stats", survey_id=survey['_id']))
     # Now run some checks to ensure the page loads correctly
     assert(rv.status_code == 200)
     assert b'Quick Stats: Test file' in rv.data
@@ -213,11 +213,11 @@ def test_statistical_test(client):
     survey = mongo.db.surveys.find_one({"title": "Test file"})
 
     # First confirm that there are no tests associated with this survey
-    rv = client.get(url_for("graphs.dashboard", survey_id=survey['_id']))
+    rv = client.get(url_for("surveys.dashboard", survey_id=survey['_id']))
     assert(rv.status_code == 200)
     assert b'No tests yet!' in rv.data
 
-    rv = client.get(url_for("graphs.analyse", survey_id=survey['_id']))
+    rv = client.get(url_for("analysis.analyse", survey_id=survey['_id']))
     # Now run some checks to ensure the page loads correctly
     assert(rv.status_code == 200)
     assert b'What test would you like to apply?' in rv.data
@@ -229,7 +229,7 @@ def test_statistical_test(client):
     test = "Kruskall Wallis Test"
     independent_variable = "Gender"
     dependent_variable = "Age"
-    rv = client.post(url_for("graphs.analyse", survey_id=survey['_id']),
+    rv = client.post(url_for("analysis.analyse", survey_id=survey['_id']),
     data=dict(test = test, independent_variable = independent_variable, dependent_variable = dependent_variable),
     follow_redirects=True)
 
@@ -240,7 +240,7 @@ def test_statistical_test(client):
     assert b'Accept the null hypothesis' in rv.data
 
     # Now we will test saving the statistical test with some dummy data
-    rv = client.post(url_for("graphs.result", test = test,
+    rv = client.post(url_for("analysis.result", test = test,
         independent_variable = independent_variable,
         dependent_variable = dependent_variable,
         survey=survey['_id'],
@@ -255,7 +255,7 @@ def test_statistical_test(client):
 
     # Now finally, let's test deleting the test
     example_test = mongo.db.tests.find_one({"title": "Example test"})
-    rv = client.post(url_for("graphs.delete_test",
+    rv = client.post(url_for("analysis.delete_test",
         survey_id = survey['_id'],
         test_id = example_test['_id']),
         follow_redirects=True)
@@ -296,7 +296,7 @@ def test_graph(client):
 
     survey = mongo.db.surveys.find_one({"title": "Test file"})
     # First confirm that there are no graphs associated with this survey
-    rv = client.get(url_for("graphs.dashboard", survey_id=survey['_id']))
+    rv = client.get(url_for("surveys.dashboard", survey_id=survey['_id']))
     assert(rv.status_code == 200)
     assert b'No graphs yet!' in rv.data
 

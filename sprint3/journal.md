@@ -138,7 +138,6 @@ Another difficulty I encountered was converting the Country names to ISO. Datama
 
 One final problem I am encountering is how to save the image. My save function currently is aimed at D3 svg nodes and does not seem to work on the map SVG. I will continue to try and figure this out tomorrow. I also want to add further functionality so that users can select to zoom in on certain parts of the map (such as Europe if all your data is in Europe). This functionality is almost working but will need to be extended to work for all continents.
 
-<a name="latestEntry"></a>
 ### Finishing data map, sorting of tabular data and simplifying code. (27th July)
 
 This morning I finished up on getting the data map page to work and exporting the SVG. The difficulty was with getting the svg.node() element so that it could be drawn on a canvas and making this reproducible so the same code could be used across all of my graph types.
@@ -153,6 +152,22 @@ I have therefore created a 'graphs.html' template which the other HTML files inh
 Additionally to this, I have also separated out the function which converts the SVG to an image and posts this with the other form data to the server when the user clicks the 'save' button. I have put this in it's own javascript file which I have included in the template 'graph.html' file so as to reduce reptitive code.
 
 As I am nearing the end of sprint 3 (the final sprint) and most of the features that I intended to add have been done, I will likely spend the next few days reviewing my code in a similar way and refactoring it. There are also some small changes to make, such as increasing the file size allowance and making the home page more intuitive.
+
+
+<a name="latestEntry"></a>
+### Reorganising static folder and templates and adding tooltips. (28th July)
+
+Today I carried out a big restructuring of my application. Previously, all of my routes relating to anything to do with surveys were in a 'graphs' folder. All of the utils relating to surveys and stats were also in this folder. The routes file itself was very large with many routes and functions, as were the 'utility' helper functions in graphs.utils.py.
+
+In order to make this more organised, I divided these functions and routes into 3 separate python packages. 'graphs', 'surveys' and 'analysis'. Blueprints were create and initialised for each one and __init__.py files made (needed to  tell python this is a package). I created a 'routes.py', 'utils.py', and 'forms.py' file in each one and separated out the functions into the corresponding places. This has helped reduce the size of many files and made it much easier to read and manage.
+
+Additionally to this I have also restructured the 'tempaltes' folder. Previously, this was a folder that just contained all of the html files without an sort of structure or organisation. I have now made multiple sub folders (users, graphs, surveys, analysis and main) and have put the relevant html files into each one.
+
+In a similar manner, I have restructured my static folder, creating subfolders for different types of javascript files, as well as making a general images folder that contains subfolders for the site images and the images relating to the user's uploaded graphs.
+
+I went through the old CSS file, removing and simplify any previous CSS classes (I want to continue simplifying this over the next few days.)
+
+I have added some tooltips the the 'histogram' and 'scatterchart' pages. This was because they do not give the user the option to display anything but numerical data (as both of these graph types require numerical data) - the downside of this is that if the user has no numerical columns then there are no options in the select field. A small tooltip is created for this situation to explain to the user why this is the case so that they do not get confused.
 
 
 ##### Ongoing objectives

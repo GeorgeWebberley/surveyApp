@@ -13,10 +13,7 @@ main = Blueprint("main", __name__)
 @main.route('/')
 @main.route('/index')
 def index():
-    return render_template("index.html")
-
-
-
+    return render_template("main/index.html")
 
 # Feedback route to gather user feedback during development
 @main.route('/feedback', methods=["GET", "POST"])
@@ -31,4 +28,4 @@ def feedback():
         "user" : current_user._id})
         flash("Thank you for your feedback.", "success")
         return redirect(url_for("main.index"))
-    return render_template("feedback.html", title = "Feedback", form = form)
+    return render_template("main/feedback.html", title = "Feedback", form = form)

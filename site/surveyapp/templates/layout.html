@@ -36,7 +36,7 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-site-primary shadow sticky-top" role="navigation">
       <div class="container">
       <a href="{{ url_for('main.index') }}">
-        <img class="logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="Datasaur Logo">
+        <img class="logo" src="{{ url_for('static', filename='images/siteimages/logo.png') }}" alt="Datasaur Logo">
 
       </a>
       <!-- <a class="navbar-brand text-light" href="{{ url_for('main.index') }}">Survey Site</a> -->
@@ -50,7 +50,7 @@
             <a class="nav-link text-light" href="{{ url_for('users.logout') }}">Logout</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-light" href="{{ url_for('graphs.home') }}">Home</a>
+            <a class="nav-link text-light" href="{{ url_for('surveys.home') }}">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-light" href="{{ url_for('main.feedback') }}">Feedback</a>

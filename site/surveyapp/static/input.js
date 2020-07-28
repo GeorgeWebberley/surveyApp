@@ -218,7 +218,7 @@ function postData(dataString){
       data: postData,
       success: function (data) {
         // The server returns the id of the survey (if it is new) so we can update our URL
-        url = Flask.url_for("graphs.input", {"survey_id": data})
+        url = Flask.url_for("surveys.input", {"survey_id": data})
       }
   });
 }

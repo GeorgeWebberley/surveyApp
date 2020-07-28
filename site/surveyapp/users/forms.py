@@ -1,9 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, RadioField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from surveyapp import mongo, login_manager
-
 
 
 class RegistrationForm(FlaskForm):
@@ -16,7 +15,6 @@ class RegistrationForm(FlaskForm):
 
     # This method follows the custom validator pattern outlined in WTForms documentation
     # When the form is validated, it checks if a user already exists with that email
-
     def validate_email(self, email):
         user_exists = mongo.db.users.find_one({"email" : email.data})
         if user_exists:
@@ -36,8 +34,8 @@ class UpdateAccountForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Update')
 
-    # This method follows the custom validator pattern outlined in WTForms documentation
-    # When the form is validated, it checks if a user already exists with that email
+    # Similar to method above in RegsitrationForm, checks if user exists with that Email
+    # before allowing user to change email
     def validate_email(self, email):
         if email.data != current_user.email:
             user_exists = mongo.db.users.find_one({"email" : email.data})
@@ -49,6 +47,7 @@ class RequestPasswordForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request password reset')
 
+    # Opposite of methods above, checks if user doesn't exist with the given email
     def validate_email(self, email):
         user_exists = mongo.db.users.find_one({"email" : email.data})
         if not user_exists:

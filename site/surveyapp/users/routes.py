@@ -25,7 +25,7 @@ def register():
         "password" : password_hash})
         flash("Account created successfully! You can now login.", "success")
         return redirect(url_for("users.login"))
-    return render_template("register.html", title = "Register", form = form)
+    return render_template("users/register.html", title = "Register", form = form)
 
 
 @users.route("/login", methods=["GET", "POST"])
@@ -46,7 +46,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for("main.index"))
         else:
             flash("Invalid username or password", "danger")
-    return render_template("login.html", title = "Login", form = form)
+    return render_template("users/login.html", title = "Login", form = form)
 
 
 @users.route('/logout')
@@ -75,7 +75,7 @@ def account():
     form.first_name.data = current_user.first_name
     form.last_name.data = current_user.last_name
     form.email.data = current_user.email
-    return render_template("account.html", title = "Account", form = form)
+    return render_template("users/account.html", title = "Account", form = form)
 
 
 @users.route('/reset_password', methods=["GET", "POST"])
@@ -89,7 +89,7 @@ def request_reset():
         send_email(user_obj)
         flash("An email has been sent with a password reset link", "success")
         return redirect(url_for("users.login"))
-    return render_template("request_reset.html", title="Password Reset", form=form)
+    return render_template("users/request_reset.html", title="Password Reset", form=form)
 
 
 @users.route('/reset_password/<token>', methods=["GET", "POST"])
@@ -109,4 +109,4 @@ def reset_password(token):
         {"$set": {"password": password_hash}})
         flash("Password updated! You can now login.", "success")
         return redirect(url_for("users.login"))
-    return render_template("reset_password.html", title="Password Reset", form=form)
+    return render_template("users/reset_password.html", title="Password Reset", form=form)
