@@ -47,6 +47,18 @@ class MapForm(FlaskForm):
     submit = SubmitField("Save to dashboard")
 
 
+# Form used for box and whisker plots
+class BoxForm(FlaskForm):
+    title = StringField(validators=[DataRequired()])
+    # We will append variables to x/y axis choices based on the data
+    # The x-axis is optional in a box-whisker plot. Users can select it if they want
+    # to see distribution over a particular group of respondents
+    x_axis = SelectField("Choose a variable:", choices=[("", " -- optional -- ")])
+    # Unlike with bar charts, the y-axis will not have an 'Amount'. It instead must
+    # be a numerical type data from the users data
+    y_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
+    submit = SubmitField("Save to dashboard")
+
 
 
 # FileAllowed([".xls", ".xlt", ".xla", ".xlsx", ".xltx", ".xlsb", ".xlsm", ".xltm", ".xlam", ".csv"], message="Only CSV files or Excel Spreadsheets allowed.")

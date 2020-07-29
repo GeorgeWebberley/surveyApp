@@ -1,0 +1,29 @@
+{% extends "graphs/graph.html" %} {% block axis %}
+<!-- Axes settings -->
+<div class="col-md-3  order-md-1">
+  <div class="h-100 grid-section p-3">
+    <!-- ------Y AXIS------ -->
+    <div class="y-axis-details">
+      <h3>Numerical variable</h3>
+      <div class="grid-bar"></div>
+      <div class="axis-variable">
+        {{ form.y_axis.label() }}
+        {{ form.y_axis(class="y-axis-value axis-setting") }}
+      </div>
+    </div>
+    <!-- ------X AXIS------ -->
+    <div class="x-axis-details hidden-axis">
+      <h3>Categorical variable</h3>
+      <div class="grid-bar">
+        <div class="axis-variable">
+          {{ form.x_axis.label() }}
+          {{ form.x_axis(class="x-axis-value axis-setting") }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End of Axis settings -->
+<!-- Scripts specifically for barchart -->
+<script src="{{ url_for('static', filename='graphscripts/boxchart.js') }}" defer></script>
+{% endblock axis %}

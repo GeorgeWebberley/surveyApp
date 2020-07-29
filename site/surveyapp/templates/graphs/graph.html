@@ -61,6 +61,13 @@
   var redirectUrl = "{{ url_for('surveys.dashboard', survey_id=survey_id) }}"
   var url = "{{ url_for('graphs.graph', survey_id=survey_id, graph_id=graph_id, chart_type=chart_type) }}"
 </script>
+{% if chary_type ==  "Map" %}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js" defer></script>
+  <script src="{{ url_for('static', filename='node_modules/datamaps/dist/datamaps.all.min.js')}}" defer></script>
+{% else %}
+  <script src="https://d3js.org/d3.v5.min.js" defer></script>
+{% endif %}
 <!-- Scripts for exporting graph as image and for saving to dashboard -->
 <script src="{{ url_for('static', filename='graphscripts/postgraph.js') }}" defer></script>
 <!-- Script taken from https://github.com/exupero/saveSvgAsPng -->

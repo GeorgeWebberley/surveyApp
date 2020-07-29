@@ -154,7 +154,6 @@ Additionally to this, I have also separated out the function which converts the 
 As I am nearing the end of sprint 3 (the final sprint) and most of the features that I intended to add have been done, I will likely spend the next few days reviewing my code in a similar way and refactoring it. There are also some small changes to make, such as increasing the file size allowance and making the home page more intuitive.
 
 
-<a name="latestEntry"></a>
 ### Reorganising static folder and templates and adding tooltips. (28th July)
 
 Today I carried out a big restructuring of my application. Previously, all of my routes relating to anything to do with surveys were in a 'graphs' folder. All of the utils relating to surveys and stats were also in this folder. The routes file itself was very large with many routes and functions, as were the 'utility' helper functions in graphs.utils.py.
@@ -169,6 +168,17 @@ I went through the old CSS file, removing and simplify any previous CSS classes 
 
 I have added some tooltips the the 'histogram' and 'scatterchart' pages. This was because they do not give the user the option to display anything but numerical data (as both of these graph types require numerical data) - the downside of this is that if the user has no numerical columns then there are no options in the select field. A small tooltip is created for this situation to explain to the user why this is the case so that they do not get confused.
 
+
+<a name="latestEntry"></a>
+### No internet - code refactoring. (29th July)
+
+Unfortunately this morning there was a power outage affecting all of the flats in the building. Since the power came back the internet has been non functional and we have been waiting all day for an engineer to arrive and diagnose/fix the problem.
+
+I started working on adding a box and whisker plot diagram (at the request of a user) but soon realised that this would be impossible to test without the internet. This is because the CSS and also many of the javascripts (including the ones for the D3 functions) are direct links to the CDN and therefore do not work without the internet.
+
+Instead I have spent the day attempting to refactor code. Whilst this has been ok, it is also somewhat difficult as I am unable to test whether the changes I have made with refactoring have introduce bugs into the rendering of the graphs. Whilst I am fairly confident that it should be ok, I am slightly hesitant about changing my code too much without being able to test that it actually still works.
+
+An engineer will be arriving at the building tonight and therefore hopefully tomorrow the internet will be back up and running so that I can make an attempt at creating a box and whisker graph.
 
 ##### Ongoing objectives
 

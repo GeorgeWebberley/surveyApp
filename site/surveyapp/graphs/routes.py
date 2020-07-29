@@ -2,7 +2,7 @@ import json
 from surveyapp import mongo
 from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, abort
 from flask_login import login_required, current_user
-from surveyapp.graphs.forms import BarPieForm, ScatterchartForm, HistogramForm, MapForm
+from surveyapp.graphs.forms import BarPieForm, ScatterchartForm, HistogramForm, MapForm, BoxForm
 from bson.objectid import ObjectId
 
 from surveyapp.graphs.utils import save_image, delete_image
@@ -70,9 +70,53 @@ def graph(survey_id):
     # ----------SCATTER CHART----------
     elif chart_type == "Map":
         return map_chart(survey_id, column_info, chart_data, graph_id, file_obj["title"])
+    # ----------SCATTER CHART----------
+    elif chart_type == "Box and whisker":
+        return box_chart(survey_id, column_info, chart_data, graph_id, file_obj["title"])
     else:
         flash("something went wrong", "danger")
         abort(404)
+
+
+
+
+# Function that renders the bar-chart page
+def box_chart(survey_id, column_info, chart_data, graph_id, title):
+    form = BoxForm()
+    # Populate the form options. A box chart can take any data type for x-axis but y-axis must be numerical
+    for column in column_info:
+        form.x_axis.choices.append((column["title"], column["title"]))
+        if column["data_type"] == "numerical":
+            # We insert a tuple, The first is the 'value' of the select, the second is the text displayed
+            form.y_axis.choices.append((column["title"], column["title"]))
+    # Now we have specified the 'select' options for the form, we can check 'form.validate_on_submit'
+    if form.validate_on_submit():
+        image_data = request.form["image"]
+        file_name = save_image(image_data, graph_id)
+        # setting upsert=true in the update will create the entry if it doesn't yet exist, else it updates
+        mongo.db.graphs.update_one({"_id": ObjectId(graph_id)},\
+        {"$set": {"title" : form.title.data,\
+                "surveyId": survey_id,\
+                "user" : current_user._id,\
+                "type" : "Box and whisker",\
+                "xAxis" : form.x_axis.data,\
+                "yAxis": form.y_axis.data,\
+                "image": file_name}}, upsert=True)
+
+    # If we are editing the graph instead of creating new, we want to prepopulate the fields
+    graph_obj = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
+
+    if graph_obj:
+        form.x_axis.data = graph_obj["xAxis"]
+        form.y_axis.data = graph_obj["yAxis"]
+        form.title.data = graph_obj["title"]
+    else:
+        form.title.data = "Graph - " + title
+
+    data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
+    return render_template("graphs/boxchart.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id, chart_type="Box and whisker")
+
+
 
 
 

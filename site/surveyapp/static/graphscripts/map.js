@@ -1,12 +1,14 @@
-// Set variables for all our DOM elements
+// ------VARIABLE DECLARATIONS------
 const settings = document.querySelectorAll(".axis-setting")
 const variable = document.querySelector(".x-axis-value")
 const scope = document.querySelector(".scope")
 const exportButton = document.querySelector(".export")
-
-
 // Get the graph data
 const data = graphData["chart_data"]
+
+// Width/height needed for saving image to dashboard
+const width = document.getElementById('graph').clientWidth;
+const height = document.getElementById('graph').clientHeight;
 
 // Get the iso code for all the countries and pair them with country names for later access
 let iso = {}
@@ -83,12 +85,28 @@ const oceania = function(element) {
     return {path: path, projection: projection};
 }
 
+// ------END OF VARIABLE DECLARATIONS------
+// ------SET EVENT LISTENERS------
+// Add event listener for any axis changes
+settings.forEach(setting => {
+  setting.onchange = function(){
+    render(variable.options[variable.selectedIndex].value);
+  }
+})
 
+// Runs if variables already set (i.e. if user is choosing to edit rather than create)
+if(variable.options[variable.selectedIndex].value != ''){
+  render(variable.options[variable.selectedIndex].value)
+}
 
+// Export as PNG so user can use outside the app
+exportButton.addEventListener("click", () => {
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+})
 
-
-function groupData(chosenVariable){
-  // Delete old graph (if present)
+// ------FUNCTIONS FOR DRAWING THE GRAPH------
+function render(chosenVariable){
+  // Needed to delete the old graph (if present)
   $("#graph").parent().append( "<div id='graph' class='h-100 position-relative'/>");
   $("#graph").remove();
   // Get the grouped data
@@ -120,7 +138,7 @@ function groupData(chosenVariable){
       "fillKey": colour,
       "value": country.values
     }
-    // Get the country code (ISO 3 letter code)
+    // Convert the country to 3 letter ISO code (if needed)
     let countryCode = iso[country.key] == undefined ? country.key : iso[country.key]
     result[countryCode] = fill
   })
@@ -152,13 +170,22 @@ function groupData(chosenVariable){
   map.legend();
 }
 
+// Groups the data on the chosenVariable/column
+function group(chosenVariable){
+  // We can create a 'nested' D3 object, with the key as the chosen x-axis variable
+  let nestedData = d3.nest().key(function(d) { return d[chosenVariable]; })
+  return nestedData
+    .rollup(function(v) { return v.length; })
+    .entries(data)
+}
+
 // Gets the maximum value and then increases it so it is divisible by 5 (for the 5 bins)
 function getMax(groupedData){
   let max = 0
   for(let i = 0; i < groupedData.length; i++){
-    if(groupedData[i].values > max)[
+    if(groupedData[i].values > max){[}
       max = groupedData[i].values
-    ]
+    }
   }
   // we now increase the maximum until it is directly divisble by 5 (as we have 5 bins)
   max++;
@@ -170,7 +197,7 @@ function getMax(groupedData){
 
 // Sets the colour scale of the map
 function getColourScale(max, veryHigh, high, medium, veryLow, low){
-  // Save as string so that we can insert in values
+  // Save as string so that we can insert in javascript variables
   let colourScale = `{
       "${veryLow}": "#DEEDCF",
       "${low}": "#74C67A",
@@ -182,7 +209,6 @@ function getColourScale(max, veryHigh, high, medium, veryLow, low){
   // Convert to JSON object to be used in the map
   return JSON.parse(colourScale)
 }
-
 
 // Gets the projection of the map, depending on the chosen user input
 function getProjection(){
@@ -211,40 +237,6 @@ function getScope(){
     return "world"
   }
 }
-
-// Groups the data on the chosenVariable/column
-function group(chosenVariable){
-  // We can create a 'nested' D3 object, with the key as the chosen x-axis variable
-  let nestedData = d3.nest().key(function(d) { return d[chosenVariable]; })
-  return nestedData
-    .rollup(function(v) { return v.length; })
-    .entries(data)
-}
-
-// Add event listener for any axis changes
-settings.forEach(setting => {
-  setting.onchange = function(){
-    groupData(variable.options[variable.selectedIndex].value);
-  }
-})
-
-// Runs if variables already set (i.e. if user is choosing to edit rather than create)
-if(variable.options[variable.selectedIndex].value != ''){
-  groupData(variable.options[variable.selectedIndex].value)
-}
-
-
-
-// Export as PNG so user can use outside the app
-exportButton.addEventListener("click", () => {
-  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
-})
-
-
-// Width/height needed for saving image to dashboard
-const width = document.getElementById('graph').clientWidth;
-const height = document.getElementById('graph').clientHeight;
-
 
 // Ajax call used to post, as we are also sending the image of the graph (not in form)
 $('form').submit(function (e) {

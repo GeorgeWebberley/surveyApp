@@ -1,43 +1,74 @@
+// ------VARIABLE DECLARATIONS------
 const xAxisSelect = document.querySelector(".x-axis-value")
-const emptyGraph = document.querySelector(".empty-graph")
+const emptyGraph = document.querySelector(".empty-graph") //overlay
 const exportButton = document.querySelector(".export")
-
 const settingsGroup = document.querySelector(".extra-settings-group")
-
 const extraSettings = document.querySelectorAll(".extra-setting")
-
+// x-axis range
 const xFrom = document.querySelector(".x-from")
 const xTo = document.querySelector(".x-to")
 const numberOfGroups = document.querySelector(".number-groups")
-
-// Function required to activate the 'help' tooltip on the axis
-$(function () {
-    $("[data-toggle='help']").tooltip();
-});
-
 // Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
 const axisSettings = document.querySelector(".axis-setting")
 
 // Get the graph data
 const data = graphData["chart_data"]
 
+// Get the width and height of the SVG on the client screen
+let width = document.getElementById('graph').clientWidth;
+let height = document.getElementById('graph').clientHeight;
+// Re-set the width and height on window resize
+window.onresize = function(){
+  width = document.getElementById('graph').clientWidth;
+  height = document.getElementById('graph').clientHeight;
+  svg.attr('width', width).attr('height', height);
+}
+// Set margins around graph for axis and labels
+const margin = { top: 20, right: 20, bottom: 60, left: 80 };
+// Set the graph width and height to account for margins
+const gWidth = width - margin.left - margin.right;
+const gHeight = height - margin.top - margin.bottom;
 
+// Create SVG ready for graph
+const svg = d3.select('#graph')
+              .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("viewBox", "0 0 " + width + " " + height)
+                .attr("preserveAspectRatio", "none")
 
-// When the axis is altered, we need to re-group the data depending on the variable set
+// Add the graph area to the SVG, factoring in the margin dimensions
+let graph = svg.append('g').attr("transform", `translate(${margin.left}, ${margin.top})`)
+// ------END OF VARIABLE DECLARATIONS------
+
+// ------EVENT LISTENERS------
+// When the axis is altered, we trigger the graph rendering
 axisSettings.onchange = function(){
   axisChange()
 }
 
+// If the x-axis is not an empty string on page load (i.e. if user is editing a graph)
+if(xAxisSelect.options[xAxisSelect.selectedIndex].value != ''){
+  axisChange()
+}
+
 // When the x-axis range is altered or the group size is altered, we need to re-render the table
+// We do not need to call 'axisChange' as the variables themselves haven't changed
 extraSettings.forEach(input => {
   input.onchange = function() {
     render(data)
   }
 })
 
+// Export button that allows user to export and download the SVG as a PNG image
+exportButton.addEventListener("click", () => {
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+})
 
+
+// ------FUNCTIONS FOR DRAWING GRAPH------
+// Resets some options and handles DOM elements visibility
 function axisChange (){
-    let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
     // Reset the axis range and number of groups when user selects a new variable
     xFrom.value = ""
     xTo.value = ""
@@ -48,7 +79,6 @@ function axisChange (){
     // Reveal the extra settings
     settingsGroup.classList.remove('hidden-axis')
 
-    // If the user has selected variables for both the x and the y axes
     // Make the overlay hidden
     emptyGraph.classList.remove("visible");
     emptyGraph.classList.add("hidden");
@@ -57,49 +87,8 @@ function axisChange (){
     render(data);
 }
 
-
-
-
-
-// DATA GROUPING FUNCTION. CALLED WHEN AN AXIS SETTING CHANGES
-function groupData(xAxisValue){
-  // We can create a 'nested' D3 object, with the key as the chosen x-axis variable
-  let nestedData = d3.nest().key(function(d) { return d[xAxisValue]; })
-
-  return nestedData
-    .rollup(function(v) { return v.length; })
-    .entries(data)
-
-}
-
-
-
-
-// Set graph dimensions
-var width = document.getElementById('graph').clientWidth;
-var height = document.getElementById('graph').clientHeight;
-
-window.onresize = function(){
-  width = document.getElementById('graph').clientWidth;
-  height = document.getElementById('graph').clientHeight;
-  svg.attr('width', width).attr('height', height);
-}
-
-
-// Create SVG ready for graph
-const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height).attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "none")
-
-// Set margins around graph for axis and labels
-const margin = { top: 20, right: 20, bottom: 60, left: 80 };
-// Set the graph width and height to account for axes
-const gWidth = width - margin.left - margin.right;
-const gHeight = height - margin.top - margin.bottom;
-
-// Add the graph area to the SVG, factoring in the margin dimensions
-var graph = svg.append('g').attr("transform", `translate(${margin.left}, ${margin.top})`)
-
-const render = (data) => {
-
+// Draws the graph with the chosen variable
+function render(data){
   let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
 
   // Specify the x-axis values and the y-axis values
@@ -109,9 +98,9 @@ const render = (data) => {
   // Remove old axes labels (if they exist)
   d3.selectAll('.label').remove();
 
-  // sort the grouped data keys in ascending order (i.e. so the x-axis is in numerical order)
-  data.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
-
+  // sort the data keys in ascending order (i.e. so the x-axis is in numerical order)
+  // IS THIS NEEDED?
+  // data.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
 
   // set the input fields for the domain (i.e. range of values) if not yet set
   if(xFrom.value == "") xFrom.value = d3.min(data, xValues)
@@ -120,16 +109,16 @@ const render = (data) => {
   // Now extract the range from the values (if they are specifed by user)
   // If the values specified by the user are outside the range of the data, increase the range
   // else use the range of the data as default.
-  xFromValue = xFrom.value = Math.min(d3.min(data, xValues), xFrom.value)
-  xToValue = xTo.value = Math.max(d3.max(data, xValues), xTo.value)
+  let xFromValue = xFrom.value = Math.min(d3.min(data, xValues), xFrom.value)
+  let xToValue = xTo.value = Math.max(d3.max(data, xValues), xTo.value)
 
   // Set the scale for the x-axis
   const xScale = d3.scaleLinear()
-    // .domain(d3.extent(data, xValues)).nice()
     .domain([xFromValue, xToValue]).nice()
     .range([0, gWidth])
 
   let groups;
+  // If the user hasn't specified the number of groups, we will use the default of xScale.ticks()
   if(numberOfGroups.value == ""){
     groups = xScale.ticks()
     numberOfGroups.value = xScale.ticks().length-1
@@ -137,30 +126,24 @@ const render = (data) => {
     groups = numberOfGroups.value
   }
 
-
   let histogram = d3.histogram()
     .value(xValues)
     .domain(xScale.domain())
-    // .thresholds(xScale.ticks())
     .thresholds(groups)
 
-  var bins = histogram(data)
+  let bins = histogram(data)
 
-
-  // Set the scale for the y-axis
+  // Set the scale for the y-axis based on the size of the biggest bin
   const yScale = d3.scaleLinear()
     .domain([0, d3.max(bins, d => d.length)]).nice()
     .range([gHeight, 0])
 
-
-
   // Select the axes (if they exist)
-  var yAxis = d3.selectAll(".yAxis")
-  var xAxis = d3.selectAll(".xAxis")
+  let yAxis = d3.selectAll(".yAxis")
+  let xAxis = d3.selectAll(".xAxis")
 
   // Get the position of the y-axis (as it will shift with negative x-axis data)
-  yPosition = (0 > xFromValue && 0 < xToValue) ? xScale(0) : 0
-
+  let yPosition = (0 > xFromValue && 0 < xToValue) ? xScale(0) : 0
 
   // If they dont exist, we create them. If they do, we update them
   if (yAxis.empty() && xAxis.empty()){
@@ -181,7 +164,6 @@ const render = (data) => {
       .attr("transform", `translate(${yPosition}, 0)`)
   }
 
-
   // Add y axis label
   svg.append("text")
       .attr("transform", "rotate(-90)")
@@ -192,15 +174,13 @@ const render = (data) => {
       .style("text-anchor", "middle")
       .text("Frequency");
 
-  // Add x axis label
+  // Add x axis label (again, translated to the correct position)
   svg.append("text")
     .attr("transform",`translate(${width/2}, ${gHeight + margin.top + 55})`)
     .attr("class", "label")
     .text(xAxisValue);
 
-
   let rect = graph.selectAll('rect').data(bins)
-
   // D3 'exit()' is what happens to DOM elements that no longer have data bound to them
   // Given a transition that shrinks them down to the x-axis
   rect.exit().transition()
@@ -210,13 +190,27 @@ const render = (data) => {
   .remove()
 
   // D3 'enter()' is the creation of DOM elements bound to the data
-  var bar = rect.enter()
+  let bar = rect.enter()
   .append('rect')
       .attr("y",  yScale(0))
       .attr('x', d => xScale(d.x0))
       .attr('width', d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 1)) // width of a single bar
       .style('fill', 'steelblue')
 
+  setTooltip(bar, yValues)
+
+  bar.merge(rect)  // 'merge' merges the 'enter' and 'update' groups
+      .transition()
+      .duration(1000)
+      .attr('height', d => yScale(0) - yScale(d.length))
+      .attr('y', d => yScale(d.length))
+      .attr('x', d => xScale(d.x0))
+      .attr('width', d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 1)) // band width is width of a single bar
+}
+
+
+// Function that sets tooltip over each bar when hovered over
+function setTooltip(bar, yValues){
   // For the colour, I had to convert the 'primary-colour-dark' variable into a hex colour so that the effect can work
   bar.on('mouseenter', function(d) {
     d3.select(this)
@@ -224,89 +218,28 @@ const render = (data) => {
     .duration(100)
     .style('fill', '#2D4053')
 
-
-    var tooltipOffset = (d3.select(this).attr("width") - 80)/2;
-
-    var tooltip = d3.select(".graph-tooltip")
-
+    let tooltip = d3.select(".graph-tooltip")
+    let tooltipOffset = (d3.select(this).attr("width") - 80)/2;
     // To position the tool tip when the user hovers. Use the window and calculate the offset
-    var position = this.getScreenCTM()
+    let position = this.getScreenCTM()
         .translate(+ this.getAttribute("x"), + this.getAttribute("y"));
 
     // Now give the tooltip the data it needs to show and the position it should be.
     tooltip.html(yValues(d))
         .style("left", (window.pageXOffset + position.e + tooltipOffset) + "px") // Center it horizontally over the bar
         .style("top", (window.pageYOffset + position.f - 50) + "px"); // Shift it 50 px above the bar
-
-
-
-		tooltip.classed("tooltip-hidden", false)
+    tooltip.classed("tooltip-hidden", false)
 
   }).on('mouseout', function() {
     d3.select(this)
     .transition()
     .style('fill', 'steelblue')
-
+    // Hide the tooltip
     d3.select(".graph-tooltip").classed("tooltip-hidden", true);
   })
-
-
-  bar.merge(rect)  // 'merge' merges the 'enter' and 'update' groups
-      .transition()
-      // .delay(d =>  xScale(xValues(d))/2 )
-      .duration(1000)
-      .attr('height', d => yScale(0) - yScale(d.length))
-      .attr('y', d => yScale(d.length))
-      .attr('x', d => xScale(d.x0))
-      .attr('width', d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 1)) // band width is width of a single bar
-
-
-// CODE BELOW HERE FOR ATTEMPTING LINE OF BEST FIT
-  //
-  // var line = d3.line()
-  //     .x(function(d) { return xScale((d.x0 + d.x1)/2); })
-  //     .y(function(d) { return yScale(d.length); })
-  //     .curve(d3.curveCatmullRom.alpha(0.5));
-  //
-  // var path = graph.selectAll('.graph-line').data(data)
-  //
-  //
-  //  path
-  //   .enter()
-  //   .append("path")
-  //   .attr("class","graph-line")
-  //   .merge(path)
-  //   .transition()
-  //   .duration(1000)
-  //   .attr("d", line(bins))
-  //     .attr("fill", "none")
-  //     .attr("stroke", "steelblue")
-  //     .attr("stroke-width", 2.5)
-
 }
 
-
-
-
-let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
-if(xAxisValue != ''){
-  axisChange()
-}
-
-
-
-exportButton.addEventListener("click", () => {
-  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
-})
-
-
-// Prevent form auto submitting when a user presses Enter
-// $(document).on("keydown", "form", function(event) {
-//     return event.key != "Enter";
-// });
-
-
-
+// JQUERY functions
 // Function that will confirm user input when they press enter, without submitting the form
 $('body').on('keydown', 'input, select', function(e) {
   if (e.key === "Enter") {
@@ -314,7 +247,10 @@ $('body').on('keydown', 'input, select', function(e) {
   }
 });
 
-
+// Function required to activate the 'help' tooltip on the axis
+$(function () {
+    $("[data-toggle='help']").tooltip();
+});
 
 // When the form is submitted, we want to get a jpg image of the svg
 $('form').submit(function (e) {
