@@ -149,7 +149,7 @@ function groupData(variableValue, againstValue){
 }
 
 // Function that draws the pie chart
-function render(groupedData) {
+function render(groupedData, variableValue, againstValue, againstAgg) {
   // Specify the values and keys to be used by the graph
   const keys = d => d.data.data.key;
   const values = d => d.value;

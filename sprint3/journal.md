@@ -168,8 +168,6 @@ I went through the old CSS file, removing and simplify any previous CSS classes 
 
 I have added some tooltips the the 'histogram' and 'scatterchart' pages. This was because they do not give the user the option to display anything but numerical data (as both of these graph types require numerical data) - the downside of this is that if the user has no numerical columns then there are no options in the select field. A small tooltip is created for this situation to explain to the user why this is the case so that they do not get confused.
 
-
-<a name="latestEntry"></a>
 ### No internet - code refactoring. (29th July)
 
 Unfortunately this morning there was a power outage affecting all of the flats in the building. Since the power came back the internet has been non functional and we have been waiting all day for an engineer to arrive and diagnose/fix the problem.
@@ -179,6 +177,25 @@ I started working on adding a box and whisker plot diagram (at the request of a 
 Instead I have spent the day attempting to refactor code. Whilst this has been ok, it is also somewhat difficult as I am unable to test whether the changes I have made with refactoring have introduce bugs into the rendering of the graphs. Whilst I am fairly confident that it should be ok, I am slightly hesitant about changing my code too much without being able to test that it actually still works.
 
 An engineer will be arriving at the building tonight and therefore hopefully tomorrow the internet will be back up and running so that I can make an attempt at creating a box and whisker graph.
+
+<a name="latestEntry"></a>
+### Finishing box and whisker. (30th July)
+
+Today the internet was working so I was able to continue working on the box and whisker charts.
+At first, there were several bugs in my code, introduced during the refactoring I did yesterday without being able to test it. I have now fixed many of these bugs but will continue to test the features of the application over the coming days.
+
+The box and whisker plot itself presented a few challenges:
+1. What will the user want to plot? Would they choose a single numerical variable for the y-axis, (such as 'Age') and then plot this for the entire survey? Or would they want to also plot it against a categorical variable (such as 'Gender') so that they can see the distribution across different genders and compare them?
+2. How to present the whiskers? Traditionally the whiskers themselves could represent the highest and lowest values in the data. However, sometimes they can also be used to show other data (another commonly used one is showing 1.5 times the IQR above and below the first and third quartiles.) Wikipedia lists 4 features that the whiskers could represent.
+* the minimum and maximum of all of the data (as in figure 2)
+* one standard deviation above and below the mean of the data
+* the 9th percentile and the 91st percentile
+* the 2nd percentile and the 98th percentile.
+I decided in the end to simply plot it as the highest and lowest values as this is commonly used in other graphing applications, such as Excel.
+3. All the previous graphs usually have a single graph element displaying just one value. A box and whisker plot however displays much more data (the max, the min, the median, the first quartile, third quartile and interquartile range). It is therefore difficult to know how to display the tooltip. In the end, I decided to display the user all of this data upon hovering over the 'box' section of the graph.
+
+Now that this graph is complete, I will carry out final testing and final reformatting of code before focussing on the dissertation write up.
+
 
 ##### Ongoing objectives
 

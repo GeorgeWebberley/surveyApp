@@ -1,52 +1,60 @@
+// VARiABLE DECLARATIONS
+// Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
+const axesSettings = document.querySelectorAll(".axis-setting")
 const xAxisSelect = document.querySelector(".x-axis-value")
 const yAxisSelect = document.querySelector(".y-axis-value")
 const yAxisDetails = document.querySelector(".y-axis-details")
 const emptyGraph = document.querySelector(".empty-graph")
 const exportButton = document.querySelector(".export")
-
+// Connecting line (if user wants to make a line graph)
 const addLine = document.querySelector(".add-line")
 
 const axesRange = document.querySelectorAll(".axis-range")
-
+// x and y axis ranges
 const xFrom = document.querySelector(".x-from")
 const yFrom = document.querySelector(".y-from")
 const xTo = document.querySelector(".x-to")
 const yTo = document.querySelector(".y-to")
 
+// Get the graph data
+const data = graphData["chart_data"]
+
+// Set graph dimensions
+var width = document.getElementById('graph').clientWidth;
+var height = document.getElementById('graph').clientHeight;
+// Re set graph size when window changes size
+window.onresize = function(){
+  width = document.getElementById('graph').clientWidth;
+  height = document.getElementById('graph').clientHeight;
+  svg.attr('width', width).attr('height', height);
+}
+// Set margins around graph for axis and labels
+const margin = { top: 20, right: 20, bottom: 60, left: 80 };
+// Set the graph width and height to account for axes
+const gWidth = width - margin.left - margin.right;
+const gHeight = height - margin.top - margin.bottom;
+// Create SVG ready for graph
+const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height).attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "none")
+// Add the graph area to the SVG, factoring in the margin dimensions
+var graph = svg.append('g').attr("transform", `translate(${margin.left}, ${margin.top})`)
+
+
+
+// EVENT LISTENERS
 // Function required to activate the 'help' tooltip on the axis
 $(function () {
     $("[data-toggle='help']").tooltip();
 });
 
-// Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
-const axesSettings = document.querySelectorAll(".axis-setting")
+// If the x-axis is not empty (i.e. if user is editing graph) then call function immediately
+if(xAxisSelect.options[xAxisSelect.selectedIndex].value != ''){
+  axisChange()
+}
 
-// Get the graph data
-const data = graphData["chart_data"]
-// // Get the column info, which will be used to identify
-// const columnInfo = graphData["column_info"]
-
-// const parseDate = d3.time.format("%Y-%m-%d %X");
-
-// initialiseData(data, columnInfo);
-
-// // This function is used to check and parse date/time columns (if any)
-// function initialiseData(data, columnInfo){
-//   columnInfo.forEach(column => {
-//     console.log(data);
-//     if(column["data_type"] == "date"){
-//       console.log(column["title"]);
-//     }
-//     else if(column["data_type"] == "time"){
-//       console.log(column["title"]);
-//     }
-//     else if(column["data_type"] == "date/time"){
-//       parseDate = d3.time.format("%Y-%m-%d %X");
-//     }
-//   })
-// }
-//
-
+// Button so that users can export the graph as an image (PNG)
+exportButton.addEventListener("click", () => {
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+})
 
 
 // When the axes are altered, we need to re-group the data depending on the variables set
@@ -56,7 +64,25 @@ axesSettings.forEach(setting => {
   }
 })
 
+// Whenever the range changes we want to draw the graph (without having to re-get the data)
+axesRange.forEach(input => {
+  input.onchange = function() {
+    render(data)
+  }
+})
 
+// Event listener for adding a connecting line
+addLine.addEventListener("change", function(){
+  if(this.checked){
+    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "visible");
+  } else {
+    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "hidden");
+  }
+  render(data)
+})
+
+
+// FUNCTIONS FOR RENDERING GRAPH
 function axisChange (){
     let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
     let yAxisValue = yAxisSelect.options[yAxisSelect.selectedIndex].value;
@@ -80,71 +106,9 @@ function axisChange (){
 }
 
 
-addLine.addEventListener("change", function(){
-  if(this.checked){
-    // d3.selectAll('.graph-line').attr("opacity",1);
-    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "visible");
-    render(data)
-  } else {
-    // d3.selectAll('.graph-line').attr("opacity",0);
-    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "hidden");
-    render(data)
-  }
-})
-
-axesRange.forEach(input => {
-  input.onchange = function() {
-    render(data)
-  }
-})
-
-
-
-addLine.addEventListener("change", function(){
-  if(this.checked){
-    // d3.selectAll('.graph-line').attr("opacity",1);
-    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "visible");
-    render(data)
-  } else {
-    // d3.selectAll('.graph-line').attr("opacity",0);
-    d3.selectAll('.graph-line').transition().duration(1000).style("visibility", "hidden");
-    render(data)
-  }
-})
-
-
-
-
-
-
-// Set graph dimensions
-var width = document.getElementById('graph').clientWidth;
-var height = document.getElementById('graph').clientHeight;
-
-window.onresize = function(){
-  width = document.getElementById('graph').clientWidth;
-  height = document.getElementById('graph').clientHeight;
-  svg.attr('width', width).attr('height', height);
-}
-
-
-// Create SVG ready for graph
-const svg = d3.select('#graph').append("svg").attr("width", width).attr("height", height).attr("viewBox", "0 0 " + width + " " + height).attr("preserveAspectRatio", "none")
-
-// Set margins around graph for axis and labels
-const margin = { top: 20, right: 20, bottom: 60, left: 80 };
-// Set the graph width and height to account for axes
-const gWidth = width - margin.left - margin.right;
-const gHeight = height - margin.top - margin.bottom;
-
-// Add the graph area to the SVG, factoring in the margin dimensions
-var graph = svg.append('g').attr("transform", `translate(${margin.left}, ${margin.top})`)
-
-const render = (data) => {
-
+function render(data){
   let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
   let yAxisValue = yAxisSelect.options[yAxisSelect.selectedIndex].value;
-
 
   // Specify the x-axis values and the y-axis values
   const xValues = d => d[xAxisValue];
@@ -158,7 +122,6 @@ const render = (data) => {
   data.sort(function(a, b) {
     return d3.ascending(parseInt(a[xAxisValue]), parseInt(b[xAxisValue]))
   });
-
 
   // set the input fields for the domain (i.e. range of values) if not yet set
   if(xFrom.value == "") xFrom.value = d3.min(data, xValues)
@@ -335,17 +298,15 @@ const render = (data) => {
 
 
 
-let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
-if(xAxisValue != ''){
-  axisChange()
-}
 
 
-
-exportButton.addEventListener("click", () => {
-  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
-})
-
+// JQUERY functions
+// Function that will confirm user input when they press enter, without submitting the form
+$('body').on('keydown', 'input, select', function(e) {
+  if (e.key === "Enter") {
+    $(this).blur()
+  }
+});
 
 
 // When the form is submitted, we want to get a jpg image of the svg

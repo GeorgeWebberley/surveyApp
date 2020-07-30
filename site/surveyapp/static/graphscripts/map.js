@@ -183,7 +183,7 @@ function group(chosenVariable){
 function getMax(groupedData){
   let max = 0
   for(let i = 0; i < groupedData.length; i++){
-    if(groupedData[i].values > max){[}
+    if(groupedData[i].values > max){
       max = groupedData[i].values
     }
   }
