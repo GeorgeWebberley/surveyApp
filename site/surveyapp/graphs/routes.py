@@ -80,7 +80,7 @@ def graph(survey_id):
 
 
 
-# Function that renders the bar-chart page
+# Function that renders the box-chart page
 def box_chart(survey_id, column_info, chart_data, graph_id, title):
     form = BoxForm()
     # Populate the form options. A box chart can take any data type for x-axis but y-axis must be numerical
@@ -121,7 +121,7 @@ def box_chart(survey_id, column_info, chart_data, graph_id, title):
 
 
 
-# Function that renders the bar-chart page
+# Function that renders the map page
 def map_chart(survey_id, column_info, chart_data, graph_id, title):
     form = MapForm()
     # Populate the form options.
@@ -156,7 +156,7 @@ def map_chart(survey_id, column_info, chart_data, graph_id, title):
 
 
 
-# Function that renders the bar-chart page
+# Function that renders the bar-chart and pie chart pages
 def pie_bar_chart(survey_id, column_info, chart_data, graph_id, title, chart_type):
     form = BarPieForm()
     # Populate the form options. A bar/pie chart can take any data type for x-axis but y-axis must be numerical

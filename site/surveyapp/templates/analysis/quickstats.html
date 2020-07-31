@@ -1,22 +1,22 @@
 {% extends "layout.html" %} {% block content %}
-<div class="container">
-  <div class="row mt-4">
+<main class="container">
+  <section class="row mt-4">
     <div class="col-3">
       <a class="btn btn-secondary" href="{{ url_for('surveys.dashboard', survey_id=survey_id) }}">Back</a>
     </div>
     <div class="col-6">
-      <h1 class="text-center h1 font-weight-light">Quick Stats: {{ survey_title }}</h1>
+      <h3 class="mt-2 primary-colour text-center">Quick Stats: {{ survey_title }}</h3>
     </div>
-  </div>
-  <div class="my-3 d-flex justify-content-center bg-white rounded shadow border p-2">
-    <p class="h4 mx-4 my-0 font-weight-light">Number of rows: {{ rows }}</p>
-    <p class="h4 mx-4 my-0 font-weight-light">Number of columns: {{ cols }}</p>
-  </div>
-  <div class="stats-grid">
+  </section>
+  <section class="my-3 d-flex justify-content-center bg-white rounded shadow border p-2">
+    <h4 class="mx-4 my-0 font-weight-light">Number of rows: {{ rows }}</h4>
+    <h4 class="mx-4 my-0 font-weight-light">Number of columns: {{ cols }}</h4>
+  </section>
+  <section class="stats-grid">
     {% for column in column_info %}
-    <div class="bg-light shadow rounded grid-element">
+    <article class="bg-light shadow rounded grid-element">
       <div class="text-center">
-        <h1 class="h5 primary-colour-bg p-2 text-light rounded-top">{{ column["title"] }}</h1>
+        <h5 class="primary-colour-bg p-2 text-light rounded-top">{{ column["title"] }}</h5>
       </div>
       <div class="p-3">
         <p class="lead">Data type: {{ column["data_type"] }}</p>
@@ -25,7 +25,7 @@
         {% endif %}
         {% if column["quantities"] %}
           <div class="bg-white border rounded shadow-sm">
-            <h4 class="h5 grey-background p-2 rounded-top mb-0">Quantities</h4>
+            <h5 class="text-light bg-secondary p-2 rounded-top mb-0">Quantities</h5>
             <ul class="list-group text-dark">
               {% for key in column["quantities"] %}
               <li class="list-group-item d-flex justify-content-between">
@@ -38,7 +38,7 @@
         {% endif %}
         {% if column["data_type"] == "numerical" %}
         <div class="bg-white border rounded shadow-sm">
-          <h1 class="h5 grey-background p-2 rounded-top mb-0">Aggregations</h1>
+          <h5 class="text-light bg-secondary p-2 rounded-top mb-0">Aggregations</h5>
             <ul class="list-group">
               <li class="list-group-item d-flex justify-content-between">
                 <p class="m-0">Average</p>
@@ -64,10 +64,10 @@
         </div>
         {% endif %}
       </div>
-    </div>
+    </article>
   {% endfor %}
-  </div>
-</div>
+  </section>
+</main>
 
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" defer></script>
 <script src="{{ url_for('static', filename='statscripts/quickstats.js') }}" defer></script>

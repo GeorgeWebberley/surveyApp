@@ -29,11 +29,11 @@ function checkTotal(){
   let sum = getSumOfInputs()
   total.innerHTML = sum;
   if(sum == totalChi || sum == 0){
-    total.style.color = "LightGreen"
-    submit.classList.remove("hidden-axis")
+    total.style.color = "Green"
+    submit.classList.remove("hidden-down")
   }else{
-    total.style.color = "LightPink"
-    submit.classList.add("hidden-axis")
+    total.style.color = "Red"
+    submit.classList.add("hidden-down")
   }
 }
 

@@ -15,9 +15,16 @@ const xFrom = document.querySelector(".x-from")
 const yFrom = document.querySelector(".y-from")
 const xTo = document.querySelector(".x-to")
 const yTo = document.querySelector(".y-to")
+// Colours for our graph
+const fill = "steelblue"
+const hoverFill = "#2D4053"
+const stroke = "steelblue"
 
 // Get the graph data
 const data = graphData["chart_data"]
+
+
+
 
 // Set graph dimensions
 var width = document.getElementById('graph').clientWidth;
@@ -92,13 +99,13 @@ function axisChange (){
     yAxisSelect.firstChild.hidden = true;
 
     // Reveal the y-axis variable for the user to select
-    yAxisDetails.classList.remove('hidden-axis')
+    yAxisDetails.classList.remove('hidden-down')
 
     // If the user has selected variables for both the x and the y axes
     if (xAxisValue != "" && yAxisValue != ""){
       // Make the overlay hidden
       emptyGraph.classList.remove("visible");
-      emptyGraph.classList.add("hidden");
+      emptyGraph.classList.add("invisible");
       addLine.disabled = false;
       // re-draw the graph with the chosen variables
       render(data);
@@ -138,7 +145,7 @@ function render(data){
   yToValue = yTo.value = Math.max(d3.max(data, yValues), yTo.value)
 
   // Reveal the 'add-line' select option
-  document.querySelector(".form-add-line").classList.remove("hidden")
+  document.querySelector(".form-add-line").classList.remove("invisible")
 
   // Set the scale for the x-axis
   const xScale = d3.scaleLinear()
@@ -182,16 +189,13 @@ function render(data){
   }
 
 
-
-
-
   // Add y axis label
   svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("class", "label")
       .attr("y", 0)
       .attr("x",0 - (gHeight / 2))
-      .attr("dy", "1em")
+      // .attr("dy", "1em")
       .style("text-anchor", "middle")
       .text(yAxisValue);
 
@@ -216,8 +220,6 @@ function render(data){
 
   var path = graph.selectAll('.graph-line').data(data)
 
-
-
   if(addLine.checked == true){
     path
      .enter()
@@ -228,7 +230,7 @@ function render(data){
      .duration(1000)
      .attr("d", line(data))
        .attr("fill", "none")
-       .attr("stroke", "steelblue")
+       .attr("stroke", stroke)
        .attr("stroke-width", 2.5)
   }
 
@@ -250,41 +252,9 @@ function render(data){
       .attr("cy",  yScale(0))
       .attr('cx', d => xScale(xValues(d)))
       .attr("r", 3)
-      .style('fill', 'steelblue')
+      .style('fill', fill)
 
-
-  // For the colour, I had to convert the 'primary-colour-dark' variable into a hex colour so that the effect can work
-  plot.on('mouseenter', function(d) {
-    d3.select(this)
-    .transition()
-    .duration(100)
-    .style('fill', '#2D4053')
-
-
-    var tooltipOffset = (d3.select(this).attr("width") - 80)/2;
-
-    var tooltip = d3.select(".graph-tooltip")
-
-    // To position the tool tip when the user hovers. Use the window and calculate the offset
-    var position = this.getScreenCTM()
-        .translate(+ this.getAttribute("x"), + this.getAttribute("y"));
-
-    // Now give the tooltip the data it needs to show and the position it should be.
-    tooltip.html(yValues(d))
-        .style("left", (window.pageXOffset + position.e + tooltipOffset) + "px") // Center it horizontally over the bar
-        .style("top", (window.pageYOffset + position.f) + "px"); // Shift it 40 px above the bar
-
-
-
-		tooltip.classed("tooltip-hidden", false)
-
-  }).on('mouseout', function() {
-    d3.select(this)
-    .transition()
-    .style('fill', 'steelblue')
-
-    d3.select(".graph-tooltip").classed("tooltip-hidden", true);
-  })
+  setTooltip(plot, yValues)
 
   plot.merge(circle)  // 'merge' merges the 'enter' and 'update' groups
       .transition()
@@ -292,6 +262,39 @@ function render(data){
       .duration(1000)
       .attr('cy', d=>  yScale(yValues(d)))
       .attr('cx', d => xScale(xValues(d)))
+
+}
+
+function setTooltip(plot, yValues){
+  plot.on('mouseenter', function(d) {
+    d3.select(this)
+    .transition()
+    .duration(100)
+    .style('fill', hoverFill)
+
+    var tooltipOffset = (d3.select(this).attr("width") - 80)/2;
+
+    var tooltip = d3.select(".graph-tooltip")
+
+    // To position the tool tip when the user hovers. Use the window and calculate the offset
+    var position = this.getScreenCTM()
+        .translate(+ this.getAttribute("cx"), + this.getAttribute("cy"));
+
+    // Now give the tooltip the data it needs to show and the position it should be.
+    tooltip.html(yValues(d))
+        .style("left", (window.pageXOffset + position.e + tooltipOffset) + "px") // Center it horizontally over the plot
+        .style("top", (window.pageYOffset + position.f - 80) + "px"); // Shift it 40 px above the plot
+
+    tooltip.classed("tooltip-hidden", false)
+
+  }).on('mouseout', function() {
+    d3.select(this)
+    .transition()
+    .duration(100)
+    .style('fill', fill)
+
+    d3.select(".graph-tooltip").classed("tooltip-hidden", true);
+  })
 
 }
 

@@ -178,7 +178,6 @@ Instead I have spent the day attempting to refactor code. Whilst this has been o
 
 An engineer will be arriving at the building tonight and therefore hopefully tomorrow the internet will be back up and running so that I can make an attempt at creating a box and whisker graph.
 
-<a name="latestEntry"></a>
 ### Finishing box and whisker. (30th July)
 
 Today the internet was working so I was able to continue working on the box and whisker charts.
@@ -196,11 +195,21 @@ I decided in the end to simply plot it as the highest and lowest values as this 
 
 Now that this graph is complete, I will carry out final testing and final reformatting of code before focussing on the dissertation write up.
 
+<a name="latestEntry"></a>
+### Redesign home page, analysis page, results page and refactoring code. (31st July)
+
+One of the user comments was to make the home page more intuitive. In fact, this was something I saw in person too when watching my family members test out the application. After uploading a file, they were not completely sure where to go to next. I have therefore redesigned the home page, adding large buttons (instead of the smaller text I had previously) with links to creating graphs and statistical tests.
+
+I have also gone through many of the other pages in my application, such as analysis page, chisquare page, results page and the graph pages, redesigning the look. Although I was happy previously with the look, following the refactoring with bootstrap classes many of these pages no longer fit with the look of the rest of the website. Replacing many of the classes on these pages with bootstrap classes has helped my website look more cohesive as well as reducing the amount of custom CSS classes I have. In total, I have managed to drastically simplify my CSS code, reducing the file size considerably.
+
+I have also refactored some of my HTML code, using more specific HTML tags instead of generic 'div' and 'span' tags everywhere.
+
+I have also added to my D3.css file, allowing me to easily adjust font sizes on charts. Furthermore, I have added constants on the top of javascript files to define the colours used in the charts, so that it can easily be changed. The reason I did it here instead of the CSS file is because the mouse-over and mouse-out functions need to access this colour so it can change back to the original colour after the mouse moves out of the element. The function d3.select(this).style('fill') could also be used to select the current colour, however as there is a slight delay it means that very fast mouse movements over the elements will not select the right colour.
+
+Tomorrow I will look at refactoring my python code (particularly on the graph routes page) before making my application public to get some final feedback.
 
 ##### Ongoing objectives
 
-* Relook at home page to make it more intuitive.
 * Increase file size allowance.
-* Finish looking at statistical tests assumptions.
 * To carry out unit testing graph saving and manual data input pages.
 * Refactoring code.

@@ -7,6 +7,10 @@ const exportButton = document.querySelector(".export")
 // Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
 const axesSettings = document.querySelectorAll(".axis-setting")
 
+// Colours for our graph
+const fill = "steelblue"
+const hoverFill = "#2D4053"
+
 // Get the graph data
 const data = graphData["chart_data"]
 
@@ -57,12 +61,12 @@ function axisChange (){
 
     // Hide the overlay
     emptyGraph.classList.remove("visible");
-    emptyGraph.classList.add("hidden");
+    emptyGraph.classList.add("invisible");
 
     // Remove the ' -- select an option -- ' option
     yAxisSelect.firstChild.hidden = true;
     // Reveal the y-axis variable for the user to select
-    xAxisDetails.classList.remove('hidden-axis')
+    xAxisDetails.classList.remove('hidden-down')
 
     let dataStats = getData(yAxisValue, xAxisValue)
     // re-draw the graph with the chosen variables
@@ -94,7 +98,6 @@ function getData(yAxisValue, xAxisValue){
       return({q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max})
     })
     .entries(data)
-  console.log(dataStats);
   return dataStats
 }
 
@@ -130,7 +133,7 @@ function render(dataStats){
   const xScale = d3.scaleBand()
     .domain(dataStats.map(xValues))
     .range([0, gWidth])
-    .paddingInner(0.1)
+    .paddingInner(.3)
     .paddingOuter(.1)
 
 
@@ -223,7 +226,7 @@ function render(dataStats){
       .attr("height", 0)
       .attr("width", 0)
       .attr("stroke", "black")
-      .style("fill", 'steelblue')
+      .style('fill', fill)
 
   setTooltip(box, hoverText)
 
@@ -303,17 +306,16 @@ function render(dataStats){
 
 }
 
-// Function that sets tooltip over each bar when hovered over
-function setTooltip(bar, hoverText){
-  // For the colour, I had to convert the 'primary-colour-dark' variable into a hex colour so that the effect can work
-  bar.on('mouseenter', function(d) {
+// Function that sets tooltip over each box and whisker when hovered over
+function setTooltip(box, hoverText){
+  box.on('mouseenter', function(d) {
     d3.select(this)
     .transition()
     .duration(100)
-    .style('fill', '#2D4053')
+    .style('fill', hoverFill)
 
     let tooltip = d3.select(".graph-tooltip")
-    // 80 chosen as it positions the tooltip in an appropriate location to the bars
+    // 80 chosen as it positions the tooltip in an appropriate location to the boxes
     let tooltipOffset = (d3.select(this).attr("width") - 80)/2;
 
     // To position the tool tip when the user hovers. Use the window and calculate the offset
@@ -323,16 +325,17 @@ function setTooltip(bar, hoverText){
     // Now give the tooltip the data it needs to show and the position it should be.
     tooltip
         .html(hoverText(d))
-        .style("left", (window.pageXOffset + position.e + tooltipOffset) + "px") // Center it horizontally over the bar
-        .style("top", (window.pageYOffset + position.f - 80) + "px"); // Shift it 80 px above the bar
+        .style("left", (window.pageXOffset + position.e + tooltipOffset) + "px") // Center it horizontally over the box
+        .style("top", (window.pageYOffset + position.f - 80) + "px"); // Shift it 80 px above the box
 
     // Finally remove the 'hidden' class
     tooltip.classed("tooltip-hidden", false)
   }).on('mouseout', function() {
     d3.select(this)
     .transition()
-    .style('fill', 'steelblue')
-    // When the mouse is removed from the bar we can add the hidden class to the tooltip again
+    .duration(100)
+    .style('fill', fill)
+    // When the mouse is removed from the box we can add the hidden class to the tooltip again
     d3.select(".graph-tooltip").classed("tooltip-hidden", true);
   })
 }

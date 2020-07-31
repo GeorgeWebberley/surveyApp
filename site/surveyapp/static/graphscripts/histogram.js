@@ -11,6 +11,10 @@ const numberOfGroups = document.querySelector(".number-groups")
 // Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
 const axisSettings = document.querySelector(".axis-setting")
 
+// Colours for our graph
+const fill = "steelblue"
+const hoverFill = "#2D4053"
+
 // Get the graph data
 const data = graphData["chart_data"]
 
@@ -77,11 +81,11 @@ function axisChange (){
     xAxisSelect.firstChild.hidden = true;
 
     // Reveal the extra settings
-    settingsGroup.classList.remove('hidden-axis')
+    settingsGroup.classList.remove('hidden-down')
 
     // Make the overlay hidden
     emptyGraph.classList.remove("visible");
-    emptyGraph.classList.add("hidden");
+    emptyGraph.classList.add("invisible");
 
     // re-draw the graph with the chosen variables
     render(data);
@@ -195,7 +199,7 @@ function render(data){
       .attr("y",  yScale(0))
       .attr('x', d => xScale(d.x0))
       .attr('width', d => Math.max(0, xScale(d.x1) - xScale(d.x0) - 1)) // width of a single bar
-      .style('fill', 'steelblue')
+      .style('fill', fill)
 
   setTooltip(bar, yValues)
 
@@ -211,12 +215,11 @@ function render(data){
 
 // Function that sets tooltip over each bar when hovered over
 function setTooltip(bar, yValues){
-  // For the colour, I had to convert the 'primary-colour-dark' variable into a hex colour so that the effect can work
   bar.on('mouseenter', function(d) {
     d3.select(this)
     .transition()
     .duration(100)
-    .style('fill', '#2D4053')
+    .style('fill', hoverFill)
 
     let tooltip = d3.select(".graph-tooltip")
     let tooltipOffset = (d3.select(this).attr("width") - 80)/2;
@@ -233,7 +236,8 @@ function setTooltip(bar, yValues){
   }).on('mouseout', function() {
     d3.select(this)
     .transition()
-    .style('fill', 'steelblue')
+    .duration(100)
+    .style('fill', fill)
     // Hide the tooltip
     d3.select(".graph-tooltip").classed("tooltip-hidden", true);
   })

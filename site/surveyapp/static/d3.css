@@ -1,8 +1,18 @@
-/* rect {
-  fill: steelblue;
+/* D3 styles set using CSS, so that I can quickly change it across all graph types */
+/* Set size of axis tick font */
+g .xAxis {
+  font-size:1em;
 }
- */
 
-g text {
-  font-size:1.4em;
+g .yAxis {
+  font-size:1em;
 }
+
+/* Set size of axis labels */
+.label {
+  font-size:1em;
+}
+/* Colours are specified in the javascript files as constants. This is so that they
+can be accessed during mouse-over/mouse-out affects. The function d3.select(this).style('fill')
+could also be used to select the current colour, however as there is a slight delay
+it means that very fast mouse movements over the elements will not select the right colour. */

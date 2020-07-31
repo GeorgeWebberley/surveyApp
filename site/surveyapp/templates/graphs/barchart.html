@@ -1,27 +1,25 @@
 {% extends "graphs/graph.html" %} {% block axis %}
 <!-- Axes settings -->
 <div class="col-md-3  order-md-1">
-  <div class="h-100 grid-section p-3">
+  <div class="h-100 bg-gradient text-light rounded p-3">
     <!-- ------X AXIS------ -->
     <div class="x-axis-details">
       <h3>X-axis</h3>
-      <div class="grid-bar"></div>
       <div class="axis-variable">
         {{ form.x_axis.label() }}
-        {{ form.x_axis(class="x-axis-value axis-setting") }}
+        {{ form.x_axis(class="custom-select x-axis-value axis-setting") }}
       </div>
     </div>
     <!-- ------Y AXIS------ -->
-    <div class="y-axis-details hidden-axis">
+    <div class="y-axis-details primary-transition hidden-down">
       <h3>Y-axis</h3>
-      <div class="grid-bar">
         <div class="axis-variable">
           {{ form.y_axis.label() }}
-          {{ form.y_axis(class="y-axis-value axis-setting") }}
+          {{ form.y_axis(class="custom-select y-axis-value axis-setting") }}
         </div>
-        <div class="aggregate hidden-axis">
+        <div class="aggregate hidden-down">
           {{ form.y_axis_agg.label() }}
-          {{ form.y_axis_agg(class="y-axis-aggregation axis-setting") }}
+          {{ form.y_axis_agg(class="custom-select y-axis-aggregation axis-setting") }}
         </div>
       </div>
     </div>

@@ -1,44 +1,44 @@
 {% extends "graphs/graph.html" %} {% block axis %}
 <!-- Axes settings -->
 <div class="col-md-3  order-md-1">
-  <div class="h-100 grid-section p-3">
+  <div class="h-100 bg-gradient text-light rounded p-3">
     <!-- ------X AXIS------ -->
     <div class="x-axis-details">
       <h3 class="border-bottom">X-axis</h3>
       <div class="axis-variable">
         {{ form.x_axis.label() }}
-        {{ form.x_axis(class="x-axis-value axis-setting") }}
+        {{ form.x_axis(class="custom-select x-axis-value axis-setting") }}
       </div>
       <small data-toggle='help' class="text-light help"
       title="A scatter chart requires numerical type data. If you don't see your variable it is because it was not recognised as numerical.">
       <i class="far fa-question-circle mr-2"></i>Don't see your variable?</small>
       <div class="axis-variable">
         <div class="d-flex justify-content-between">
-          {{ form.x_axis_from.label() }} {{ form.x_axis_from(class="axis-range x-from w-25") }}
-          {{ form.x_axis_to.label() }} {{ form.x_axis_to(class="axis-range x-to w-25") }}
+          {{ form.x_axis_from.label() }} {{ form.x_axis_from(class="form-control axis-range x-from w-25") }}
+          {{ form.x_axis_to.label() }} {{ form.x_axis_to(class="form-control axis-range x-to w-25") }}
         </div>
       </div>
     </div>
     <!-- ------Y AXIS------ -->
-    <div class="y-axis-details hidden-axis">
+    <div class="y-axis-details primary-transition hidden-down">
       <h3 class="border-bottom">Y-axis</h3>
-      <div class="grid-bar">
         <div class="axis-variable">
           {{ form.y_axis.label() }}
-          {{ form.y_axis(class="y-axis-value axis-setting") }}
+          {{ form.y_axis(class="custom-select y-axis-value axis-setting") }}
         </div>
         <div class="axis-variable">
           <div class="d-flex justify-content-between">
-            {{ form.y_axis_from.label() }} {{ form.y_axis_from(class="axis-range y-from w-25") }}
-            {{ form.y_axis_to.label() }} {{ form.y_axis_to(class="axis-range y-to w-25") }}
+            {{ form.y_axis_from.label() }} {{ form.y_axis_from(class="form-control axis-range y-from w-25") }}
+            {{ form.y_axis_to.label() }} {{ form.y_axis_to(class="form-control axis-range y-to w-25") }}
           </div>
         </div>
       </div>
+      <small class="align-self-end invisible form-add-line">
+        {{ form.line.label(class="text-light") }}
+        {{ form.line(class="add-line") }}
+      </small>
     </div>
-    <small class="align-self-end hidden form-add-line">
-      {{ form.line.label(class="text-light") }}
-      {{ form.line(class="add-line") }}
-    </small>
+
   </div>
 </div>
 <!-- Graphs specific to scatter chart -->

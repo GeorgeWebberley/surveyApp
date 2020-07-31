@@ -10,6 +10,10 @@ const exportButton = document.querySelector(".export")
 // Get the DOM elements for all of the axes, so that we can add event listeners for when they are changed
 const axesSettings = document.querySelectorAll(".axis-setting")
 
+// Colours for our graph
+const fill = "steelblue"
+const hoverFill = "#2D4053"
+
 // Get the graph data
 const data = graphData["chart_data"]
 
@@ -68,20 +72,20 @@ function axisChange (){
   let yAxisAgg = yAxisAggDom.options[yAxisAggDom.selectedIndex].value;
   // Hide the overlay if it is still present
   emptyGraph.classList.remove("visible");
-  emptyGraph.classList.add("hidden");
+  emptyGraph.classList.add("invisible");
 
   // Remove the ' -- select an option -- ' option
   xAxisSelect.firstChild.hidden = true;
   // Reveal the y-axis variable for the user to select
-  yAxisDetails.classList.remove('hidden-axis')
+  yAxisDetails.classList.remove('hidden-down')
 
   // If the chosen y variable is equal to 'Amount' then we don't want to give the user the option to perform data aggregations
   if(yAxisValue != 'Amount'){
-    aggregate.classList.remove('hidden-axis')
+    aggregate.classList.remove('hidden-down')
     aggregate.classList.add('visible')
   } else{
     aggregate.classList.remove('visible')
-    aggregate.classList.add('hidden-axis')
+    aggregate.classList.add('hidden-down')
   }
   // Get the grouped data based on the chose variables
   let groupedData = groupData(xAxisValue, yAxisValue);
@@ -204,7 +208,7 @@ function render(groupedData, xAxisValue, yAxisValue, yAxisAgg){
       .attr("y",  yScale(0))
       .attr('x', d => xScale(xValues(d)))
       .attr('width', xScale.bandwidth()) // band width is width of a single bar
-      .style('fill', 'steelblue')
+      .style('fill', fill)
 
   // Tooltip needs to be set before merging?????
   setTooltip(bar, xValues, yValues)
@@ -223,13 +227,11 @@ function render(groupedData, xAxisValue, yAxisValue, yAxisAgg){
 
 // Function that sets tooltip over each bar when hovered over
 function setTooltip(bar, xValues, yValues){
-  // For the colour, I had to convert the 'primary-colour-dark' variable into a hex colour so that the effect can work
   bar.on('mouseenter', function(d) {
     d3.select(this)
     .transition()
     .duration(100)
-    .style('fill', '#2D4053')
-
+    .style('fill', hoverFill)
     let tooltip = d3.select(".graph-tooltip")
     // 80 chosen to position the tooltip above bars
     let tooltipOffset = (d3.select(this).attr("width") - 80)/2;
@@ -247,7 +249,8 @@ function setTooltip(bar, xValues, yValues){
   }).on('mouseout', function() {
     d3.select(this)
     .transition()
-    .style('fill', 'steelblue')
+    .duration(100)
+    .style('fill', fill)
     // When the mouse is removed from the bar we can add the hidden class to the tooltip again
     d3.select(".graph-tooltip").classed("tooltip-hidden", true);
   })

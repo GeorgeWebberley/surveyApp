@@ -1,31 +1,67 @@
 {% extends "layout.html" %} {% block content %}
-<div class="container">
-  <h3 class="text-center"><u>What type of graph would you like to make?</u></h3>
-  <div class="select-graphs">
-    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Bar chart') }}">
-      <img class="graph-img" src="{{ url_for('static', filename='images/siteimages/barchart.png') }}" class="graph-img"/>
-      <p class="select-graph-type">Bar Chart</p>
-    </a>
-    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Scatter chart') }}">
-      <img class="graph-img" src="{{ url_for('static', filename='images/siteimages/scatterchart.png') }}" class="graph-img"/>
-      <p class="select-graph-type">Scatter Chart</p>
-    </a>
-    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Pie chart') }}">
-      <img class="graph-img" src="{{ url_for('static', filename='images/siteimages/piechart.png') }}" class="graph-img"/>
-      <p class="select-graph-type">Pie Chart</p>
-    </a>
-    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Histogram') }}">
-      <img class="graph-img" src="{{ url_for('static', filename='images/siteimages/histogram.png') }}" class="graph-img"/>
-      <p class="select-graph-type">Histogram</p>
-    </a>
-    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Map') }}">
-      <img class="graph-img" src="{{ url_for('static', filename='images/siteimages/map.png') }}" class="graph-img"/>
-      <p class="select-graph-type">Map</p>
-    </a>
-    <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Box and whisker') }}">
-      <img class="graph-img" src="{{ url_for('static', filename='images/siteimages/boxchart.png') }}" class="graph-img"/>
-      <p class="select-graph-type">Box and Whisker Plot</p>
-    </a>
+<main class="container">
+  <h3 class="pb-2 mt-4 mb-2 border-bottom primary-colour">What type of graph would you like to make?</h3>
+  <div class="row">
+    <section class="col-sm-4 my-3">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Bar chart') }}">
+        <div class="card shadow-sm">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/barchart.png') }}" alt="Bar chart image">
+          <div class="card-body rounded-bottom primary-colour-bg text-light">
+            <h5 class="card-title text-light">Bar Chart</h5>
+          </div>
+        </div>
+      </a>
+    </section>
+    <section class="col-sm-4 my-3">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Scatter chart') }}">
+        <div class="card shadow-sm">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/scatterchart.png') }}" alt="Scatter chart image">
+          <div class="card-body rounded-bottom primary-colour-bg text-light">
+            <h5 class="card-title text-light">Scatter Chart</h5>
+          </div>
+        </div>
+      </a>
+    </section>
+    <section class="col-sm-4 my-3">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Pie chart') }}">
+        <div class="card shadow-sm">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/piechart.png') }}" alt="Pie chart image">
+          <div class="card-body rounded-bottom primary-colour-bg text-light">
+            <h5 class="card-title text-light">Pie Chart</h5>
+          </div>
+        </div>
+      </a>
+    </section>
+    <section class="col-sm-4 my-3">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Histogram') }}">
+        <div class="card shadow-sm">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/histogram.png') }}" alt="Histogram image">
+          <div class="card-body rounded-bottom primary-colour-bg text-light">
+            <h5 class="card-title text-light">Histogram</h5>
+          </div>
+        </div>
+      </a>
+    </section>
+    <section class="col-sm-4 my-3">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Map') }}">
+        <div class="card shadow-sm">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/map.png') }}" alt="Map chart image">
+          <div class="card-body rounded-bottom primary-colour-bg text-light">
+            <h5 class="card-title text-light">Map Chart</h5>
+          </div>
+        </div>
+      </a>
+    </section>
+    <section class="col-sm-4 my-3">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Box and whisker') }}">
+        <div class="card shadow-sm">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/boxchart.png') }}" alt="Box and whisker image">
+          <div class="card-body rounded-bottom primary-colour-bg text-light">
+            <h5 class="card-title text-light">Box and Whisker Plot</h5>
+          </div>
+        </div>
+      </a>
+    </section>
   </div>
-</div>
+</main>
 {% endblock content %}

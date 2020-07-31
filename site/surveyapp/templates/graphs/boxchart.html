@@ -1,23 +1,21 @@
 {% extends "graphs/graph.html" %} {% block axis %}
 <!-- Axes settings -->
 <div class="col-md-3  order-md-1">
-  <div class="h-100 grid-section p-3">
+  <div class="h-100 bg-gradient text-light rounded p-3">
     <!-- ------Y AXIS------ -->
     <div class="y-axis-details">
       <h3>Numerical variable</h3>
-      <div class="grid-bar"></div>
       <div class="axis-variable">
         {{ form.y_axis.label() }}
-        {{ form.y_axis(class="y-axis-value axis-setting") }}
+        {{ form.y_axis(class="custom-select y-axis-value axis-setting") }}
       </div>
     </div>
     <!-- ------X AXIS------ -->
-    <div class="x-axis-details hidden-axis">
+    <div class="x-axis-details hidden-down">
       <h3>Optional categorical variable</h3>
-      <div class="grid-bar">
         <div class="axis-variable">
           {{ form.x_axis.label() }}
-          {{ form.x_axis(class="x-axis-value axis-setting") }}
+          {{ form.x_axis(class="custom-select x-axis-value axis-setting") }}
         </div>
       </div>
     </div>

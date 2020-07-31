@@ -57,10 +57,6 @@ const labelArc = d3.arc()
 	.innerRadius(radius)
 	.outerRadius(radius);
 
-// Define size for the legend
-const legendRectSize = 18;
-const legendSpacing = 4;
-
 
 // ------EVENT LISTENERS------
 // When the axes are altered, we need to re-group the data depending on the variables set
@@ -88,21 +84,21 @@ function axisChange (){
 
     // Hide the overlay
     emptyGraph.classList.remove("visible");
-    emptyGraph.classList.add("hidden");
+    emptyGraph.classList.add("invisible");
 
     // Remove the ' -- select an option -- ' option
     variableSelect.firstChild.hidden = true;
     // Reveal the y-axis variable for the user to select
-    againstSection.classList.remove('hidden-axis')
+    againstSection.classList.remove('hidden-down')
 
 
     // If the chosen y variable is equal to 'Amount' then we don't want to give the user the option to perform data aggregations
     if(againstValue != 'Amount'){
-      aggregate.classList.remove('hidden-axis')
+      aggregate.classList.remove('hidden-down')
       aggregate.classList.add('visible')
     } else{
       aggregate.classList.remove('visible')
-      aggregate.classList.add('hidden-axis')
+      aggregate.classList.add('hidden-down')
     }
     // A function that carries ou the grouping, based on the chosen settings
     let groupedData = groupData(variableValue, againstValue);
@@ -234,8 +230,8 @@ function setTooltip(initSegment){
   initSegment.on("mouseenter", function(d){
     d3.select(this)
     .transition()
-    .duration(100)
-    .style('opacity', '50%')
+    .duration(200)
+    .style('opacity', '0.5')
 
     d3.select(".graph-tooltip")
     .style("left", d3.event.pageX + 20 + "px")
@@ -247,6 +243,8 @@ function setTooltip(initSegment){
   })
     .on('mouseout', function() {
       d3.select(this)
+      .transition()
+      .duration(200)
       .style('opacity', '1')
 
       d3.select(".graph-tooltip")
@@ -257,8 +255,20 @@ function setTooltip(initSegment){
 
 // Add the legend, corresponding to the pie chart
 function addLegend(legendTitle, colour){
+  // Define size for the legend. These numbers fit nicely on the chart
+  let legendRectSize = 18;
+  let legendSpacing = 4;
+  let legendFontsize = "1rem";
+
   // THE FIRST ELEMENT IN COLOUR.DOMAIN() IS AN UNWANTED OBJECT SO IT IS REMOVED
   let legendData = colour.domain().slice(1)
+  // If there are lots of elements in the pie chart (22 is cutoff that can fit) then
+  // half the size of the legend elements
+  if(legendData.length > 22){
+    legendRectSize = legendRectSize/2
+    legendSpacing = legendSpacing/2
+    legendFontsize = "0.5rem"
+  }
 
   // Remove the legend and title before redrawing it
   svg.selectAll(".legend").remove()
@@ -298,7 +308,7 @@ function addLegend(legendTitle, colour){
   legend.append('text')
       .attr('x', legendRectSize + legendSpacing)
       .attr('y', legendRectSize - legendSpacing)
-      .style("font-size", "1rem")
+      .style("font-size", legendFontsize)
       .text(function(d) {return d });
 }
 

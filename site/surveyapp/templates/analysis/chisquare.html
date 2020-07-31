@@ -1,22 +1,19 @@
 {% extends "layout.html" %} {% block content %}
 <div class="container">
-  <div class="sub-container mt-3">
+  <div class="p-0 rounded bg-white mt-3 shadow-sm border">
+    <h3 class="text-light py-2 pl-4 primary-colour-bg rounded-top">Please Enter the expected percentage of each category</h3>
     <form action="" method="post">
-      <div class="title-area">
-        <h3>Please Enter the expected percentage of each category.</h3>
-      </div>
-      <div class="full-bar"></div>
-      <p class="mx-4 my-0">
+      {{ form.hidden_tag() }}
+      <p class="mt-4 px-4 primary-colour">
         A Chi-square goodness of fit test will compare the values you obtained from
         your survey with what you would expect from the sample population.  It is used
         to determine whether your sample data is consistent with a specific distribution.
-        The test will assume equal distribution if left as '0'</p>
-      {{ form.hidden_tag() }}
+        The test will assume equal distribution if left as '0'.</p>
       <div class="row">
         {% for i in range(form.field|length)  %}
           <div class="col-sm-3 mx-4 mt-2 d-flex flex-column mb-4">
-            <span>{{ keys[i] }}</span>
-            {{ form.field[i].expected() }}
+            <h5 class="primary-colour">{{ keys[i] }}</h5>
+            {{ form.field[i].expected(class="form-control") }}
             {% if form.field[i].errors %}
               {% for error in form.field.errors %}
                 {% for e in error['expected'] %}
@@ -29,16 +26,14 @@
       </div>
       <div class="row">
         <div class="col-sm-4 ml-4">
-          <h4>Total must equal to 0 or {{ total }}</h4>
+          <h4 class="primary-colour">Total must equal to 0 or {{ total }}</h4>
         </div>
         <div class="col-sm-4 ml-4">
-          <h4>Current total: <span class="chi-total"></span></h4>
+          <h4 class="primary-colour">Current total: <span class="chi-total"></span></h4>
         </div>
-
       </div>
-      <div class="analyse-continue hidden-axis">
-        <div class="full-bar"></div>
-        {{ form.submit(class="btn btn-secondary") }}
+      <div class="analyse-continue hidden-down d-flex flex-column border-top">
+        {{ form.submit(class="btn btn-primary align-self-center my-3") }}
       </div>
     </form>
   </div>

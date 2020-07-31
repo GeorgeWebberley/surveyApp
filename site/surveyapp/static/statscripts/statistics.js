@@ -1,7 +1,6 @@
 "use strict";
 
 // The DOM elements representing the different sections
-const statisticalTests = document.querySelector(".statistical-tests")
 const independentVariables = document.querySelector(".independent-variables")
 const dependentVariables = document.querySelector(".dependent-variables")
 const continueButton = document.querySelector(".analyse-continue")
@@ -26,16 +25,16 @@ let one_variable = false
 
 
 // Information boxes for different data types
-const nominal = `<span data-toggle='tooltip' class="badge badge-light ml-3 help"
+const nominal = `<span data-toggle='tooltip' class="badge badge-dark ml-3 help"
 title='Nominal data has no numeric value (i.e. cannot be measured) and has no natural order to it. An example could be race, gender or yes/no questions.'>
 Nominal</span>`
-const ordinal = `<span data-toggle='tooltip' class="badge badge-light ml-3 help"
+const ordinal = `<span data-toggle='tooltip' class="badge badge-dark ml-3 help"
 title='Ordinal data has no numeric value but it does have a natural order. An example could be positions in a race (first, second, third) or Likert type questions (answers ranging from strongly agree to strongly disagree).'>
 Ordinal</span>`
-const interval = `<span data-toggle='tooltip' class="badge badge-light ml-3 help"
+const interval = `<span data-toggle='tooltip' class="badge badge-dark ml-3 help"
 title='Interval data has numeric value, with equal value between each point, but 0 does not mean absolute 0. An example could be temperature in Celcius (0°C does not mean absolute 0 since you can have negative degree Celcius)'>
 Interval</span>`
-const ratio = `<span data-toggle='tooltip' class="badge badge-light ml-3 help"
+const ratio = `<span data-toggle='tooltip' class="badge badge-dark ml-3 help"
 title='Ratio data is similar to interval data in that it has numeric value, but it also has absolute 0 (i.e. no negative values). An example could be weight or height.'>
 Ratio</span>`
 
@@ -148,7 +147,7 @@ function setSelectOptions(currentSelect, otherSelect){
 // Function that reveals the next section of HTML, after the user selects an option in the current section
 function revealHtml(currentSelect, nextSection){
   if(currentSelect.value != ""){
-    nextSection.classList.remove("hidden-axis");
+    nextSection.classList.remove("hidden-down");
   }
 }
 
@@ -167,12 +166,12 @@ function populateInfo(){
     independentInfo.innerHTML = ivTypes
     if(test.variable2 == undefined){
       one_variable = true;
-      independentVariables.classList.remove("hidden-axis");
-      dependentVariables.classList.add("hidden-axis");
+      independentVariables.classList.remove("hidden-down");
+      dependentVariables.classList.add("hidden-down");
       revealHtml(independentVariableList, continueButton)
     }else{
-      independentVariables.classList.remove("hidden-axis");
-      dependentVariables.classList.remove("hidden-axis");
+      independentVariables.classList.remove("hidden-down");
+      dependentVariables.classList.remove("hidden-down");
       revealHtml(dependentVariableList, continueButton)
       one_variable = false;
       // Question 2

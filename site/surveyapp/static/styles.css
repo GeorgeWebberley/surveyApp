@@ -1,27 +1,14 @@
 @import "d3.css";
 
+/* Variables set so can easily be changed and subsequently alter the appearance of the site */
 :root {
-  --base-hue: 210;
-  --complementary-hue-offset: 180;
-  --complementary-hue: calc(var(--base-hue) - var(--complementary-hue-offset));
-  --primary-colour: linear-gradient(to left, #141e30, #243b55);
-  --grey-background: #d0d2d6;
-  --primary-colour-transparent: hsla(var(--base-hue), 30%, 50%, 75%);
-  --primary-colour-dark: hsla(var(--base-hue), 30%, 25%);
-  --primary-colour-light: hsla(var(--base-hue), 30%, 75%);
-  --complementary-colour: hsla(var(--complementary-hue), 50%, 50%);
-  --complementary-colour-dark: hsla(var(--complementary-hue), 30%, 25%);
-  --complementary-colour-transparent: hsla(var(--complementary-hue), 30%, 25%, 50%);
-  --background-colour: hsla(var(--complementary-hue), 10%, 97%);
-  --success-colour: hsla(110, 100%, 78%, 0.5);
-  --error-colour: hsla(0, 100%, 78%, 0.3);
+  --primary-colour: #243b55;
+  --primary-gradient: linear-gradient(to left, #141e30, #243b55);
+  --grey: #a2a4a6;
+  --background-colour: #f7f7f7;
   --primary-transition: 0.3s all ease;
   --main-font: "Ubuntu", sans-serif;
-  --content-width:1000px;
-}
-
-html {
-  background-color: var(--background-colour);
+  --landing-image: url('/static/images/siteimages/landing2.png');
 }
 
 body {
@@ -33,20 +20,71 @@ body {
   margin: 0;
 }
 
+/* General CSS classes */
 .primary-colour{
-  color: #243b55;
-}
-
-.gradient-bg{
-  background: var(--primary-colour);
+  color: var(--primary-colour);
 }
 
 .primary-colour-bg {
-  background: #243b55;
+  background: var(--primary-colour);
 }
 
-.grey-background{
-  background: var(--grey-background);
+.bg-gradient {
+  background: var(--primary-gradient);
+}
+
+.hidden-down{
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.primary-transition{
+  transition: var(--primary-transition);
+}
+
+.hover-shadow:hover {
+  box-shadow: 5px 5px 5px var(--grey);
+}
+
+.help{
+  cursor: help;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.vh-75 {
+  height: 75vh;
+}
+
+/* Css class that removes default styles of button elements */
+.no-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+}
+
+
+/* ------LANDING PAGE CSS------ */
+
+.masthead{
+  height: calc(100vh - 50px);
+  min-height: 500px;
+  background-image: var(--landing-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.landing-logo {
+  font-size: 8rem;
+  margin: 1rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .logo {
@@ -57,96 +95,16 @@ body {
   width: 60%;
 }
 
-.bar {
-  width: 100%;
-  height: 1px;
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0),
-    var(--primary-colour-dark),
-    rgba(0, 0, 0, 0)
-  );
-}
-
-/* ------LANDING PAGE CSS------ */
-
-
-.masthead{
-  height: calc(100vh - 50px);
-  min-height: 500px;
-  background-image: url('/static/images/siteimages/landing2.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-
-.landing-logo {
-  font-size: 8rem;
-  margin: 1rem;
-  background: var(--primary-colour);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-
-.btn-row {
-  margin: 0 auto 2rem auto;
-  display: flex;
-  /* max-width: var(--content-width); */
-  justify-content: space-between;
-}
-
-
-.btn{
-  z-index: 1000;
-}
-
-
-.no-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  width: 100%;
-  text-align: left;
-}
-
-
-/* TABLE2.HTML */
-
-
-
-.table-container {
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: scroll;
-  clear: both;
-}
-
-
-
-/* ------home PAGE------ */
-
-
-.grid-section{
-  background: var(--primary-colour);
-  color: white;
-  border-radius: 10px;
-  overflow: auto;
-}
-
-.home-table{
+/* CSS relating to the statistical tests on the dashboard page */
+.dashboard-test{
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   font-size: 1rem;
   padding: 0.5rem;
-  transition: var(--primary-transition);
 }
 
-.home-table:hover a{
+.dashboard-test:hover a{
   color: white;
 }
 
@@ -156,149 +114,37 @@ body {
   margin: 0 0 0 0;
   background: none;
   color: darkred;
-  transition: var(--primary-transition);
   cursor: pointer;
 }
 
-.home-table:hover{
-  background-color: var(--complementary-colour);
-  color: var(--complementary-colour);
+.dashboard-test:hover{
+  background-color: var(--grey);
   padding-left: 1rem;
   cursor: pointer;
 }
-
-
-.home-table:hover .delete-icon{
+.dashboard-test:hover .delete-icon{
   color: white;
 }
 
+
+/* Additional CSS given to bootstrap cards */
 .card {
   width: 18rem;
   margin: 0 auto;
   float: none;
 }
 
-
 .card-img-top {
   height: 10rem;
 }
 
-.dropdown{
-  position: relative;
-  width: 10rem;
-  margin: 0;
-}
 
-.dropdown p{
-  background: var(--primary-colour);
-  padding: 1rem;
-  text-align: center;
-  color: white;
-  cursor: pointer;
-  margin: 0;
-  font-size: 0.8rem;
-}
-
-.dropdown-options {
-  display: none;
-  position: absolute;
-  background-color: var(--complementary-colour);
-  width: 10rem;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-
-.dropdown-option {
-  font-size: 0.8rem;
-  color: white;
-  padding: 1rem;
-  text-decoration: none;
-  display: block;
-  transition: var(--primary-transition);
-  cursor: pointer;
-}
-
-.dropdown-option:hover {
-  background-color: white;
-  color: var(--complementary-colour);
-}
-
-.dropdown:hover .dropdown-options {
-  display: block;
-}
-
-
-
-/* home-PROMPT */
-
-
-.close {
-  margin: 0.3rem 0.5rem 0 0;
-  float: right;
-  cursor: pointer;
-}
-
-.close:hover {
-  color: var(--complementary-colour);
-}
-
-
-/* ------CHOOSE GRAPH PAGE------ */
-
-.select-graphs{
-  width: 100%;
-  display: grid;
-  grid-template-columns: 30% 30% 30%;
-  grid-column-gap: 1.5rem;
-  grid-row-gap: 2rem;
-  padding-top: 2rem;
-}
-
-
-.select-graphs a:hover{
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-}
-
-.graph-img {
-  width: 100%;
-  margin: 0;
-}
-
-
-.select-graph-type{
-  line-height: 3rem;
-  width: 100%;
-  background-color: var(--primary-colour-dark);
-  color: white;
-  margin: 0;
-  height: 3rem;
-  text-align: center;
-}
-
-/* ---------------------------KEEP------------------------- */
-.edit-graph-title{
-  color: var(--primary-colour-dark);
-  max-width: 30rem;
-  font-size: 1rem;
-  width: 50%;
-  text-align: center;
-}
-
-
-
-/* --------BARCHART 2 PAGE-------- */
-
-.vh-75 {
-  height: 75vh;
-}
-
+/* ------GRAPH PAGE CSS------ */
 .graph-container{
   min-height: 85vh;
   margin: 1rem;
   background-color: white;
   border-radius: 10px;
-  border: 1px solid var(--primary-colour)
 }
 
 .graph-height {
@@ -309,36 +155,12 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* height: 50%; */
 }
-
 
 .axis-variable {
   display: flex;
   flex-direction: column;
   padding: 1rem 0;
-}
-
-.y-axis-details{
-  transition: 0.6s all ease;
-}
-
-.aggregate{
-  transition: 0.6s all ease;
-}
-
-.hidden-axis{
-  opacity: 0;
-  transform: translateY(50px);
-}
-
-
-.hidden {
-  visibility: hidden;
-}
-
-.visible {
-  visibility: visible;
 }
 
 .empty-graph {
@@ -354,57 +176,13 @@ body {
 
 /* ------ANALYSE DATA PAGE------ */
 
-.sub-container {
-  text-align: left;
-  background: var(--primary-colour);
-  color: white;
-  padding: 0;
-  border-radius: 10px;
-}
-
-.analyse-option{
-  margin-bottom: 2rem;
-  margin-left: 2rem;
-}
-
-
-.analyse-transition{
-  transition: var(--primary-transition);
-}
-
-.analyse-question{
-  box-sizing: border-box;
-  width: 100%;
-  color: white;
-  margin: 0;
-  padding: 0.2rem 2rem;
-  font-size: 1rem;
-}
-
 .full-bar{
   width: 100%;
   background-color: white;
   height: 1px;
 }
 
-.analyse-continue{
-  display: flex;
-  flex-direction: column;
-  height: 5rem;
-  align-items: center;
-  background-color: var(--primary-colour);
-  border-radius: 0 0 10px 10px;
-}
-
-.analyse-continue input{
-  margin: auto;
-}
-
-
-
-
 /* ------QUICK STATS------ */
-
 
 .grid-element {
   margin-bottom: 10px;
@@ -426,15 +204,12 @@ body {
   }
 }
 
-
-
 .graph-tooltip {
   text-align: center;
   width: 50;
-  /* NEED TO FIX THIS POSITION. ORIGINALLY ABSOLUTE BUT WHEN USING WITH BOOTSTRAP THE TOOLTIP DID NOT WORK CORRECLTY */
   position: fixed;
   padding: 0.5rem 2rem;
-  color: var(--complementary-colour);
+  color: var(--primary-colour);
   background-color: white;
   border-radius: 10px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
@@ -443,59 +218,6 @@ body {
 .tooltip-hidden {
   opacity: 0;
 }
-
-.tooltip p {
-  margin: 0;
-  font-family: Futura;
-  font-size: 16px;
-  line-height: 20px;
-}
-
-
-/* ------RESULT PAGE------ */
-
-
-.result-form-title {
-  margin: 0 1rem;
-  font-size: 1rem;
-}
-
-.result-form-input {
-  width: 50%;
-  font-size: 1rem;
-  color: var(--primary-colour-dark);
-}
-
-.result-table {
-  margin: 1rem;
-  text-align: center;
-  border-collapse: collapse;
-}
-
-
-.result-table td, .result-table th {
-  border: 1px solid #ddd;
-  padding: 0.7rem;
-}
-
-.result-table th{
-  background: var(--grey-background);
-  color: var(--primary-colour);;
-}
-
-.result-table tr{
-  background-color: white;
-  color: var(--primary-colour-dark);
-}
-
-
-/* ------GENERAL------ */
-
-.bg-site-primary {
-  background: var(--primary-colour);
-}
-
-
 
 /* ------DATA INPUT PAGE------ */
 
@@ -509,29 +231,6 @@ body {
   justify-content: center;
   align-items: center;
 }
-
-.add-variable{
-  cursor: pointer;
-  transition: var(--primary-transition);
-}
-
-.add-variable:hover {
-  box-shadow: 5px 5px 5px grey;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.no-display{
-  display: none;
-}
-
-.help{
-  cursor: help;
-}
-
-
 
 /* Wobble affect on notification */
 

@@ -1,29 +1,25 @@
 {% extends "layout.html" %} {% block content %}
-<div class="graph-container shadow-sm">
+<div class="graph-container">
   <form class="min-vh-75" action="" method="post" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <div class="container-fluid">
-      <div class="row pt-3">
+      <div class="row pt-2">
         <div class="d-flex col-sm-6 offset-md-3 justify-content-end">
           {% if form.title.errors %}
-              {{ form.title(class="primary-colour form-control is-invalid w-75") }}
+              {{ form.title(class="primary-colour lead px-2 w-50") }}
               <div class="invalid">
                   {% for error in form.title.errors %}
                       <span>{{ error }}</span>
                   {% endfor %}
               </div>
           {% else %}
-              {{ form.title(class="primary-colour form-control w-75") }}
+              {{ form.title(class="primary-colour lead px-2 w-50") }}
           {% endif %}
-        </div>
-        <div class="col-sm-3 d-flex justify-content-end">
           <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Save as
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-              <div class="dropdown-item export pointer">Export as PNG</div>
-              {{ form.submit(class="dropdown-item no-btn") }}
+            <p>Save as</p>
+            <div class="dropdown-options">
+              <div class="export dropdown-option primary-transition">Export as PNG</div>
+              {{ form.submit(class="dropdown-option primary-transition no-btn") }}
             </div>
           </div>
         </div>

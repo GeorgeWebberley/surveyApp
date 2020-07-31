@@ -21,14 +21,14 @@ let savedChanges = True;
 
 // If the table has not yet been created then we want to hide the DOM elements
 if(headers.length == 0){
-  container.classList.add("hidden")
-  infoRow.classList.add("hidden")
+  container.classList.add("invisible")
+  infoRow.classList.add("invisible")
 } else{
   // Edge case: handsontable needs a 2d array. If 'values' is empty it needs converting
   if (values.length == 0){
     values = [[]]
   }
-  inputOverlay.classList.add("hidden")
+  inputOverlay.classList.add("invisible")
   let columns = columnData(headers)
   renderTable(values, headers, columns)
 }
@@ -63,9 +63,9 @@ function triggerModal(){
     newVariable.value = ""
     // If the table does not yet exist, we need to remove the overlay and make the table visible
     if(hot == undefined){
-      container.classList.remove("hidden")
-      infoRow.classList.remove("hidden")
-      inputOverlay.classList.add("hidden")
+      container.classList.remove("invisible")
+      infoRow.classList.remove("invisible")
+      inputOverlay.classList.add("invisible")
       // Populate column headers with provided headers
       let columns = columnData(headers)
       // Intialise empty 2d array to represent the cells in the table
