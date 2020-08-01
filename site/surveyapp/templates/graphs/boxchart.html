@@ -1,26 +1,25 @@
 {% extends "graphs/graph.html" %} {% block axis %}
 <!-- Axes settings -->
-<div class="col-md-3  order-md-1">
+<section class="col-md-3  order-md-1">
   <div class="h-100 bg-gradient text-light rounded p-3">
     <!-- ------Y AXIS------ -->
-    <div class="y-axis-details">
+    <section class="y-axis-details">
       <h3>Numerical variable</h3>
       <div class="axis-variable">
         {{ form.y_axis.label() }}
         {{ form.y_axis(class="custom-select y-axis-value axis-setting") }}
       </div>
-    </div>
+    </section>
     <!-- ------X AXIS------ -->
-    <div class="x-axis-details hidden-down">
+    <section class="x-axis-details hidden-down">
       <h3>Optional categorical variable</h3>
-        <div class="axis-variable">
-          {{ form.x_axis.label() }}
-          {{ form.x_axis(class="custom-select x-axis-value axis-setting") }}
-        </div>
+      <div class="axis-variable">
+        {{ form.x_axis.label() }}
+        {{ form.x_axis(class="custom-select x-axis-value axis-setting") }}
       </div>
-    </div>
+    </section>
   </div>
-</div>
+</section>
 <!-- End of Axis settings -->
 <!-- Scripts specifically for barchart -->
 <script src="https://d3js.org/d3.v5.min.js" defer></script>

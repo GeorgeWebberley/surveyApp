@@ -1,6 +1,5 @@
 {% extends "layout.html" %} {% block content %}
 <main class="container">
-
   <div class="row mt-3">
     <section class="col-12">
       <div class="d-flex flex-column">
@@ -20,7 +19,7 @@
         </div>
       {% else %}
         {% for notification in notifications %}
-          <div class="card w-100 mb-4">
+          <section class="card w-100 mb-4">
             <div class="card-body">
               <form action="{{ url_for('surveys.findings', result_id=notification._id,
                                                           p=notification.result.p_value,
@@ -72,8 +71,6 @@
                 <td>Reject the null hypothesis</td>
                </tr>
               </table>
-              <!-- <h5 class="card-title">Card title</h5>
-              <h6 class="card-subtitle mb-2 text-muted"></h6> -->
               <p class="card-text">{{ notification.result.info }}</p>
               <div class="d-flex justify-content-end">
                 {{ form.submit(class="btn btn-primary") }}
@@ -83,7 +80,7 @@
               <button class="btn btn-danger" type="submit">Delete result</button>
             </form>
             </div>
-          </div>
+          </section>
         {% endfor %}
       {% endif %}
     </section>

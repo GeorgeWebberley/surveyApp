@@ -25,16 +25,3 @@ def save_image(data, graph_id):
 def delete_image(name):
     image = os.path.join(current_app.root_path, "static/images/graphimages", name)
     os.remove(image)
-
-#
-# # Saves new graph, else if already exists it updates the existing one
-# def save_graph(title, survey_id, graph_id, x_variable, y_variable, y_aggregation):
-#     graph = mongo.db.graphs.find_one({"_id":ObjectId(graph_id)})
-#     if not graph:
-#         mongo.db.graphs.insert_one({\
-#         "title" : title,\
-#         "user" : current_user._id,\
-#         "column" : column,\
-#         "surveyId": survey_id})
-#     else:
-#         mongo.db.graphs.update_one({"_id": ObjectId(graph_id)}, {"$set": {"title": title}})

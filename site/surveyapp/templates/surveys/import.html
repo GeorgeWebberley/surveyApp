@@ -1,13 +1,12 @@
 {% extends "layout.html" %} {% block content %}
-
-<div class="container">
+<main class="container">
   <section class="row justify-content-center mt-4">
     <form class="col-md-6" action="" method="post" enctype="multipart/form-data">
       {{ form.hidden_tag() }}
       <fieldset class="bg-white rounded shadow border">
         <div class="text-center h3 primary-colour m-2 pb-2 border-bottom">Import a file</div>
         <div class="p-3">
-          <div class="form-group">
+          <section class="form-group">
             {{ form.title.label(class="primary-colour") }}
             {% if form.title.errors %}
                 {{ form.title(class="form-control is-invalid") }}
@@ -19,8 +18,8 @@
             {% else %}
                 {{ form.title(class="form-control", placeholder="Enter title") }}
             {% endif %}
-          </div>
-          <div class="form-field">
+          </section>
+          <section class="form-field">
             {{ form.file.label(class="primary-colour") }}
             {% if form.file.errors %}
                 {{ form.file(class="m-2 is-invalid") }}
@@ -32,16 +31,14 @@
             {% else %}
                 {{ form.file(class="m-2") }}
             {% endif %}
-          </div>
-
-          <div class="d-flex justify-content-between">
-            <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Go back</a>
+          </section>
+          <section class="d-flex justify-content-between">
+            <a class="btn btn-secondary" href="{{ url_for('main.index') }}" title="Go back to the landing page">Go back</a>
             {{ form.submit(class="btn btn-primary") }}
-          </div>
-
+          </section>
         </div>
       </fieldset>
     </form>
   </section>
-</div>
+</main>
 {% endblock content %}

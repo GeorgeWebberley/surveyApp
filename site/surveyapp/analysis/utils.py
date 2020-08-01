@@ -27,24 +27,26 @@ def run_tests(survey_id, user_id):
     test_results = []
     for column_1 in column_info:
         if column_1["data_type"] == "categorical" or column_1["data_type"] == "true/false":
-            # Chi square goodness of fit only takes one variable non-parametric
+            # Chi square goodness of fit only takes one, non-parametric variable
             p_value, result = chi_goodness(df, column_1["title"])
             if p_value < 0.05:
                 test_results.append(result)
+            # Now loop through again from the start, checking second variable against the first
             for column_2 in column_info:
+                # If the columns are the same then we can contnue with next iteration
                 if column_2["title"] == column_1["title"]:
                     continue
                 elif column_2["data_type"] == "categorical" or column_2["data_type"] == "true/false":
                     # Chi square needs 2 categorical variables
                     p_value, result = chi_square(df, column_1["title"], column_2["title"])
+                    # As Chi square can be done twice (with variable swapping places)
+                    # we need to check that it has not yet been done
                     if p_value < 0.05 and not test_done(test_results, result):
                         test_results.append(result)
-
                 elif column_2["data_type"] == "numerical":
                     if column_1["num_unique"] == 2 and column_2["num_unique"] > 1:
                         # We perform mann-whitney U test
                         p_value, result = mann_whitney(df, column_1["title"], column_2["title"])
-
                     elif column_1["num_unique"] > 2 and column_2["num_unique"] > 1:
                         # We perform kruskal wallis test
                         p_value, result = kruskal_wallis(df, column_1["title"], column_2["title"])

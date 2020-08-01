@@ -14,16 +14,17 @@ from surveyapp.surveys.utils import save_file, read_file, delete_file
 surveys = Blueprint("surveys", __name__)
 
 # Home page, displaying all the user's surveys as well as notifications
-@surveys.route('/home', methods=['GET', 'POST'])
+@surveys.route('/home', methods=['GET'])
 @login_required
 def home():
+    # Get all surveys related to the current_user
     surveys=mongo.db.surveys.find({"user":current_user._id})
+    # Initialise an empty list that will contain the number of graphs and tests for each survey
     survey_list = []
     # Loop through each survey, counting the number of graphs and tests
     for survey in surveys:
         graphs = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
         tests = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
-        # Send information to home page regarding the surveys, number of graphs and tests
         survey_list.append({"title": survey["title"],\
                             "_id": survey["_id"],\
                             "numGraphs": graphs,\
@@ -33,10 +34,9 @@ def home():
     return render_template("surveys/home.html", title="Home", surveys=survey_list, notifications=notifications)
 
 
-
 # Dasboard page for each survey
 # Renders a page with all graphs and surveys relating to the chosen survey
-@surveys.route('/home/<survey_id>', methods=['GET', 'POST'])
+@surveys.route('/home/<survey_id>', methods=['GET'])
 @login_required
 def dashboard(survey_id):
     # Get the current survey
@@ -47,16 +47,16 @@ def dashboard(survey_id):
     return render_template("surveys/dashboard.html", title="Dashboard", graphs=list(graphs), tests=list(tests), survey=survey)
 
 
-
-
+# Importing a file (CSV or Excel spreadsheet)
 @surveys.route('/import', methods=['GET', 'POST'])
-# login required decorator prevents people accessing the page when not logged in
 @login_required
 def import_file():
     form = UploadForm()
     # Checks validation when form is submitted with submit button
     if form.validate_on_submit():
+        # Save the file
         file_name = save_file(form.file.data)
+        # And add to the database
         survey_id = mongo.db.surveys.insert_one({
         "fileName" : file_name,
         "user" : current_user._id,
@@ -67,10 +67,13 @@ def import_file():
         # so that the threaded function can be carried out from the current application context
         thread = threading.Thread(target=run_all_tests, args=(str(survey_id), current_user._id, current_app._get_current_object()), daemon=True)
         thread.start()
+        # Redirect user to the input/table page so they can view their uploaded data in tabular form
         return redirect(url_for("surveys.input", survey_id=survey_id))
     return render_template("surveys/import.html", title = "Import", form=form)
 
 
+# # This page displays data in tabular form. It can be used for entering data from
+# # scratch or for editing a survey that is already uploaded
 @surveys.route('/input', methods=['GET', 'POST'])
 @login_required
 def input():
@@ -79,8 +82,7 @@ def input():
     header_list = []
     survey_id = request.args.get("survey_id")
     form = EditForm()
-    # Handsontable data cannot be posted using normal WTForms methods.
-    # Post needs to be from combined WTForm and AJAX
+    # Handsontable data cannot be posted using WTForms POST methods - Post needs to be from combined WTForm and javascript AJAX
     if form.validate_on_submit():
         # get the file_obj (if one exists yet)
         file_obj = mongo.db.surveys.find_one({"_id":ObjectId(survey_id)})
@@ -91,8 +93,7 @@ def input():
         # Else we need to generate a new filename with a new random hex.
         else:
             # Generate a random hex to be the new filename
-            random_hex = secrets.token_hex(8)
-            file_name = random_hex + ".csv"
+            file_name = generate_filepath()
             file = os.path.join(current_app.root_path, "uploads", file_name)
         # write/overwrite the table values to the file
         with open(file, "w") as file_to_write:
@@ -102,9 +103,10 @@ def input():
         {"$set": {"fileName" : file_name,\
                 "user" : current_user._id,\
                 "title" : form.title.data}}, upsert=True)
-        survey_id = survey.upserted_id
-        # Respond to the jquery POST with the survey_id. This is so that if the survey
-        # was new, it can now be incorporated into subsequent POST requests to avoid multiple surveys being saved
+        if not survey_id:
+            survey_id = survey.upserted_id
+        # Respond to the jquery POST with the survey_id. This is so that if the survey was new, it
+        # can now be incorporated into subsequent POST requests to avoid multiple surveys being saved
         return str(survey_id)
     # If GET request and the survey already exists (i.e. editing an existing survey)
     elif request.method == "GET" and survey_id:
@@ -121,28 +123,22 @@ def input():
     return render_template("surveys/input.html", title="Input", data=data, survey_id=survey_id, form=form)
 
 
-
-
-
 @surveys.route('/findings', methods=['GET', 'POST'])
 @login_required
 def findings():
     form = EditForm()
     notifications = mongo.db.temp_results.find({"user": current_user._id})
+    # If user chooses to save a test
     if form.validate_on_submit():
-        survey_id = request.args.get("survey_id")
-        test = request.args.get("test")
-        independent_variable = request.args.get("independent_variable")
-        dependent_variable = request.args.get("dependent_variable")
-        p_value = request.args.get("p")
         result_id = request.args.get("result_id")
-        mongo.db.tests.insert_one({"surveyId" : survey_id,
+        mongo.db.tests.insert_one({
+                "surveyId" : request.args.get("survey_id"),
                 "user" : current_user._id,
                 "title" : form.title.data,
-                "test" : test,\
-                "independentVariable" : independent_variable,\
-                "dependentVariable" : dependent_variable,\
-                "p" : p_value})
+                "test" : request.args.get("test"),
+                "independentVariable" : request.args.get("independent_variable"),
+                "dependentVariable" : request.args.get("dependent_variable"),
+                "p" : request.args.get("p")})
         mongo.db.temp_results.delete_one({'_id': ObjectId(result_id)})
         notifications = mongo.db.temp_results.find({"user": current_user._id})
         flash("Statistical test saved to your survey dashboard", "success")
@@ -171,8 +167,6 @@ def delete_findings():
     return redirect(url_for('surveys.findings'))
 
 
-
-
 # DELETE A SURVEY
 @surveys.route("/survey/<survey_id>/delete", methods=['POST'])
 @login_required
@@ -183,15 +177,14 @@ def delete_survey(survey_id):
         abort(403)
     # First loop through all graphs, tests and remp results associated with that survey and delete them
     graphs = mongo.db.graphs.find({"surveyId":survey_id})
+    # Loop through and delete all associated graphs and tests
     for graph in graphs:
         delete_image(graph["image"])
         mongo.db.graphs.delete_one(graph)
-    tests = mongo.db.tests.find({"surveyId":survey_id})
-    for test in tests:
-        mongo.db.tests.delete_one(test)
-    temp_results = mongo.db.temp_results.find({"survey_id":survey_id})
-    for result in temp_results:
-        mongo.db.temp_results.delete_one(result)
+    mongo.db.tests.delete_many({"surveyId":survey_id})
+    mongo.db.temp_results.delete_many({"survey_id":survey_id})
+    # Delete the file
     delete_file(file_obj["fileName"])
+    # finally delete from the surveys database
     mongo.db.surveys.delete_one(file_obj)
     return redirect(url_for('surveys.home'))

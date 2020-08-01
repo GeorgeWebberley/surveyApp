@@ -2,7 +2,8 @@
 <main class="container">
   <section class="row mt-4">
     <div class="col-3">
-      <a class="btn btn-secondary" href="{{ url_for('surveys.dashboard', survey_id=survey_id) }}">Back</a>
+      <a class="btn btn-secondary" href="{{ url_for('surveys.dashboard', survey_id=survey_id) }}"
+      title="Return to the survey dashboard page">Back</a>
     </div>
     <div class="col-6">
       <h3 class="mt-2 primary-colour text-center">Quick Stats: {{ survey_title }}</h3>
@@ -24,7 +25,7 @@
           <p class="lead">Unique values: {{ column["num_unique"] }}</p>
         {% endif %}
         {% if column["quantities"] %}
-          <div class="bg-white border rounded shadow-sm">
+          <section class="bg-white border rounded shadow-sm">
             <h5 class="text-light bg-secondary p-2 rounded-top mb-0">Quantities</h5>
             <ul class="list-group text-dark">
               {% for key in column["quantities"] %}
@@ -34,34 +35,34 @@
               </li>
               {% endfor %}
             </ul>
-          </div>
+          </section>
         {% endif %}
         {% if column["data_type"] == "numerical" %}
-        <div class="bg-white border rounded shadow-sm">
+        <section class="bg-white border rounded shadow-sm">
           <h5 class="text-light bg-secondary p-2 rounded-top mb-0">Aggregations</h5>
-            <ul class="list-group">
-              <li class="list-group-item d-flex justify-content-between">
-                <p class="m-0">Average</p>
-                <p class="m-0">{{ column["average"] }}</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <p class="m-0">Standard deviation</p>
-                <p class="m-0">{{ column["standard_deviation"] }}</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <p class="m-0">Highest value</p>
-                <p class="m-0">{{ column["max"] }}</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <p class="m-0">Lowest value</p>
-                <p class="m-0">{{ column["min"] }}</p>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <p class="m-0">Sum of values</p>
-                <p class="m-0">{{ column["sum"] }}</p>
-              </li>
-            </ul>
-        </div>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between">
+              <p class="m-0">Average</p>
+              <p class="m-0">{{ column["average"] }}</p>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <p class="m-0">Standard deviation</p>
+              <p class="m-0">{{ column["standard_deviation"] }}</p>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <p class="m-0">Highest value</p>
+              <p class="m-0">{{ column["max"] }}</p>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <p class="m-0">Lowest value</p>
+              <p class="m-0">{{ column["min"] }}</p>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <p class="m-0">Sum of values</p>
+              <p class="m-0">{{ column["sum"] }}</p>
+            </li>
+          </ul>
+        </section>
         {% endif %}
       </div>
     </article>
@@ -69,6 +70,7 @@
   </section>
 </main>
 
+<!-- Script for masonry - allowing for easy display of variable sized grid elements -->
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" defer></script>
 <script src="{{ url_for('static', filename='statscripts/quickstats.js') }}" defer></script>
 {% endblock content %}

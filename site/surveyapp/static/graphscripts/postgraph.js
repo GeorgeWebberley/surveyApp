@@ -28,9 +28,7 @@ function postgraph(width, height){
 
     let imgData = await canvas.toDataURL("image/png");
     canvas.remove();
-    console.log("hello");
     // ajax call to send canvas(base64) url to server.
-
     $.ajaxSetup({
       beforeSend: function(xhr, settings) {
         if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
@@ -40,7 +38,6 @@ function postgraph(width, height){
     })
     let postData = $('form').serializeArray()
     postData.push({name: "image", value: imgData})
-    console.log(imgData);
     $.ajax({
         type: "POST",
         url: url,

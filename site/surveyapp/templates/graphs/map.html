@@ -1,9 +1,9 @@
 {% extends "graphs/graph.html" %} {% block axis %}
 <!-- Axes settings -->
-<div class="col-md-3  order-md-1">
+<section class="col-md-3  order-md-1">
   <div class="h-100 bg-gradient text-light rounded p-3">
-      <!-- ------X AXIS------ -->
-    <div class="x-axis-details">
+      <!-- ------Country Select------ -->
+    <section class="x-axis-details">
       <h3 class="border-bottom">Select Variable</h3>
       <small>Variable must contain country names (e.g. "France") or 3 letter ISO code (e.g. "FRA")</small>
       <div class="axis-variable">
@@ -13,9 +13,11 @@
       <div class="axis-variable">
         {{ form.scope(class="custom-select scope axis-setting") }}
       </div>
-    </div>
+    </section>
+    <!-- End of country select -->
   </div>
-</div>
+</section>
+<!-- End of Axes settings -->
 <!-- Scripts specific to map graphs -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js" defer></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js" defer></script>

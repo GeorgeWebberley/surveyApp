@@ -1,9 +1,9 @@
 {% extends "graphs/graph.html" %} {% block axis %}
 <!-- Axes settings -->
-<div class="col-md-3  order-md-1">
+<section class="col-md-3  order-md-1">
   <div class="h-100 bg-gradient text-light rounded p-3">
     <!-- ------X AXIS------ -->
-    <div class="x-axis-details">
+    <section class="x-axis-details">
       <h3>X-axis</h3>
       <div class="axis-variable">
         {{ form.x_axis.label() }}
@@ -19,17 +19,17 @@
           {{ form.x_axis_to.label() }} {{ form.x_axis_to(class="form-control extra-setting x-to w-25") }}
         </div>
         <div class="y-axis-group">
-            <div class="axis-variable">
-              {{ form.group_size.label() }}
-              {{ form.group_size(class="form-control extra-setting number-groups") }}
-            </div>
+          <div class="axis-variable">
+            {{ form.group_size.label() }}
+            {{ form.group_size(class="form-control extra-setting number-groups") }}
           </div>
-          <small>This is not precise. If you specify the number of groups, the graph will approximate what is possible close to that number.</small>
         </div>
+        <small>This is not precise. If you specify the number of groups, the graph will approximate what is possible close to that number.</small>
       </div>
-    </div>
+    </section>
+    <!-- End of x-axis -->
   </div>
-</div>
+</section>
 <!-- End of Axis settings -->
 <!-- Scripts specific to histogram -->
 <script src="https://d3js.org/d3.v5.min.js" defer></script>

@@ -195,7 +195,6 @@ I decided in the end to simply plot it as the highest and lowest values as this 
 
 Now that this graph is complete, I will carry out final testing and final reformatting of code before focussing on the dissertation write up.
 
-<a name="latestEntry"></a>
 ### Redesign home page, analysis page, results page and refactoring code. (31st July)
 
 One of the user comments was to make the home page more intuitive. In fact, this was something I saw in person too when watching my family members test out the application. After uploading a file, they were not completely sure where to go to next. I have therefore redesigned the home page, adding large buttons (instead of the smaller text I had previously) with links to creating graphs and statistical tests.
@@ -208,8 +207,19 @@ I have also added to my D3.css file, allowing me to easily adjust font sizes on 
 
 Tomorrow I will look at refactoring my python code (particularly on the graph routes page) before making my application public to get some final feedback.
 
+<a name="latestEntry"></a>
+### Finishing refactoring HTML and attempting to refactor python. (1st August)
+
+I spent the morning continuing to refactor my HTML code. I added "titles" to all of my links, providing text as to where the link would take them. I also added alt text for all images and made the HTML tags more descriptive to provide semantic meaning. I hope that this will improve the accessibility of my application.
+
+I have also added more questions to my feedback form, now totalling 10 questions. This will provide me with a more in depth review/feedback of my application now that it is coming to the final stages of development.
+
+I have tried to refactor my python code. Whilst this was ok in some areas, I am still really struggling to refactor the analysis and graph routes. The analysis route is a very long function, with multiple 'if' statements that check and validate the type of test chosen with the selected variables. It does not seem it will be possible to factor these checks into a separate function, as any checks that fail need to return a re-render of the page along with a flash message. Likewise, the way the function is set up is quite different to the function used in "run_all_tests" (the automatic function that runs all statistical tests on a newly uploaded file). Although both involve statistical tests, they operate quite different (as on is in a route and needs flash statements and rendering HTML, whilst the other creates objects and adds to a database). I could likely spend a long time reviewing these functions without gaining a lot of ground and I feel at this point my time is better spent making a start on the dissertation write up. I will therefore put this on hold and maybe come back to it another day when I feel more comfortable with the progress of my write up.
+
 ##### Ongoing objectives
 
+* Publish to public server and get final feedback.
+* Start preparing for writing up dissertation.
 * Increase file size allowance.
 * To carry out unit testing graph saving and manual data input pages.
 * Refactoring code.

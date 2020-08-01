@@ -16,16 +16,19 @@ analysis = Blueprint("analysis", __name__)
 
 
 # Analyse data sets
-@analysis.route("/analyse", methods=['GET', 'POST'])
+# In this function, after failing validation I have chosen to render the template fresh
+# rather than redirecting the user back to this route. This is so that the form fields
+# remain filled in and the user doesn't have to re-enter their choices.
+@analysis.route("/analyse/<survey_id>", methods=['GET', 'POST'])
 @login_required
-def analyse():
+def analyse(survey_id):
     form = StatisticalTestForm()
-    survey_id = request.args.get("survey_id")
     survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
     if survey["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
         abort(403)
     df = read_file(survey["fileName"])
+    # Populate the select options in the form with all the variables
     for variable in list(df.columns.values):
         form.independent_variable.choices.append((variable, variable))
         form.dependent_variable.choices.append((variable, variable))
@@ -33,14 +36,19 @@ def analyse():
         # Get the dataset, and save the variables in python variables
         independent_variable = form.independent_variable.data
         dependent_variable = form.dependent_variable.data
+        # Ensure the user hasn't selected the same variable for both
         if independent_variable == dependent_variable:
-            flash("You can select the same variable for both.", "danger")
+            flash("You can't select the same variable for both.", "danger")
             return render_template("analysis/analysedata.html", form=form)
         test = form.test.data
+        # If the user selects Chi-Square goodness fit then they are redirected to a separate URL
+        if test == "Chi-Square goodness of fit":
+            return redirect(url_for('analysis.chi_goodness', variable=independent_variable, survey_id=survey_id))
+        # The other tests all require a dependent variable
+        if dependent_variable == "":
+            flash("You must select a dependent variable for this test.", "danger")
+            return render_template("analysis/analysedata.html", form=form)
         if test == "Kruskall Wallis Test":
-            if dependent_variable == "":
-                flash("You must select a dependent variable for this test.", "danger")
-                return render_template("analysis/analysedata.html", form=form)
             if is_string_dtype(df[dependent_variable]):
                 flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
                 return render_template("analysis/analysedata.html", form=form)
@@ -49,9 +57,6 @@ def analyse():
             p_value = "%.4f" % kruskal_result["p-unc"][0]
         # AT THE MOMENT, THIS TEST IS 2 TAILED. MAY WANT TO ADD OPTIONS FOR 1 TAILED TESTS
         elif test == "Mann-Whitney U Test":
-            if dependent_variable == "":
-                flash("You must select a dependent variable for this test.", "danger")
-                return render_template("analysis/analysedata.html", form=form)
             if is_string_dtype(df[dependent_variable]):
                 flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
                 return render_template("analysis/analysedata.html", form=form)
@@ -65,29 +70,21 @@ def analyse():
             mwu_result = mwu(x, y)
             p_value = "%.4f" % mwu_result['p-val'].values[0]
         elif test == "Chi-Square Test":
-            if dependent_variable == "":
-                flash("You must select a dependent variable for this test.", "danger")
-                return render_template("analysis/analysedata.html", form=form)
             contingency_table = pd.crosstab(df[independent_variable], df[dependent_variable])
             _, p_value, _, _ = chi2_contingency(contingency_table, correction=False)
-        elif test == "Chi-Square goodness of fit":
-            return redirect(url_for('analysis.chi_goodness', survey=survey_id, variable=independent_variable, survey_id=survey_id))
-        return redirect(url_for('analysis.result',\
-                                survey=survey_id,\
-                                test=test,\
-                                p_value=p_value,\
-                                independent_variable=independent_variable,\
+        return redirect(url_for('analysis.result',
+                                survey=survey_id,
+                                test=test,
+                                p_value=p_value,
+                                independent_variable=independent_variable,
                                 dependent_variable=dependent_variable))
     return render_template("analysis/analysedata.html", form=form)
 
 
 # Chi goodness of fit - extra form for expected values
-@analysis.route("/chi", methods=['GET', 'POST'])
+@analysis.route("/chi/<survey_id>/<variable>", methods=['GET', 'POST'])
 @login_required
-def chi_goodness():
-    # Get request arguments
-    survey_id = request.args.get("survey_id")
-    variable = request.args.get("variable")
+def chi_goodness(survey_id, variable):
     # Get survey object and datafram
     survey = mongo.db.surveys.find_one_or_404({"_id": ObjectId(survey_id)})
     df = read_file(survey["fileName"])
@@ -97,35 +94,37 @@ def chi_goodness():
     key_list = []
     # Get the total count, so that we can check the expected distribution matches
     total_count = len(df.index)
+    # Populate the keys objects, initialising "expected" to 0
     for key in keys:
         key_list.append({"expected": 0, "key": key})
     form = ChiGoodnessForm(field=key_list)
     if form.validate_on_submit():
+        # Initialise lists for actual and expected ditributions in the data
         actual_distribution = []
         expected_distribution = []
         for key in keys:
+            # For each group, we get the count in the data and append it to our list
             key_count = df[df[variable] == key].shape[0]
             actual_distribution.append(key_count)
             for input in form.field.data:
                 if key == input['key']:
+                    # Now we populate the expected count from the form data
                     expected_distribution.append(input['expected'])
         if sum(expected_distribution) == 0:
             _, p_value = chisquare(actual_distribution)
         else:
             _, p_value = chisquare(actual_distribution, expected_distribution)
-        return redirect(url_for('analysis.result',\
-            survey=survey_id,\
-            test="Chi-Square goodness of fit",\
-            p_value=p_value,\
+        return redirect(url_for('analysis.result',
+            survey=survey_id,
+            test="Chi-Square goodness of fit",
+            p_value=p_value,
             independent_variable=variable,))
-
     return render_template("analysis/chisquare.html", form=form, keys=keys, total=total_count)
 
 
 
 
 # Results from stats test
-# IN THE FURUTRE, ADD FEATURE TO ADJUST THE P-VALUE????
 @analysis.route("/result", methods=['GET', 'POST'])
 @login_required
 def result():
@@ -137,6 +136,7 @@ def result():
     test=request.args.get("test")
     independent_variable=request.args.get("independent_variable")
     dependent_variable=request.args.get("dependent_variable")
+    # Chi goodness does not have a dependent_variable
     if not dependent_variable:
         dependent_variable = ""
     # Get the survey variable so the test result can be saved and reference the survey
@@ -144,13 +144,13 @@ def result():
     test_id=request.args.get("test_id")
     if form.validate_on_submit():
         # 'upsert' creates entry if it does not yet exist
-        mongo.db.tests.update_one({"_id": ObjectId(test_id)},\
-        {"$set":{"surveyId" : survey_id,\
-                "user" : current_user._id,\
-                "title" : form.title.data,\
-                "test" : test,\
-                "independentVariable" : independent_variable,\
-                "dependentVariable" : dependent_variable,\
+        mongo.db.tests.update_one({"_id": ObjectId(test_id)},
+        {"$set":{"surveyId" : survey_id,
+                "user" : current_user._id,
+                "title" : form.title.data,
+                "test" : test,
+                "independentVariable" : independent_variable,
+                "dependentVariable" : dependent_variable,
                 "p" : p_value}}, upsert=True)
         flash("Statistical test saved.", "success")
         return redirect(url_for('surveys.dashboard', title="Dashboard", survey_id=survey_id))

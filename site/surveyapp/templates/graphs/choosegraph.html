@@ -3,7 +3,8 @@
   <h3 class="pb-2 mt-4 mb-2 border-bottom primary-colour">What type of graph would you like to make?</h3>
   <div class="row">
     <section class="col-sm-4 my-3">
-      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Bar chart') }}">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Bar chart') }}"
+      title="Go to the Bar chart creation page.">
         <div class="card shadow-sm">
           <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/barchart.png') }}" alt="Bar chart image">
           <div class="card-body rounded-bottom primary-colour-bg text-light">
@@ -13,7 +14,8 @@
       </a>
     </section>
     <section class="col-sm-4 my-3">
-      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Scatter chart') }}">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Scatter chart') }}"
+      title="Go to the Scatter chart creation page.">
         <div class="card shadow-sm">
           <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/scatterchart.png') }}" alt="Scatter chart image">
           <div class="card-body rounded-bottom primary-colour-bg text-light">
@@ -23,7 +25,8 @@
       </a>
     </section>
     <section class="col-sm-4 my-3">
-      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Pie chart') }}">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Pie chart') }}"
+      title="Go to the Pie chart creation page.">
         <div class="card shadow-sm">
           <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/piechart.png') }}" alt="Pie chart image">
           <div class="card-body rounded-bottom primary-colour-bg text-light">
@@ -33,7 +36,8 @@
       </a>
     </section>
     <section class="col-sm-4 my-3">
-      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Histogram') }}">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Histogram') }}"
+      title="Go to the Histogram creation page.">
         <div class="card shadow-sm">
           <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/histogram.png') }}" alt="Histogram image">
           <div class="card-body rounded-bottom primary-colour-bg text-light">
@@ -43,7 +47,8 @@
       </a>
     </section>
     <section class="col-sm-4 my-3">
-      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Map') }}">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Map') }}"
+      title="Go to the Map graph creation page.">
         <div class="card shadow-sm">
           <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/map.png') }}" alt="Map chart image">
           <div class="card-body rounded-bottom primary-colour-bg text-light">
@@ -53,7 +58,8 @@
       </a>
     </section>
     <section class="col-sm-4 my-3">
-      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Box and whisker') }}">
+      <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=survey_id, chart_type='Box and whisker') }}"
+      title="Go to the box and whisker plot creation page.">
         <div class="card shadow-sm">
           <img class="card-img-top" src="{{ url_for('static', filename='images/siteimages/boxchart.png') }}" alt="Box and whisker image">
           <div class="card-body rounded-bottom primary-colour-bg text-light">

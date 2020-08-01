@@ -15,24 +15,25 @@
                 Get started!
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="{{ url_for('surveys.import_file') }}">Import a file</a>
-                <a class="dropdown-item" href="{{ url_for('surveys.input') }}">Input data manually</a>
+                <a class="dropdown-item" href="{{ url_for('surveys.import_file') }}" title="Import an Excel or CSV file">Import a file</a>
+                <a class="dropdown-item" href="{{ url_for('surveys.input') }}" title="Start data entry from scratch">Input data manually</a>
               </div>
             </div>
           </div>
         {% else %}
           <div class="text-center">
-            <a class="btn btn-primary align-self-center mt-2 mb-2 text-light" href="{{ url_for('users.register') }}">Sign up today!</a>
+            <a class="btn btn-primary align-self-center mt-2 mb-2 text-light" href="{{ url_for('users.register') }}"
+            title="Go to registration page">Sign up today!</a>
           </div>
           <div class="text-center mb-5">
-            <small>Already have an account? <a href="{{ url_for('users.login') }}">Login</a></small>
+            <small>Already have an account? <a href="{{ url_for('users.login') }}" title="Go to login page">Login</a></small>
           </div>
         {% endif %}
       </div>
     </div>
   </section>
 </div>
-<div class="container mt-5">
+<article class="container mt-5">
   <div class="row my-5"></div>
   <div class="row">
     <div class="col-sm-6">
@@ -49,8 +50,8 @@
     </div>
   </div>
   <div class="row my-5"></div>
-</div>
-<div class="jumbotron">
+</article>
+<article class="jumbotron">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-sm-8 ">
@@ -60,8 +61,8 @@
       </div>
     </div>
   </div>
-</div>
-<div class="container mt-5">
+</article>
+<article class="container mt-5">
   <div class="row my-5"></div>
   <div class="row">
     <div class="col-sm-6">
@@ -78,8 +79,8 @@
     </div>
   </div>
   <div class="row my-4"></div>
-</div>
-<div class="jumbotron pt-4">
+</article>
+<article class="jumbotron pt-4">
   <p class="h2 text-center mb-4">Easy data editing</p>
   <div class="container">
     <div class="d-flex justify-content-center">
@@ -93,8 +94,8 @@
       </div>
     </div>
   </div>
-</div>
-<div class="container mt-5">
+</article>
+<article class="container mt-5">
   <div class="row my-5"></div>
   <div class="row">
     <div class="col-sm-6 d-flex justify-content-center">
@@ -108,12 +109,12 @@
       </div>
     </div>
     <div class="col-sm-6 d-flex justify-content-center">
-      <a class="btn-lg btn-primary align-self-center text-light text-decoration-none" href="{{ url_for('users.register') }}">Register today</a>
+      <a class="btn-lg btn-primary align-self-center text-light text-decoration-none" href="{{ url_for('users.register') }}"
+      title="Go to register page">Register today</a>
     </div>
   </div>
   <div class="row my-4"></div>
-</div>
-
+</article>
 <footer>
   <div class="jumbotron mb-0 border-top d-flex flex-column">
     <div>
@@ -122,6 +123,4 @@
     <small>Site logo made at <a href="https://logomakr.com/">Logomakr</a></small>
   </div>
 </footer>
-
-
 {% endblock content %}

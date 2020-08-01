@@ -1,5 +1,5 @@
 {% extends "layout.html" %} {% block content %}
-<div class="container">
+<main class="container">
   <div class="p-0 rounded bg-white mt-3 shadow-sm border">
     <h3 class="text-light py-2 pl-4 primary-colour-bg rounded-top">Please Enter the expected percentage of each category</h3>
     <form action="" method="post">
@@ -9,7 +9,7 @@
         your survey with what you would expect from the sample population.  It is used
         to determine whether your sample data is consistent with a specific distribution.
         The test will assume equal distribution if left as '0'.</p>
-      <div class="row">
+      <section class="row">
         {% for i in range(form.field|length)  %}
           <div class="col-sm-3 mx-4 mt-2 d-flex flex-column mb-4">
             <h5 class="primary-colour">{{ keys[i] }}</h5>
@@ -23,22 +23,23 @@
             {% endif %}
           </div>
         {% endfor %}
-      </div>
-      <div class="row">
+      </section>
+      <section class="row">
         <div class="col-sm-4 ml-4">
           <h4 class="primary-colour">Total must equal to 0 or {{ total }}</h4>
         </div>
         <div class="col-sm-4 ml-4">
           <h4 class="primary-colour">Current total: <span class="chi-total"></span></h4>
         </div>
-      </div>
-      <div class="analyse-continue hidden-down d-flex flex-column border-top">
+      </section>
+      <section class="analyse-continue hidden-down d-flex flex-column border-top">
         {{ form.submit(class="btn btn-primary align-self-center my-3") }}
-      </div>
+      </section>
     </form>
   </div>
-</div>
+</main>
 <script>
+  // Variable passed to javascript file from Jinja2
   var totalChi = {{ total }};
 </script>
 <script src="{{ url_for('static', filename='statscripts/chi.js') }}" defer></script>

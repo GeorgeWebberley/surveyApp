@@ -1,6 +1,6 @@
 {% extends "layout.html" %} {% block content %}
-  <section class="container mt-4">
-    <div class="row justify-content-center">
+  <main class="container mt-4">
+    <section class="row justify-content-center">
       <!-- action is empty string so that we post back to our current route -->
       <form class="col-md-6" action="" method="post">
         <!-- hidden tag helps protect against CSRF (by using CSRF token) -->
@@ -8,7 +8,7 @@
         <fieldset class="bg-white rounded shadow border">
           <div class="text-center h3 primary-colour m-2 pb-2 border-bottom">Login</div>
             <div class="p-3">
-              <div class="form-group">
+              <section class="form-group">
                 {{ form.email.label(class="primary-colour") }}
                 {% if form.email.errors %}
                   {{ form.email(class="form-control is-invalid") }}
@@ -20,9 +20,9 @@
                 {% else %}
                     {{ form.email(class="form-control", placeholder="Enter email") }}
                 {% endif %}
-              </div>
+              </section>
 
-              <div class="form-group">
+              <section class="form-group">
                 {{ form.password.label(class="primary-colour") }}
                 {% if form.password.errors %}
                   {{ form.password(class="form-control is-invalid") }}
@@ -34,33 +34,33 @@
                 {% else %}
                     {{ form.password(class="form-control", placeholder="Enter password") }}
                 {% endif %}
-              </div>
-              <div class="d-flex justify-content-between mb-2">
+              </section>
+              <section class="d-flex justify-content-between mb-2">
                 <div class="form-check">
                   {{ form.remember(class="form-check-input") }}
                   {{ form.remember.label(class="form-check-label") }}
                 </div>
                 <small class="text-muted">
-                  <a href="{{ url_for('users.request_reset') }}">Forgot password?</a>
+                  <a href="{{ url_for('users.request_reset') }}" title="Go to password reset page">Forgot password?</a>
                 </small>
-              </div>
+              </section>
 
-              <div class="d-flex justify-content-between">
-                <a class="btn btn-secondary" href="{{ url_for('main.index') }}">Cancel</a>
+              <section class="d-flex justify-content-between">
+                <a class="btn btn-secondary" href="{{ url_for('main.index') }}" title="Cancel and return to landing page">Cancel</a>
                 {{ form.submit(class="btn btn-primary") }}
-              </div>
+              </section>
 
             </div>
 
         </fieldset>
 
       </form>
-    </div>
-    <div class="d-flex justify-content-center">
+    </section>
+    <section class="d-flex justify-content-center">
       <small class="primary-colour mt-3">
-        Need to sign up? <a href="{{ url_for('users.register') }}">Register</a>
+        Need to sign up? <a href="{{ url_for('users.register') }}" title="Go to register page">Register</a>
       </small>
-    </div>
+    </section>
 
-  </section>
+  </main>
 {% endblock content %}

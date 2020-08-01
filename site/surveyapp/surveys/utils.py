@@ -8,24 +8,31 @@ from flask import Flask, current_app
 
 # Saves file after import. All files are saved as CSV for easier handling
 def save_file(form_file):
-    # Generate a random hex for the filename
-    random_hex = secrets.token_hex(8)
-    file_name = random_hex + ".csv"
-    file_path = os.path.join(current_app.root_path, "uploads", file_name)
     # Split the extension from the fileName. I'm not using the filename so variable name is '_' according to PEP8
     _, f_ext = os.path.splitext(form_file.filename)
     # If not CSV file I will convert it to csv before saving (for easier handling later)
     if f_ext != ".csv":
-        data_xls = pd.read_excel(form_file, index_col=None)
-        df = remove_nan(data_xls)
-        df = trim_strings(df)
-        df.to_csv(file_path, encoding='utf-8', index=False)
+        df = pd.read_excel(form_file, index_col=None)
     else:
-        data_csv = pd.read_csv(form_file, index_col=None)
-        df = remove_nan(data_csv)
-        df = trim_strings(df)
-        df.to_csv(file_path, encoding='utf-8', index=False)
+        df = pd.read_csv(form_file, index_col=None)
+    # Removes empty rows/columns
+    df = remove_nan(df)
+    # Trims white space from strings
+    df = trim_strings(df)
+    # Generate a random hex filename and create the path
+    file_name = generate_filepath()
+    file_path = os.path.join(current_app.root_path, "uploads", file_name)
+    # Save as CSV
+    df.to_csv(file_path, encoding='utf-8', index=False)
     return file_name
+
+# Uses python secrets to generate a random hex token for the file name
+def generate_filepath():
+    # Generate a random hex for the filename
+    random_hex = secrets.token_hex(8)
+    file_name = random_hex + ".csv"
+    return file_name
+
 
 
 def trim_strings(df):

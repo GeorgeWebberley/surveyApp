@@ -1,17 +1,17 @@
 {% extends "layout.html" %} {% block content %}
-<div class="container-fluid mt-4">
+<main class="container-fluid mt-4">
   <div class="bg-white rounded border shadow px-4 py-2 mb-4">
-
     <!-- TITLE AND BUTTONS -->
     <section class="row border-bottom mt-4 pb-2 mb-2">
       <form class="col-12 d-flex justify-content-between" action="" method="post">
         {{ form.hidden_tag() }}
         {% if survey_id %}
         <div>
-          <a class="btn btn-secondary" href="{{ url_for('surveys.dashboard', survey_id=survey_id) }}">Back</a>
+          <a class="btn btn-secondary" href="{{ url_for('surveys.dashboard', survey_id=survey_id) }}"
+          title="Return to the dashboard page for this survey">Back</a>
         </div>
         {% endif %}
-        <div class="form-group">
+        <section class="form-group">
           {% if form.title.errors %}
               {{ form.title(class="form-control is-invalid") }}
               <div class="text-danger">
@@ -22,10 +22,10 @@
           {% else %}
               {{ form.title(class="form-control", placeholder="Enter title") }}
           {% endif %}
-        </div>
+        </section>
         <div>
           <span id="proceed">
-            <a class="btn btn-primary" href="{{ url_for('surveys.home') }}">Proceed to home</a>
+            <a class="btn btn-primary" href="{{ url_for('surveys.home') }}" title="Go to the home page">Proceed to home</a>
           </span>
           {{ form.submit(class="btn btn-primary") }}
         </div>
@@ -43,7 +43,6 @@
     <div class="lead py-2">
       New rows will be generated as you enter
     </div>
-
     <!-- Initial overlay -->
     <section class="input-overlay">
       <div class="add-variable p-4 rounded border pointer hover-shadow primary-transition" data-toggle="modal" data-target="#new-column-modal">
@@ -53,14 +52,13 @@
         </div>
       </div>
     </section>
-
   </div>
-</div>
+</main>
 
 
 
 <!-- Modal requesting header when new column is added -->
-<div class="modal fade" id="new-column-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<section class="modal fade" id="new-column-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -82,10 +80,10 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- Modal asking user to confirm moving to dashboard if not saved -->
-<div class="modal fade" id="save-changes-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<section class="modal fade" id="save-changes-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -96,11 +94,12 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <a class="btn btn-primary" href="{{ url_for('surveys.home') }}">Proceed</a>
+        <a class="btn btn-primary" href="{{ url_for('surveys.home') }}"
+        title="Proceed without saving to the home page">Proceed</a>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 
 

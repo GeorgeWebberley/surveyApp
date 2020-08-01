@@ -1,16 +1,16 @@
 {% extends "layout.html" %} {% block content %}
-<section class="container">
-  <div class="d-flex justify-content-between align-items-center my-3">
-    <a class="btn btn-secondary" href="{{ url_for('surveys.home') }}">Back</a>
+<main class="container">
+  <section class="d-flex justify-content-between align-items-center my-3">
+    <a class="btn btn-secondary" href="{{ url_for('surveys.home') }}" title="Go back to home page">Back</a>
     <h2 class="pb-2 mt-2 mb-2 border-bottom primary-colour">{{ survey["title"] }}</h2>
     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Your data
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="{{ url_for('surveys.import_file') }}">Edit your data</a>
-      <a class="dropdown-item" href="{{ url_for('analysis.quick_stats', survey_id=survey['_id']) }}">Quick stats</a>
+      <a class="dropdown-item" href="{{ url_for('surveys.input', survey_id=survey['_id']) }}" title="Edit the data in tabular form">Edit your data</a>
+      <a class="dropdown-item" href="{{ url_for('analysis.quick_stats', survey_id=survey['_id']) }}" title="View some quick stats on your data">Quick stats</a>
     </div>
-  </div>
+  </section>
   <div class="row">
     <!-- ------YOUR GRAPHS GRID SECTION------ -->
     <div class="col-md-8 mb-3">
@@ -19,8 +19,9 @@
           <h1 class="h5 primary-colour-bg p-2 text-light rounded-top  mb-0">Graphs</h1>
         </div>
         {% if not graphs %}
-        <div class="p-3">
-          <a class="text-decoration-none text-center" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}">
+        <section class="p-3">
+          <a class="text-decoration-none text-center" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}"
+            title="Create a graph for your survey">
             <div class="p-4 rounded border bg-white pointer hover-shadow primary-transition">
               <p class="lead m-0 text-muted">No graphs yet! Click here to add your first graph.</p>
               <div class="mt-2">
@@ -28,33 +29,34 @@
               </div>
             </div>
           </a>
-        </div>
+        </section>
         {% else %}
-        <div class="container">
+        <section class="container">
           <div class="row p-2">
             {% for graph in graphs %}
-            <div class="col-lg-6 p-2">
+            <article class="col-lg-6 p-2">
               <div class="card shadow-sm">
-                <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'] )}}">
-                  <img class="card-img-top" src="{{ url_for('static', filename='images/graphimages/' + graph.image) }}" alt="Card image cap">
+                <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'] )}}" title="View this graph">
+                  <img class="card-img-top" src="{{ url_for('static', filename='images/graphimages/' + graph.image) }}" alt="Image of chosen graph">
                 <div class="card-body rounded-bottom bg-dark text-light">
-                  <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'] )}}">
+                  <a class="text-decoration-none" href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'] )}}" title="View this graph">
                     <h5 class="card-title text-light">{{ graph["title"] }}</h5>
                   </a>
                   <h6 class="card-subtitle mb-2 text-muted">{{ graph["type"] }}</h6>
                   <div class="d-flex justify-content-between">
-                    <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'])}}" class="btn btn-info">Edit</a>
+                    <a href="{{ url_for('graphs.graph', survey_id=graph['surveyId'], graph_id=graph['_id'])}}" class="btn btn-info" title="View and edit this graph">Edit</a>
                     <form action="{{ url_for('graphs.delete_graph', graph_id=graph['_id'], survey_id=survey['_id'] )}}" method="post" onsubmit="return confirm('Are you sure you want to delete this graph?');">
                       <button class="btn btn-danger" type="submit">Delete</button>
                     </form>
                   </div>
                 </div>
               </div>
-            </div>
+            </article>
             {% endfor %}
           </div>
-        </div>
-        <a class="text-center d-flex flex-column text-decoration-none" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}">
+        </section>
+        <a class="text-center d-flex flex-column text-decoration-none" href="{{ url_for('graphs.choose_graph', survey_id=survey['_id'])}}"
+        title="Go to a page where you can create a new graph">
           <p class="mb-1">Add new graph</p>
           <i class="mb-3 fa fa-plus-circle fa-lg text-primary" title="Add survey" aria-hidden="true"></i>
         </a>
@@ -62,14 +64,15 @@
       </div>
     </div>
     <!-- ------ANALYSE YOUR DATA GRID SECTION------ -->
-    <div class="col-md-4 mb-3">
+    <section class="col-md-4 mb-3">
       <div class="bg-light shadow rounded">
         <div class="text-center">
           <h4 class="h5 primary-colour-bg p-2 text-light rounded-top mb-0">Statistical tests</h4>
         </div>
         {% if not tests %}
-        <div class="p-3">
-          <a class="text-decoration-none text-center" href="{{ url_for('analysis.analyse', survey_id=survey['_id'])}}">
+        <section class="p-3">
+          <a class="text-decoration-none text-center" href="{{ url_for('analysis.analyse', survey_id=survey['_id'])}}"
+          title="Create a new statistical test for this survey">
             <div class="p-4 rounded border bg-white pointer hover-shadow primary-transition">
               <p class="lead m-0 text-muted">No tests yet! Click here to add your first statistical test.</p>
               <div class="mt-2">
@@ -77,10 +80,10 @@
               </div>
             </div>
           </a>
-        </div>
+        </section>
         {% else %}
           {% for test in tests %}
-            <div class="dashboard-test primary-transition">
+            <section class="dashboard-test primary-transition">
               <a  class="text-decoration-none primary-colour" href="{{ url_for('analysis.result',
                           test_id=test['_id'],
                           survey=test['surveyId'],
@@ -88,23 +91,25 @@
                           p_value=test['p'],
                           independent_variable=test['independentVariable'],
                           dependent_variable=test['dependentVariable'],
-                          title=test['title'] )}}">{{ test["title"] }}</a>
+                          title=test['title'] )}}"
+                          title="View this statistical test">{{ test["title"] }}</a>
               <div class="edit-delete">
                 <form action="{{ url_for('analysis.delete_test', test_id=test['_id'], survey_id=survey['_id'] )}}" method="post"
                     onsubmit="return confirm('Are you sure you want to delete this test?');">
                   <button class="delete-icon primary-transition" type="submit"><i class="fas fa-trash fa-lg"></i></button>
                 </form>
               </div>
-            </div>
+            </section>
           {% endfor %}
-          <a class="my-1 text-center d-flex flex-column text-decoration-none" href="{{ url_for('analysis.analyse', survey_id=survey['_id']) }}">
+          <a class="my-1 text-center d-flex flex-column text-decoration-none" href="{{ url_for('analysis.analyse', survey_id=survey['_id']) }}"
+          title="Create a new statistical test for this survey">
             <p class="mb-1">Add new tests</p>
             <i class="mb-3 fa fa-plus-circle fa-lg text-primary" title="Add survey" aria-hidden="true"></i>
           </a>
         {% endif %}
       </div>
-    </div>
+    </section>
   </div>
-</section>
+</main>
 
 {% endblock content %}

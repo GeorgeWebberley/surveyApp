@@ -2,45 +2,45 @@
 <main class="container">
   <div class="p-0 rounded bg-white mt-3 shadow-sm border">
     <form action="" method="post">
-    {{ form.hidden_tag() }}
-    <section>
-      <h4 class="text-light py-2 pl-4 primary-colour-bg rounded-top">What test would you like to apply?</h4>
-      <div class="row">
-        <div class="col-sm-4">
-          {{ form.test(class="ml-4 custom-select statistical-test") }}
+      {{ form.hidden_tag() }}
+      <section>
+        <h4 class="text-light py-2 pl-4 primary-colour-bg rounded-top">What test would you like to apply?</h4>
+        <div class="row">
+          <div class="col-sm-4">
+            {{ form.test(class="ml-4 custom-select statistical-test") }}
+          </div>
+          <div class="col-sm-8">
+            <p class="px-4 test-info"></p>
+          </div>
         </div>
-        <div class="col-sm-8">
-          <p class="px-4 test-info"></p>
+      </section>
+      <section class="primary-transition independent-variables hidden-down my-4">
+        <h4 class="primary-colour-bg text-light py-2 pl-4">Please select your <span class="first-variable-question"></span></h4>
+        <div class="row">
+          <div class="col-sm-4">
+            {{ form.independent_variable(class="ml-4 custom-select independent-variable") }}
+          </div>
+          <div class="col-sm-8">
+            <p class="px-4 iv-info"></p>
+          </div>
         </div>
-      </div>
-    </section>
-    <section class="primary-transition independent-variables hidden-down my-4">
-      <h4 class="primary-colour-bg text-light py-2 pl-4">Please select your <span class="first-variable-question"></span></h4>
-      <div class="row">
-        <div class="col-sm-4">
-          {{ form.independent_variable(class="ml-4 custom-select independent-variable") }}
+      </section>
+      <section class="primary-transition dependent-variables hidden-down my-4">
+        <h4 class="primary-colour-bg text-light py-2 pl-4">Please select your <span class="second-variable-question"></span></h4>
+        <div class="row">
+          <div class="col-sm-4">
+            {{ form.dependent_variable(class="ml-4 custom-select dependent-variable") }}
+          </div>
+          <div class="col-sm-8">
+            <p class="px-4 dv-info"></p>
+          </div>
         </div>
-        <div class="col-sm-8">
-          <p class="px-4 iv-info"></p>
-        </div>
-      </div>
-    </section>
-    <section class="primary-transition dependent-variables hidden-down my-4">
-      <h4 class="primary-colour-bg text-light py-2 pl-4">Please select your <span class="second-variable-question"></span></h4>
-      <div class="row">
-        <div class="col-sm-4">
-          {{ form.dependent_variable(class="ml-4 custom-select dependent-variable") }}
-        </div>
-        <div class="col-sm-8">
-          <p class="px-4 dv-info"></p>
-        </div>
-      </div>
-    </section>
-    <section class="primary-transition analyse-continue hidden-down d-flex flex-column border-top">
-      {{ form.submit(class="btn btn-primary align-self-center my-3") }}
-    </section>
+      </section>
+      <section class="primary-transition analyse-continue hidden-down d-flex flex-column border-top">
+        {{ form.submit(class="btn btn-primary align-self-center my-3") }}
+      </section>
+    </form>
   </div>
 </main>
-
 <script src="{{ url_for('static', filename='statscripts/statistics.js') }}" defer></script>
 {% endblock content %}
