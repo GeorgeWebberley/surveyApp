@@ -50,7 +50,8 @@ const tests = [
       "name": "dependent variable",
       "type": [ordinal, interval, ratio]
     },
-    "info": `Kruskal Wallis test is commonly used to test one categorical variable against a measurable variable.
+    "info": `Kruskal Wallis test is commonly used to test the null hypothesis that the samples (groups) are from
+            the same population. It tests one categorical variable against a measurable variable.
             The dependent variable must be ordinal, interval or ratio. Typically, this test is used to test when you have
             3 or more different groups in your independent variable, but can also be used for just 2 groups (examples could be
             3 groups: low/medium/high income, 2 groups: yes/no answers).`
@@ -65,9 +66,10 @@ const tests = [
       "name": "dependent variable",
       "type": [ordinal, interval, ratio]
     },
-    "info": `The Mann-Whitney U test requires that the independent variable consists of just 2
-              categorical groups (e.g. questions with yes/no answers). If your independent variable
-              contains more groups then the Kruskall Wallis test should be used.`
+    "info": `The Mann-Whitney U test is used to check if observations in one sample are larger
+              than observations in the other sample. It requires that the independent variable
+              consists of just 2 categorical groups (e.g. questions with yes/no answers). If your
+              independent variable contains more groups then the Kruskall Wallis test should be used.`
   },
   {
     "name": "Chi-Square Test",
@@ -91,7 +93,9 @@ const tests = [
       "type": [nominal, ordinal]
     },
     "info": `The Chi Square goodness of fit takes one categorical variable. It is used to see if the
-              different categories in that variable follow the same distribution that you would expect.`
+              different categories in that variable follow the same distribution that you would expect.
+              Assumes that the expected distribution is even accross groups, that each group is mutually
+              exclusive from the next and each group contains at least 5 subjects.`
   }
 ]
 

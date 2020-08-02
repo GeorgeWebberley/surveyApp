@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 
 from surveyapp.graphs.utils import delete_image
 from surveyapp.analysis.utils import run_all_tests
-from surveyapp.surveys.utils import save_file, read_file, delete_file
+from surveyapp.surveys.utils import save_file, read_file, delete_file, generate_filepath
 
 surveys = Blueprint("surveys", __name__)
 

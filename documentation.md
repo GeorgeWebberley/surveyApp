@@ -50,6 +50,12 @@ And then include the following line in the HTML.
 <script type="text/javascript" src="node_modules/d3/build/d3.js"></script>
 ```
 
+For the creation of geographical maps.
+
+```
+npm install datamap
+```
+
 For saving graphs produced by D3, I use 'saveSvgAsPng' and 'canvg'
 
 ```
@@ -57,6 +63,19 @@ npm install save-svg-as-png
 npm install canvg
 ```
 
+Alternatively to the above, you can include the scripts directly for D3 and canvg:
+
+```
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/canvg@3.0.4/lib/umd.js"></script>
+```
+
+NOTE: DataMap requires version 3 of D3 and therefore you will need to include it separately (along with topojson):
+
+```
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+```
 
 ### Python packages
 
@@ -205,9 +224,3 @@ pip install pingouin
 ```
 
 ##### Datamap
-
-For the creation of geographical maps.
-
-```
-npm install datamap
-```
