@@ -341,7 +341,10 @@ function setTooltip(box, hoverText){
 }
 
 
-
+// Function required to activate the 'help' tooltip on the axis
+$(function () {
+    $("[data-toggle='help']").tooltip();
+});
 
 // When the form is submitted, we want to get a jpg image of the svg
 $('form').submit(function (e) {
