@@ -206,6 +206,8 @@ def export_tests(survey_id):
         flash("You do not have access to that survey", "danger")
         abort(403)
     tests = mongo.db.tests.find({"surveyId":survey_id})
+    if tests.count() == 0:
+        flash("You do not yet have any statistical tests for this survey!", "danger")
     # Use a temp file so that it can be deleted after
     with tempfile.NamedTemporaryFile() as f:
         # Create a new excel workbook
