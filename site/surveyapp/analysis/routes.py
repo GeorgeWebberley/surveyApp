@@ -208,6 +208,7 @@ def export_tests(survey_id):
     tests = mongo.db.tests.find({"surveyId":survey_id})
     if tests.count() == 0:
         flash("You do not yet have any statistical tests for this survey!", "danger")
+        return redirect(url_for('surveys.dashboard', survey_id=survey_id))    
     # Use a temp file so that it can be deleted after
     with tempfile.NamedTemporaryFile() as f:
         # Create a new excel workbook
