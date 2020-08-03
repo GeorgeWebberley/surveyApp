@@ -48,6 +48,10 @@ let graph = svg.append('g').attr("transform", `translate(${margin.left}, ${margi
 // ------EVENT LISTENERS------
 // When the axis is altered, we trigger the graph rendering
 axisSettings.onchange = function(){
+  // Reset the axis range and number of groups when user selects a new variable
+  xFrom.value = ""
+  xTo.value = ""
+  numberOfGroups.value = ""
   axisChange()
 }
 
@@ -66,20 +70,16 @@ extraSettings.forEach(input => {
 
 // Export button that allows user to export and download the SVG as a PNG image
 exportButton.addEventListener("click", () => {
-  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+  let title = document.querySelector(".title").value
+  let exportTitle = title == "" ? "plot.png": `${title}.png`
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], exportTitle, {scale: 2, backgroundColor: "#FFFFFF"});
 })
-
 
 // ------FUNCTIONS FOR DRAWING GRAPH------
 // Resets some options and handles DOM elements visibility
 function axisChange (){
-    // Reset the axis range and number of groups when user selects a new variable
-    xFrom.value = ""
-    xTo.value = ""
-    numberOfGroups.value == ""
     // Remove the ' -- select an option -- ' option
     xAxisSelect.firstChild.hidden = true;
-
     // Reveal the extra settings
     settingsGroup.classList.remove('hidden-down')
 
@@ -156,6 +156,7 @@ function render(data){
     .attr("transform", `translate(0, ${gHeight})`)
     // For why axis we do not need to translate it, as the default is on the left
     graph.append('g').attr("class", "yAxis").call(d3.axisLeft(yScale))
+    .attr("transform", `translate(${yPosition}, 0)`)
   } else {
     // Adjust the x-axis according the x-axis variable data
     xAxis.transition()

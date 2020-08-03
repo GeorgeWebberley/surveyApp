@@ -42,7 +42,7 @@ def login():
             # retrieve the page the user was attempting to access previously from the URL
             next_page = request.args.get("next")
             # and redirect them to that page (if it exists) using a ternary conditional
-            flash("Logged in successfully.", "success")
+            flash("Login successful.", "success")
             return redirect(next_page) if next_page else redirect(url_for("main.index"))
         else:
             flash("Invalid username or password", "danger")
@@ -52,7 +52,7 @@ def login():
 @users.route('/logout')
 def logout():
     logout_user()
-    flash("Logged out successfully.", "success")
+    flash("Logout successful.", "success")
     return redirect(url_for('main.index'))
 
 

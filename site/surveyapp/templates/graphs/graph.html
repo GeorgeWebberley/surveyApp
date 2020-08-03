@@ -7,14 +7,14 @@
       <div class="row pt-3">
         <div class="d-flex col-sm-6 offset-md-3 justify-content-end">
           {% if form.title.errors %}
-              {{ form.title(class="primary-colour form-control is-invalid w-75") }}
+              {{ form.title(class="primary-colour form-control is-invalid w-75 title") }}
               <div class="invalid">
                   {% for error in form.title.errors %}
                       <span>{{ error }}</span>
                   {% endfor %}
               </div>
           {% else %}
-              {{ form.title(class="primary-colour form-control w-75") }}
+              {{ form.title(class="primary-colour form-control w-75 title") }}
           {% endif %}
         </div>
         <div class="col-sm-3 d-flex justify-content-end">

@@ -21,6 +21,7 @@ scipy = "*"
 pingouin = "*"
 flask-mail = "*"
 flask-jsglue = "*"
+xlsxwriter = "*"
 
 [requires]
 python_version = "3.7"

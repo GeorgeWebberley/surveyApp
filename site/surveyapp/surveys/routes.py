@@ -23,8 +23,8 @@ def home():
     survey_list = []
     # Loop through each survey, counting the number of graphs and tests
     for survey in surveys:
-        graphs = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
-        tests = mongo.db.graphs.count_documents({"surveyId":survey["_id"]})
+        graphs = mongo.db.graphs.count_documents({"surveyId":str(survey["_id"])})
+        tests = mongo.db.tests.count_documents({"surveyId":str(survey["_id"])})
         survey_list.append({"title": survey["title"],\
                             "_id": survey["_id"],\
                             "numGraphs": graphs,\
@@ -70,6 +70,8 @@ def import_file():
         # Redirect user to the input/table page so they can view their uploaded data in tabular form
         return redirect(url_for("surveys.input", survey_id=survey_id))
     return render_template("surveys/import.html", title = "Import", form=form)
+
+
 
 
 # # This page displays data in tabular form. It can be used for entering data from
@@ -121,6 +123,28 @@ def input():
         form.title.data = file_obj["title"]
     data = {"values": value_list, "headers": header_list}
     return render_template("surveys/input.html", title="Input", data=data, survey_id=survey_id, form=form)
+
+
+# Helper function called by client javascript. Will run all statistical tests on their
+# chosen survey and save significant findings in their findings/notification page
+@surveys.route('/home/run_tests/<survey_id>', methods=['GET', 'POST'])
+@login_required
+def run_tests(survey_id):
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that survey", "danger")
+        abort(403)
+    # Running all the statistical tests on the data can take a lot of time. Therefore I
+    # carry it out using a python thread. It is important to pass the current application,
+    # so that the threaded function can be carried out from the current application context
+    thread = threading.Thread(target=run_all_tests, args=(str(survey_id), current_user._id, current_app._get_current_object()), daemon=True)
+    thread.start()
+    # Redirect user to the input/table page so they can view their uploaded data in tabular form
+    flash("Depending on the size of your survey, running all statistical tests may take some time. \
+    Try refreshing the page in a bit or come back again later.", "success")
+    return redirect(url_for("surveys.home"))
+
+
 
 
 @surveys.route('/findings', methods=['GET', 'POST'])

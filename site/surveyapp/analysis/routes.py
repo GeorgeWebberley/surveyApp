@@ -3,11 +3,14 @@ from pandas.api.types import is_string_dtype
 from scipy.stats import chi2_contingency, chisquare
 from pingouin import kruskal, mwu
 from surveyapp import mongo
-from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, abort
+from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, abort, send_file
 from flask_login import login_required, current_user
 from surveyapp.analysis.forms import StatisticalTestForm, ChiGoodnessEntryForm, ChiGoodnessForm
 from surveyapp.surveys.forms import EditForm
 from bson.objectid import ObjectId
+
+import tempfile
+from xlsxwriter import Workbook
 
 from surveyapp.surveys.utils import parse_data, read_file
 
@@ -72,6 +75,7 @@ def analyse(survey_id):
         elif test == "Chi-Square Test":
             contingency_table = pd.crosstab(df[independent_variable], df[dependent_variable])
             _, p_value, _, _ = chi2_contingency(contingency_table, correction=False)
+
         return redirect(url_for('analysis.result',
                                 survey=survey_id,
                                 test=test,
@@ -186,9 +190,63 @@ def quick_stats(survey_id):
     file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
     if file_obj["user"] != current_user._id:
         flash("You do not have access to that page", "danger")
-        return redirect(url_for("main.index"))
+        abort(403)
     df = read_file(file_obj["fileName"])
     rows = len(df.index)
     cols = len(df.columns)
     column_info = parse_data(df);
     return render_template("analysis/quickstats.html", rows=rows, cols=cols, column_info=column_info, survey_id=survey_id, survey_title=file_obj["title"] )
+
+# Give the user a quick overview of stats on the survey data
+@analysis.route("/export_tests/<survey_id>", methods=['GET'])
+@login_required
+def export_tests(survey_id):
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that survey", "danger")
+        abort(403)
+    tests = mongo.db.tests.find({"surveyId":survey_id})
+    # Use a temp file so that it can be deleted after
+    with tempfile.NamedTemporaryFile() as f:
+        # Create a new excel workbook
+        wb = Workbook(f.name)
+        bold = wb.add_format({'bold': True})
+        # grab the active worksheet
+        ws = wb.add_worksheet()
+        # Set the title and the column headers
+        ws.write(0, 0, file_obj["title"], bold)
+        # Create a table for the data. end of table will be the number of tests
+        # +1 for the title and +1 for the column headers
+        end_of_table = tests.count() + 2
+        table_size = "A2:E" + str(end_of_table)
+        ws.add_table(table_size, {
+        'columns': [{'header': "Null Hypothesis"},
+                  {'header': "Statistical Test"},
+                  {'header': "Significance Value"},
+                  {'header': "P-Value"},
+                  {'header': "Conclusion"},
+                  ]})
+        # Row number is 2 since the first row is the header
+        row_number = 2
+        for test in tests:
+            if float(test["p"]) < 0.05:
+                conclusion = "Reject the null hypothesis."
+            else:
+                conclusion = "Accept the null hypothesis."
+            ws.write(row_number, 0, get_null_hypothesis(test["test"], test["independentVariable"], test["dependentVariable"]))
+            ws.write(row_number, 1, test["test"])
+            ws.write(row_number, 2, 0.05)
+            ws.write(row_number, 3, test["p"])
+            ws.write(row_number, 4, conclusion)
+            row_number += 1
+        wb.close()
+        return send_file(f.name, attachment_filename="tests.xlsx", as_attachment=True)
+
+# gets the null hypothesis, depending on the type of test
+def get_null_hypothesis(test, variable_1, variable_2):
+    if test == "Chi-Square goodness of fit":
+        return "There is no significant difference between the expected distribution of " + variable_1 + " and the observed distribution."
+    elif test == "Chi-Square Test":
+        return "There is no association between " + variable_1 + " and " + variable_2
+    else:
+        return "The distribution of " + variable_1 + " is the same across groups of " + variable_2

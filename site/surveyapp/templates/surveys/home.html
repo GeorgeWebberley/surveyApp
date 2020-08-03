@@ -23,6 +23,9 @@
                 Manage survey
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{ url_for('surveys.run_tests', survey_id=survey['_id'] )}}"
+                title="This will run a series of statistical tests on your data and give you notifications of any significant findings."
+                >Run automatic tests on this data</a>
                 <a class="dropdown-item" href="{{ url_for('surveys.input', survey_id=survey['_id'] )}}"
                 title="Edit the data in tabular form for this survey"
                 >Edit data</a>

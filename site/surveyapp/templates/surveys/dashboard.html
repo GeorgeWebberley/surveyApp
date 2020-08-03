@@ -7,8 +7,12 @@
       Your data
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="{{ url_for('surveys.input', survey_id=survey['_id']) }}" title="Edit the data in tabular form">Edit your data</a>
-      <a class="dropdown-item" href="{{ url_for('analysis.quick_stats', survey_id=survey['_id']) }}" title="View some quick stats on your data">Quick stats</a>
+      <a class="dropdown-item" href="{{ url_for('surveys.input', survey_id=survey['_id']) }}"
+      title="Edit the data in tabular form">Edit your data</a>
+      <a class="dropdown-item" href="{{ url_for('analysis.quick_stats', survey_id=survey['_id']) }}"
+      title="View some quick stats on your data">Quick stats</a>
+      <a class="dropdown-item" href="{{ url_for('analysis.export_tests', survey_id=survey['_id']) }}"
+      title="Download an Excel file containing all tests relating to this survey.">Export tests to Excel file</a>
     </div>
   </section>
   <div class="row">

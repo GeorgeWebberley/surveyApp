@@ -60,7 +60,9 @@ if(xAxisSelect.options[xAxisSelect.selectedIndex].value != ''){
 
 // Export button that allows user to export and download the SVG as a PNG image
 exportButton.addEventListener("click", () => {
-  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+  let title = document.querySelector(".title").value
+  let exportTitle = title == "" ? "plot.png": `${title}.png`
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], exportTitle, {scale: 2, backgroundColor: "#FFFFFF"});
 })
 
 

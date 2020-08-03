@@ -58,9 +58,11 @@ if(xAxisSelect.options[xAxisSelect.selectedIndex].value != ''){
   axisChange()
 }
 
-// Button so that users can export the graph as an image (PNG)
+// Export button that allows user to export and download the SVG as a PNG image
 exportButton.addEventListener("click", () => {
-  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+  let title = document.querySelector(".title").value
+  let exportTitle = title == "" ? "plot.png": `${title}.png`
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], exportTitle, {scale: 2, backgroundColor: "#FFFFFF"});
 })
 
 
@@ -195,7 +197,7 @@ function render(data){
       .attr("class", "label")
       .attr("y", 0)
       .attr("x",0 - (gHeight / 2))
-      // .attr("dy", "1em")
+      .attr("dy", "1em")
       .style("text-anchor", "middle")
       .text(yAxisValue);
 

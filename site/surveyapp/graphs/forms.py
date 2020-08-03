@@ -36,7 +36,7 @@ class HistogramForm(FlaskForm):
     x_axis = SelectField("Choose a variable:", choices=[("", " -- select an option -- ")])
     x_axis_from = IntegerField("From")
     x_axis_to = IntegerField("To")
-    group_size = IntegerField("Number of groups")
+    group_count = IntegerField("Number of groups")
     submit = SubmitField("Save to dashboard")
 
 

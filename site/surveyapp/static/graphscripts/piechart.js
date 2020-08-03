@@ -71,9 +71,11 @@ if(variableSelect.options[variableSelect.selectedIndex].value != ''){
   axisChange()
 }
 
-// Event listener for when the user wants to export the svg as a PNG image
+// Export button that allows user to export and download the SVG as a PNG image
 exportButton.addEventListener("click", () => {
-  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+  let title = document.querySelector(".title").value
+  let exportTitle = title == "" ? "plot.png": `${title}.png`
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], exportTitle, {scale: 2, backgroundColor: "#FFFFFF"});
 })
 
 // Called whenever the axis variables change. Handles display of DOM elements before drawing graph
@@ -220,7 +222,7 @@ function render(groupedData, variableValue, againstValue, againstAgg) {
   let legendTitle = againstValue == 'Amount' ? variableValue : `${againstAgg} ${againstValue} of ${variableValue}`
 
   // Add the legend with the specified title and associated colours
-  addLegend(legendTitle, colour)
+  addLegend(legendTitle, colour, pieData, percentage)
 }
 
 
@@ -254,7 +256,7 @@ function setTooltip(initSegment){
 
 
 // Add the legend, corresponding to the pie chart
-function addLegend(legendTitle, colour){
+function addLegend(legendTitle, colour, pieData, percentage){
   // Define size for the legend. These numbers fit nicely on the chart
   let legendRectSize = 18;
   let legendSpacing = 4;
@@ -269,7 +271,6 @@ function addLegend(legendTitle, colour){
     legendSpacing = legendSpacing/2
     legendFontsize = "0.5rem"
   }
-
   // Remove the legend and title before redrawing it
   svg.selectAll(".legend").remove()
   svg.selectAll(".legend-title").remove()
@@ -309,7 +310,13 @@ function addLegend(legendTitle, colour){
       .attr('x', legendRectSize + legendSpacing)
       .attr('y', legendRectSize - legendSpacing)
       .style("font-size", legendFontsize)
-      .text(function(d) {return d });
+      // We want the label to display the group as well as the percentage
+      // .text(function(d) {
+      //   let result = pieData.find(obj => {
+      //     return obj.data.key === d
+      //   })
+      //   return d + ":  " + percentage(result)});
+      .text(d => d)
 }
 
 

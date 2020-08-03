@@ -223,4 +223,10 @@ pip install scipy
 pip install pingouin
 ```
 
-##### Datamap
+##### XlsxWriter
+
+For writing to excel files for users to export statistical tests
+
+```
+pip install XlsxWriter
+```

@@ -42,6 +42,8 @@
        <tr class="primary-colour">
          {% if result["test"] == "Chi-Square goodness of fit" %}
           <td>There is no significant difference between the observed and the expected values.</td>
+         {% elif result["test"] == "Chi-Square Test"  %}
+          <td>There is no association between <strong>{{ result["dv"] }}</strong> and <strong>{{ result["iv"] }}</strong>.</td>
          {% else %}
           <td>The distribution of <strong>{{ result["dv"] }}</strong> is the same across groups of <strong>{{ result["iv"] }}</strong></td>
          {% endif %}

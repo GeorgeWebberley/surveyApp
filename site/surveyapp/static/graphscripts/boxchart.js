@@ -50,10 +50,10 @@ if(xAxisSelect.options[xAxisSelect.selectedIndex].value != ''){
 
 // Export button that allows user to export and download the SVG as a PNG image
 exportButton.addEventListener("click", () => {
-  saveSvgAsPng(document.getElementsByTagName("svg")[0], "plot.png", {scale: 2, backgroundColor: "#FFFFFF"});
+  let title = document.querySelector(".title").value
+  let exportTitle = title == "" ? "plot.png": `${title}.png`
+  saveSvgAsPng(document.getElementsByTagName("svg")[0], exportTitle, {scale: 2, backgroundColor: "#FFFFFF"});
 })
-
-
 
 function axisChange (){
     let xAxisValue = xAxisSelect.options[xAxisSelect.selectedIndex].value;
@@ -228,7 +228,7 @@ function render(dataStats){
       .attr("stroke", "black")
       .style('fill', fill)
 
-  setTooltip(box, hoverText)
+  setTooltip(box, hoverText, xValues)
 
   box.merge(boxDom)  // 'merge' merges the 'enter' and 'update' groups
       .transition()
@@ -307,7 +307,7 @@ function render(dataStats){
 }
 
 // Function that sets tooltip over each box and whisker when hovered over
-function setTooltip(box, hoverText){
+function setTooltip(box, hoverText, xValues){
   box.on('mouseenter', function(d) {
     d3.select(this)
     .transition()
@@ -324,7 +324,7 @@ function setTooltip(box, hoverText){
 
     // Now give the tooltip the data it needs to show and the position it should be.
     tooltip
-        .html(hoverText(d))
+        .html(xValues(d) + "<br>" + hoverText(d))
         .style("left", (window.pageXOffset + position.e + tooltipOffset) + "px") // Center it horizontally over the box
         .style("top", (window.pageYOffset + position.f - 80) + "px"); // Shift it 80 px above the box
 

@@ -243,7 +243,7 @@ def histogram(survey_id, column_info, chart_data, graph_id, title):
                 "xAxis" : form.x_axis.data,
                 "xAxisFrom" : form.x_axis_from.data,
                 "xAxisTo" : form.x_axis_to.data,
-                "groupSize" : form.group_size.data,
+                "groupSize" : form.group_count.data,
                 "image": file_name}}, upsert=True)
 
     # If we are editing the graph instead of creating new, we want to prepopulate the fields
@@ -252,6 +252,9 @@ def histogram(survey_id, column_info, chart_data, graph_id, title):
         form.x_axis.data = graph_obj["xAxis"]
         form.x_axis_from.data = graph_obj["xAxisFrom"]
         form.x_axis_to.data = graph_obj["xAxisTo"]
+        print(form.x_axis_to.data)
+        print(form.x_axis_from.data)
+        form.group_count.data = graph_obj["groupSize"]
         form.title.data = graph_obj["title"]
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}
     return render_template("graphs/histogram.html", data=data, form=form, survey_id=survey_id, graph_id=graph_id, chart_type="Histogram")
