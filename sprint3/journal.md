@@ -215,7 +215,6 @@ I have also added more questions to my feedback form, now totalling 10 questions
 
 I have tried to refactor my python code. Whilst this was ok in some areas, I am still really struggling to refactor the analysis and graph routes. The analysis route is a very long function, with multiple 'if' statements that check and validate the type of test chosen with the selected variables. It does not seem it will be possible to factor these checks into a separate function, as any checks that fail need to return a re-render of the page along with a flash message. Likewise, the way the function is set up is quite different to the function used in "run_all_tests" (the automatic function that runs all statistical tests on a newly uploaded file). Although both involve statistical tests, they operate quite different (as on is in a route and needs flash statements and rendering HTML, whilst the other creates objects and adds to a database). I could likely spend a long time reviewing these functions without gaining a lot of ground and I feel at this point my time is better spent making a start on the dissertation write up. I will therefore put this on hold and maybe come back to it another day when I feel more comfortable with the progress of my write up.
 
-<a name="latestEntry"></a>
 ### Making public, altering file size, small changes. (3rd August)
 
 I carried out some small changes based on early user feedback for sprint 3. These include:
@@ -233,10 +232,16 @@ I have reviewed all of the above points and integrated the changes. The most dif
 
 Whilst many of the changes are now in the public site, I will still need to make public the final few changes.
 
+<a name="latestEntry"></a>
+### Starting dissertation. (5th August)
+
+Whilst still waiting for the final submissions of user feedback I have made a start at writing the dissertation. I have spent some time reading previous dissertations, organising the formatting for my dissertation (along with Word's referencing tool, contents table and cross referencing). I have laid out some initial planning for the different sections and have begun with the introduction and background.
+
+After discussing with a friend today, we agreed one useful feature of the application that should bring users a lot of value would be an overall export feature - this would export the full data set along with a table of the statistical tests and also images for the graphs into a single excel file. While this is not a priority right now I will keep it at the back of my mind as an extra feature to add if time.
+
 ##### Ongoing objectives
 
-* Publish to public server and get final feedback.
+* Full package export with tests, graphs and full data set.
 * Start preparing for writing up dissertation.
-* Increase file size allowance.
 * To carry out unit testing graph saving and manual data input pages.
 * Refactoring code.
