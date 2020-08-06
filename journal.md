@@ -7,4 +7,6 @@ Any specific problems I encounter or reflections that I may have will also be in
 - [Pre-project setup](./preProject/journal.md)
 - [Sprint 1](./sprint1/journal.md)
 - [Sprint 2](./sprint2/journal.md)
-- [Jump to the latest entry](./sprint2/journal.md#latestEntry)
+- [Sprint 3](./sprint3/journal.md)
+- [Finalising project](./postSprint3/journal.md)
+- [Jump to the latest entry](./postSprint3/journal.md#latestEntry)

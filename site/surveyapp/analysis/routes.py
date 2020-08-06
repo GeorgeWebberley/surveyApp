@@ -13,6 +13,7 @@ import tempfile
 from xlsxwriter import Workbook
 
 from surveyapp.surveys.utils import parse_data, read_file
+from surveyapp.analysis.utils import tests_to_excel
 
 
 analysis = Blueprint("analysis", __name__)
@@ -208,48 +209,13 @@ def export_tests(survey_id):
     tests = mongo.db.tests.find({"surveyId":survey_id})
     if tests.count() == 0:
         flash("You do not yet have any statistical tests for this survey!", "danger")
-        return redirect(url_for('surveys.dashboard', survey_id=survey_id))    
+        return redirect(url_for('surveys.dashboard', survey_id=survey_id))
     # Use a temp file so that it can be deleted after
     with tempfile.NamedTemporaryFile() as f:
         # Create a new excel workbook
         wb = Workbook(f.name)
-        bold = wb.add_format({'bold': True})
         # grab the active worksheet
-        ws = wb.add_worksheet()
-        # Set the title and the column headers
-        ws.write(0, 0, file_obj["title"], bold)
-        # Create a table for the data. end of table will be the number of tests
-        # +1 for the title and +1 for the column headers
-        end_of_table = tests.count() + 2
-        table_size = "A2:E" + str(end_of_table)
-        ws.add_table(table_size, {
-        'columns': [{'header': "Null Hypothesis"},
-                  {'header': "Statistical Test"},
-                  {'header': "Significance Value"},
-                  {'header': "P-Value"},
-                  {'header': "Conclusion"},
-                  ]})
-        # Row number is 2 since the first row is the header
-        row_number = 2
-        for test in tests:
-            if float(test["p"]) < 0.05:
-                conclusion = "Reject the null hypothesis."
-            else:
-                conclusion = "Accept the null hypothesis."
-            ws.write(row_number, 0, get_null_hypothesis(test["test"], test["independentVariable"], test["dependentVariable"]))
-            ws.write(row_number, 1, test["test"])
-            ws.write(row_number, 2, 0.05)
-            ws.write(row_number, 3, test["p"])
-            ws.write(row_number, 4, conclusion)
-            row_number += 1
+        ws = wb.add_worksheet("Statistical tests")
+        tests_to_excel(ws, tests)
         wb.close()
-        return send_file(f.name, attachment_filename="tests.xlsx", as_attachment=True)
-
-# gets the null hypothesis, depending on the type of test
-def get_null_hypothesis(test, variable_1, variable_2):
-    if test == "Chi-Square goodness of fit":
-        return "There is no significant difference between the expected distribution of " + variable_1 + " and the observed distribution."
-    elif test == "Chi-Square Test":
-        return "There is no association between " + variable_1 + " and " + variable_2
-    else:
-        return "The distribution of " + variable_1 + " is the same across groups of " + variable_2
+        return send_file(f.name, attachment_filename=file_obj["title"] + ".xlsx", as_attachment=True)

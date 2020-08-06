@@ -188,3 +188,41 @@ def chi_goodness(df, variable):
                     that each group is mutually exclusive from the next and each group
                     contains at least 5 subjects."""}
     return p_value, result
+
+# Takes all the tests from the database and writes them to the the excel work sheet
+def tests_to_excel(worksheet, tests):
+    # Create a table for the data. end of table will be the number of tests +1 for the column headers
+    end_of_table = tests.count() + 1
+    if end_of_table > 1:
+        table_size = "A1:E" + str(end_of_table)
+        # Set column headers
+        worksheet.add_table(table_size, {'columns': [{'header': "Null Hypothesis"},
+                                              {'header': "Statistical Test"},
+                                              {'header': "Significance Value"},
+                                              {'header': "P-Value"},
+                                              {'header': "Conclusion"}]})
+    # Row number is 1 since the first row 0 is the header
+    row_number = 1
+    # Loop through all tests and write them to the worksheet table
+    for test in tests:
+        if float(test["p"]) < 0.05:
+            conclusion = "Reject the null hypothesis."
+        else:
+            conclusion = "Accept the null hypothesis."
+        worksheet.write(row_number, 0, get_null_hypothesis(test["test"], test["independentVariable"], test["dependentVariable"]))
+        worksheet.write(row_number, 1, test["test"])
+        worksheet.write(row_number, 2, 0.05)
+        worksheet.write(row_number, 3, test["p"])
+        worksheet.write(row_number, 4, conclusion)
+        row_number += 1
+
+
+
+# gets the null hypothesis, depending on the type of test
+def get_null_hypothesis(test, variable_1, variable_2):
+    if test == "Chi-Square goodness of fit":
+        return "There is no significant difference between the expected distribution of " + variable_1 + " and the observed distribution."
+    elif test == "Chi-Square Test":
+        return "There is no association between " + variable_1 + " and " + variable_2
+    else:
+        return "The distribution of " + variable_1 + " is the same across groups of " + variable_2

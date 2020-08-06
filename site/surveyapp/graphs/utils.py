@@ -22,6 +22,19 @@ def save_image(data, graph_id):
         image_to_write.write(response.file.read())
     return file_name
 
+def get_image(name):
+    return os.path.join(current_app.root_path, "static/images/graphimages", name)
+
 def delete_image(name):
     image = os.path.join(current_app.root_path, "static/images/graphimages", name)
     os.remove(image)
+
+def graphs_to_excel(worksheet, graphs):
+    # start at row number 0
+    row_number = 0
+    # Loop through all tests and write them to the worksheet
+    for graph in graphs:
+        image = get_image(graph["image"])
+        worksheet.insert_image(row_number, 0, image)
+        # Add 30 to the rows as this is the size it takes up in excel
+        row_number += 30

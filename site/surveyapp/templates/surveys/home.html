@@ -32,6 +32,9 @@
                 <form class="dropdown-item" action="{{ url_for('surveys.delete_survey', survey_id=survey['_id'] )}}" method="post" onsubmit="return confirm('Are you sure? All associated graphs/tests will be deleted?');">
                   <button class="no-btn z-index-high" type="submit">Delete survey</button>
                 </form>
+                <a class="dropdown-item" href="{{ url_for('surveys.export_survey', survey_id=survey['_id'] )}}"
+                title="Export the survey, with all associated graphs and statistical tests"
+                >Export to Excel</a>
               </div>
             </div>
           </div>

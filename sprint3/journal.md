@@ -232,16 +232,9 @@ I have reviewed all of the above points and integrated the changes. The most dif
 
 Whilst many of the changes are now in the public site, I will still need to make public the final few changes.
 
-<a name="latestEntry"></a>
+<a name="endSprint3"></a>
 ### Starting dissertation. (5th August)
 
 Whilst still waiting for the final submissions of user feedback I have made a start at writing the dissertation. I have spent some time reading previous dissertations, organising the formatting for my dissertation (along with Word's referencing tool, contents table and cross referencing). I have laid out some initial planning for the different sections and have begun with the introduction and background.
 
 After discussing with a friend today, we agreed one useful feature of the application that should bring users a lot of value would be an overall export feature - this would export the full data set along with a table of the statistical tests and also images for the graphs into a single excel file. While this is not a priority right now I will keep it at the back of my mind as an extra feature to add if time.
-
-##### Ongoing objectives
-
-* Full package export with tests, graphs and full data set.
-* Start preparing for writing up dissertation.
-* To carry out unit testing graph saving and manual data input pages.
-* Refactoring code.

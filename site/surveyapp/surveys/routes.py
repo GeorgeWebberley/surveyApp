@@ -1,15 +1,19 @@
 import threading
 import secrets
 import os
-from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, abort, current_app
+import tempfile
+import pandas as pd
+from flask import Flask, render_template, url_for, request, Blueprint, flash, redirect, abort, current_app, send_file
 from flask_login import login_required, current_user
 from surveyapp.surveys.forms import UploadForm, EditForm
 from surveyapp import mongo
 from bson.objectid import ObjectId
 
-from surveyapp.graphs.utils import delete_image
-from surveyapp.analysis.utils import run_all_tests
+from surveyapp.graphs.utils import delete_image, graphs_to_excel
+from surveyapp.analysis.utils import run_all_tests, tests_to_excel
 from surveyapp.surveys.utils import save_file, read_file, delete_file, generate_filepath
+
+from xlsxwriter import Workbook
 
 surveys = Blueprint("surveys", __name__)
 
@@ -212,3 +216,33 @@ def delete_survey(survey_id):
     # finally delete from the surveys database
     mongo.db.surveys.delete_one(file_obj)
     return redirect(url_for('surveys.home'))
+
+
+# EXPORT A SURVEY
+@surveys.route("/survey/<survey_id>/export", methods=['GET'])
+@login_required
+def export_survey(survey_id):
+    file_obj = mongo.db.surveys.find_one_or_404({"_id":ObjectId(survey_id)})
+    if file_obj["user"] != current_user._id:
+        flash("You do not have access to that survey", "danger")
+        abort(403)
+    # Get all graphs and tests relating to this file
+    tests = mongo.db.tests.find({"surveyId":survey_id})
+    graphs = mongo.db.graphs.find({"surveyId":survey_id})
+    # Use a temp file so that it can be deleted after
+    with tempfile.NamedTemporaryFile() as f:
+        # Create a Pandas Excel writer using XlsxWriter as the engine.
+        writer = pd.ExcelWriter(f.name, engine='xlsxwriter')
+        # Convert the dataframe to an XlsxWriter Excel object.
+        df = read_file(file_obj["fileName"])
+        df.to_excel(writer, sheet_name='Survey data')
+        wb = writer.book
+        # Get a worksheet for the statistical tests
+        ws = wb.add_worksheet("Statistical Tests")
+        tests_to_excel(ws, tests)
+        # Get a worksheet for the graphs
+        ws2 = wb.add_worksheet("Graphs")
+        graphs_to_excel(ws2, graphs)
+        writer.close()
+        wb.close()
+        return send_file(f.name, attachment_filename=file_obj["title"] + ".xlsx", as_attachment=True)

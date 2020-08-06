@@ -140,52 +140,6 @@ function renderTable(values, headers){
   });
 }
 
-$('#proceed').click(function(event) {
-    if(!savedChanges){
-      event.preventDefault();
-      $('#save-changes-modal').modal('toggle');
-    }
-});
-
-
-// Prevent form auto submitting when a user presses Enter
-$(document).on("keydown", "form", function(event) {
-    return event.key != "Enter";
-});
-
-
-
-
-$('form').submit(function (e) {
-  // Remove the 'spare' row before saving
-  hot.updateSettings({
-    minSpareRows: 0,
-    minRows:0
-  })
-  // Remove empty rows (if any)
-  let newHot = removeEmptyRows();
-  let exportPlugin;
-  if(newHot != undefined){
-    exportPlugin = newHot.getPlugin('exportFile');
-  }else{
-    exportPlugin = hot.getPlugin('exportFile');
-  }
-  const string = exportPlugin.exportAsString('csv', {
-    columnHeaders: true,
-  });
-  postData(string)
-  e.preventDefault();
-  // Change spare rows back to 1 if user wants to continue editing
-  hot.updateSettings({
-    minSpareRows: 1,
-    minRows:23
-  })
-  // alert("Your changes have been saved")
-  info.innerHTML = "Up to date"
-  info.style.color = "green"
-  savedChanges = True;
-});
-
 
 function removeEmptyRows(){
   let data = hot.getData()
@@ -201,8 +155,60 @@ function removeEmptyRows(){
 
 
 
-function postData(dataString){
 
+// Put all of our standalone jquery function inside a document ready check
+$(document).ready(function(){
+  // A function that prompts the user to save if they have not done so before moving to home
+  $('#proceed').click(function(event) {
+      if(!savedChanges){
+        event.preventDefault();
+        $('#save-changes-modal').modal('toggle');
+      }
+  });
+
+
+  // Prevent form auto submitting when a user presses Enter
+  $(document).on("keydown", "form", function(event) {
+      return event.key != "Enter";
+  });
+
+
+  // Function responsible for form submission
+  $('form').submit(function (e) {
+    // Remove any extra rows before saving (so they are not also submitted)
+    hot.updateSettings({
+      minSpareRows: 0,
+      minRows:0
+    })
+    // Remove empty rows (if any)
+    let newHot = removeEmptyRows();
+
+    // Get the export plugin on the newHot (if it exists) else on the old hot
+    let exportPlugin = newHot != undefined ? newHot.getPlugin('exportFile') : hot.getPlugin('exportFile')
+
+    const string = exportPlugin.exportAsString('csv', {
+      columnHeaders: true,
+    });
+    // Post the data has a string to the server
+    postData(string)
+    // Prevent default form submission
+    e.preventDefault();
+
+    // Change spare rows back to 1 and min back to 23 if user wants to continue editing
+    hot.updateSettings({
+      minSpareRows: 1,
+      minRows:23
+    })
+    // Update the html to display that the changes have been submitted
+    info.innerHTML = "Up to date"
+    info.style.color = "green"
+    savedChanges = True;
+  });
+});
+
+
+// Post the table as a string to the server (with the title)
+function postData(dataString){
   $.ajaxSetup({
     beforeSend: function(xhr, settings) {
       if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
