@@ -15,8 +15,10 @@ More specifically, this will involve:
 The deadline for the dissertation is the 14th of September. Ideally I would like to aim to be finished at least a week before this date.
 
 <a name="latestEntry"></a>
-### Review of sequence diagrams and database design (6th July)
-As mentioned at the end of the [last sprint]((../sprint3/journal.md#endSprint3))
+### Export all data (6th July)
+As mentioned at the end of the [last sprint](../sprint3/journal.md#endSprint3), one user comment from a friend was that it would be useful to have a feature where you can export the entire survey into Excel, including the statistical tests and the graphs. I have implemented this now with the help of XlsxWriter again, and have refactored my code, that is already used for exporting statistical tests, so that it can be used in both routes. I have included a link for this feature on the home page. The survey is exported to one sheet, the statistical tests to a second sheet and the images of the graphs to a third sheet.
+
+Tomorrow I will continue to work on the dissertation write up.
 
 
 ##### Ongoing objectives
