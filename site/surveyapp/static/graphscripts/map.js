@@ -18,7 +18,6 @@ for (let i = 0, j = countries.length; i < j; i++) {
 }
 
 // Set the projections for various parts of the world
-// REFACTOR THIS CODE????/
 const africa = function(element) {
     let projection = d3.geo.equirectangular()
       .center([19, 0])
