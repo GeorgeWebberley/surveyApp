@@ -119,6 +119,10 @@ function render(dataStats){
   // Remove old axes labels (if they exist)
   d3.selectAll('.label').remove();
 
+
+
+  dataStats.sort(function(a, b) { return d3.ascending(parseInt(a.key), parseInt(b.key))});
+
   // Get the highest value from our objects so we can base the y-axis on that.
   // I could instead find the highest value in that column. However, doing it this way
   // it means I can change the definition of the whiskers without needing to change
@@ -175,6 +179,7 @@ function render(dataStats){
   svg.append("text")
     .attr("transform",`translate(${width/2}, ${gHeight + margin.top + 55})`)
     .attr("class", "label")
+    .style("text-anchor", "middle")
     .text(xAxisValue);
 
 

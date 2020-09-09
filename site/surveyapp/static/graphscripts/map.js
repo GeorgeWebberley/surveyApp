@@ -121,8 +121,8 @@ function render(chosenVariable){
   let veryHigh = `- Between ${(max/5)*4} and ${max}`
   let high = `- Between ${(max/5)*3} and ${(max/5)*4 - 1}`
   let medium = `- Between ${(max/5)*2} and ${(max/5)*3 - 1}`
-  let veryLow = `- Between ${max/5} and ${(max/5)*2 - 1}`
-  let low = `- Less than ${max/5}`
+  let low = `- Between ${max/5} and ${(max/5)*2 - 1}`
+  let veryLow = `- Less than ${max/5}`
 
   // Get our colour scale and link it to the values in our legend
   let colourScale = getColourScale(max, veryHigh, high, medium, veryLow, low)

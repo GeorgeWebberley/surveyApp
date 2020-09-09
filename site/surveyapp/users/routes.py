@@ -1,4 +1,4 @@
-from surveyapp import dropzone, mongo, bcrypt, mail
+from surveyapp import mongo, bcrypt, mail
 from flask import Flask, render_template, url_for, request, flash, redirect, Blueprint
 # syntax for accessing files inside packages
 from surveyapp.users.forms import (RegistrationForm, LoginForm,

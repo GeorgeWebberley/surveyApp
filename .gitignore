@@ -1,6 +1,9 @@
 .DS_Store
 node_modules
 __pycache__
-uploads/*
-!uploads/.gitkeep
+site/surveyapp/uploads/*
+!site/surveyapp/uploads/.gitkeep
 .env
+site/.pytest_cache/*
+site/test_surveyapp.py
+site/testfiles

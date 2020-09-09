@@ -17,13 +17,15 @@ const hoverFill = "#2D4053"
 // Get the graph data
 const data = graphData["chart_data"]
 
+// Get the DOM element that will hold the SVG
+const graphDOM = document.getElementById('graph')
 // Get the width and height of the SVG on the client screen
-let width = document.getElementById('graph').clientWidth;
-let height = document.getElementById('graph').clientHeight;
+let width = graphDOM.clientWidth;
+let height = graphDOM.clientHeight;
 // Re-set the width and height on window resize
 window.onresize = function(){
-  width = document.getElementById('graph').clientWidth;
-  height = document.getElementById('graph').clientHeight;
+  width = graphDOM.clientWidth;
+  height = graphDOM.clientHeight;
   svg.attr('width', width).attr('height', height);
 }
 // Set margins around graph for axis and labels
@@ -190,6 +192,7 @@ function render(groupedData, xAxisValue, yAxisValue, yAxisAgg){
   svg.append("text")
     .attr("transform",`translate(${width/2}, ${gHeight + margin.top + 55})`)
     .attr("class", "label")
+    .style("text-anchor", "middle")
     .text(xAxisValue);
 
   // Select all 'rect' DOM elements (if they exist)

@@ -207,6 +207,7 @@ function render(data){
   svg.append("text")
     .attr("transform",`translate(${width/2}, ${gHeight + margin.top + 55})`)
     .attr("class", "label")
+    .style("text-anchor", "middle")
     .text(xAxisValue);
 
 

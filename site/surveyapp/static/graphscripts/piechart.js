@@ -310,12 +310,6 @@ function addLegend(legendTitle, colour, pieData, percentage){
       .attr('x', legendRectSize + legendSpacing)
       .attr('y', legendRectSize - legendSpacing)
       .style("font-size", legendFontsize)
-      // We want the label to display the group as well as the percentage
-      // .text(function(d) {
-      //   let result = pieData.find(obj => {
-      //     return obj.data.key === d
-      //   })
-      //   return d + ":  " + percentage(result)});
       .text(d => d)
 }
 

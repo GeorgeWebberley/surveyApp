@@ -1,8 +1,7 @@
 from flask import Flask
 from surveyapp.config import config_by_name
-# from surveyapp.config import Config
+
 from flask_bcrypt import Bcrypt
-from flask_dropzone import Dropzone
 from flask_pymongo import PyMongo
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -10,7 +9,6 @@ from flask_jsglue import JSGlue
 
 
 # extensions created outside the create_app function (but initialised inside the function)
-dropzone = Dropzone()
 # for database handling
 mongo = PyMongo()
 # for hashing passwords
@@ -34,7 +32,6 @@ def create_app(config_name):
     app.config.from_object(config_by_name[config_name])
 
     # initialise extensions
-    dropzone.init_app(app)
     mongo.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)

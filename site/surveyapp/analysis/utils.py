@@ -7,6 +7,8 @@ from scipy.stats import chi2_contingency, chisquare
 from pingouin import kruskal, mwu
 from surveyapp.surveys.utils import parse_data, read_file
 
+import time
+
 # This is a function that will automatically run when the user uploads a file. It will parse the data and
 # run some statistical tests based on the type of data in each column. It will not run all tests (for example,
 # non-parametric tests will only be run on definite categorical data - i.e. data that is string, object or

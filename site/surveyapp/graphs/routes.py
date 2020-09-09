@@ -252,8 +252,6 @@ def histogram(survey_id, column_info, chart_data, graph_id, title):
         form.x_axis.data = graph_obj["xAxis"]
         form.x_axis_from.data = graph_obj["xAxisFrom"]
         form.x_axis_to.data = graph_obj["xAxisTo"]
-        print(form.x_axis_to.data)
-        print(form.x_axis_from.data)
         form.group_count.data = graph_obj["groupSize"]
         form.title.data = graph_obj["title"]
     data = {"chart_data": chart_data, "title": title, "column_info" : column_info}

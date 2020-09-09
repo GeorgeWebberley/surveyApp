@@ -29,8 +29,7 @@ if(headers.length == 0){
     values = [[]]
   }
   inputOverlay.classList.add("invisible")
-  let columns = columnData(headers)
-  renderTable(values, headers, columns)
+  renderTable(values, headers)
 }
 
 addColumn.addEventListener('click', function () {
@@ -66,12 +65,10 @@ function triggerModal(){
       container.classList.remove("invisible")
       infoRow.classList.remove("invisible")
       inputOverlay.classList.add("invisible")
-      // Populate column headers with provided headers
-      let columns = columnData(headers)
       // Intialise empty 2d array to represent the cells in the table
       values=[[]]
       // Render the table
-      renderTable(values, headers, columns)
+      renderTable(values, headers)
       // If table already exists we can simply update it
     }else{
       hot.alter('insert_col', headers.length, 1)
