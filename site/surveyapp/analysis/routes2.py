@@ -47,71 +47,43 @@ def analyse(survey_id):
         test = form.test.data
         # If the user selects Chi-Square goodness fit then they are redirected to a separate URL
         if test == "Chi-Square goodness of fit":
-            # Chi-square goodness of fit needs an additional page where user fills in their expected distribution
             return redirect(url_for('analysis.chi_goodness', variable=independent_variable, survey_id=survey_id))
         # The other tests all require a dependent variable
         if dependent_variable == "":
             flash("You must select a dependent variable for this test.", "danger")
             return render_template("analysis/analysedata.html", form=form)
         if test == "Kruskall Wallis Test":
-            return kruskall_wallis(survey_id, df, independent_variable, dependent_variable, form)
+            if is_string_dtype(df[dependent_variable]):
+                flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
+                return render_template("analysis/analysedata.html", form=form)
+            kruskal_result = kruskal(data=df, dv=dependent_variable, between=independent_variable)
+            # get the p-value (p-unc) from the kruskal test and convert to 4 decimal places only
+            p_value = "%.4f" % kruskal_result["p-unc"][0]
         # AT THE MOMENT, THIS TEST IS 2 TAILED. MAY WANT TO ADD OPTIONS FOR 1 TAILED TESTS
         elif test == "Mann-Whitney U Test":
-            return mann_whitney(survey_id, df, independent_variable, dependent_variable, form)
+            if is_string_dtype(df[dependent_variable]):
+                flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
+                return render_template("analysis/analysedata.html", form=form)
+            group_by = df.groupby(independent_variable)
+            group_array = [group_by.get_group(x) for x in group_by.groups]
+            if len(group_array) != 2:
+                flash("Independent variable '" + independent_variable + "' has too many groups, only 2 allowed for Mann-Whitney U Test.", "danger")
+                return render_template("analysis/analysedata.html", form=form)
+            x = group_array[0][dependent_variable].values
+            y = group_array[1][dependent_variable].values
+            mwu_result = mwu(x, y)
+            p_value = "%.4f" % mwu_result['p-val'].values[0]
         elif test == "Chi-Square Test":
-            return chi_square(survey_id, df, independent_variable, dependent_variable)
+            contingency_table = pd.crosstab(df[independent_variable], df[dependent_variable])
+            _, p_value, _, _ = chi2_contingency(contingency_table, correction=False)
+
+        return redirect(url_for('analysis.result',
+                                survey=survey_id,
+                                test=test,
+                                p_value=p_value,
+                                independent_variable=independent_variable,
+                                dependent_variable=dependent_variable))
     return render_template("analysis/analysedata.html", form=form)
-
-
-
-
-
-def kruskall_wallis(survey_id, df, independent_variable, dependent_variable, form):
-    if is_string_dtype(df[dependent_variable]):
-        flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
-        return render_template("analysis/analysedata.html", form=form)
-    kruskal_result = kruskal(data=df, dv=dependent_variable, between=independent_variable)
-    # get the p-value (p-unc) from the kruskal test and convert to 4 decimal places only
-    p_value = "%.4f" % kruskal_result["p-unc"][0]
-    return redirect(url_for('analysis.result',
-                            survey=survey_id,
-                            test="Kruskall Wallis Test",
-                            p_value=p_value,
-                            independent_variable=independent_variable,
-                            dependent_variable=dependent_variable))
-
-
-def mann_whitney(survey_id, df, independent_variable, dependent_variable, form):
-    if is_string_dtype(df[dependent_variable]):
-        flash("Dependent Variable '" + dependent_variable + "' is not numeric.", "danger")
-        return render_template("analysis/analysedata.html", form=form)
-    group_by = df.groupby(independent_variable)
-    group_array = [group_by.get_group(x) for x in group_by.groups]
-    if len(group_array) != 2:
-        flash("Independent variable '" + independent_variable + "' has too many groups, only 2 allowed for Mann-Whitney U Test.", "danger")
-        return render_template("analysis/analysedata.html", form=form)
-    x = group_array[0][dependent_variable].values
-    y = group_array[1][dependent_variable].values
-    mwu_result = mwu(x, y)
-    p_value = "%.4f" % mwu_result.at["MWU", "p-val"]
-    return redirect(url_for('analysis.result',
-                            survey=survey_id,
-                            test="Mann-Whitney U Test",
-                            p_value=p_value,
-                            independent_variable=independent_variable,
-                            dependent_variable=dependent_variable))
-
-
-def chi_square(survey_id, df, independent_variable, dependent_variable):
-    contingency_table = pd.crosstab(df[independent_variable], df[dependent_variable])
-    _, p_value, _, _ = chi2_contingency(contingency_table, correction=False)
-    return redirect(url_for('analysis.result',
-                            survey=survey_id,
-                            test="Chi-Square Test",
-                            p_value=p_value,
-                            independent_variable=independent_variable,
-                            dependent_variable=dependent_variable))
-
 
 
 # Chi goodness of fit - extra form for expected values
